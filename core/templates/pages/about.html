@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+درباره ما | کافه رستوران
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/pages/about.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<section class="about">
+
+    <div class="about-image">
+
+        <img src="{% static 'images/pages/about.jpg' %}" alt="درباره کافه رستوران">
+
+    </div>
+
+    <div class="about-content">
+
+        <span class="section-badge">
+            درباره ما
+        </span>
+
+        <h1>
+            کافه رستوران CafeCore
+        </h1>
+
+        <p>
+
+            ما تلاش کرده‌ایم فضایی آرام، مدرن و صمیمی ایجاد کنیم تا در کنار سرو
+            غذاهای باکیفیت، نوشیدنی‌های تخصصی و دسرهای تازه، تجربه‌ای متفاوت برای
+            مهمانان رقم بزنیم.
+
+        </p>
+
+        <p>
+
+            تمامی مواد اولیه با دقت انتخاب می‌شوند و منوی ما بر اساس کیفیت،
+            تازگی و سلیقه مشتریان به‌روزرسانی می‌شود.
+
+        </p>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/pages/about.js' %}"></script>
+{% endblock %}

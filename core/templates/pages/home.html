@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+کافه رستوران
+{% endblock %}
+
+{% block css %}
+
+<link rel="stylesheet" href="{% static 'css/pages/home.css' %}">
+
+{% endblock %}
+
+{% block content %}
+
+<!-- Hero -->
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <span class="hero-badge">
+
+            خوش آمدید
+
+        </span>
+
+        <h1>
+
+            کافه رستوران
+
+        </h1>
+
+        <p>
+
+            تجربه‌ای متفاوت از قهوه، غذا و لحظاتی آرام در فضایی مدرن.
+
+        </p>
+
+        <div class="hero-buttons">
+
+            <a href="#" class="btn-primary">
+
+                مشاهده منو
+
+            </a>
+
+            <a href="#" class="btn-secondary">
+
+                رزرو میز
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="hero-image">
+
+        <img src="{% static 'images/pages/hero.png' %}" alt="Cafe">
+
+    </div>
+
+</section>
+
+<!-- Categories -->
+
+<section class="categories">
+
+    <h2>
+
+        دسته‌بندی منو
+
+    </h2>
+
+    <div class="categories-grid">
+
+        <div class="category-card">صبحانه</div>
+
+        <div class="category-card">غذای اصلی</div>
+
+        <div class="category-card">پیش غذا</div>
+
+        <div class="category-card">بار گرم</div>
+
+        <div class="category-card">بار سرد</div>
+
+        <div class="category-card">دسر</div>
+
+    </div>
+
+</section>
+
+<!-- Special -->
+
+<section class="special-foods">
+
+    <h2>
+
+        پیشنهاد ویژه
+
+    </h2>
+
+    <div class="foods-grid">
+
+    </div>
+
+</section>
+
+<!-- Popular -->
+
+<section class="popular-foods">
+
+    <h2>
+
+        محبوب‌ترین غذاها
+
+    </h2>
+
+    <div class="foods-grid">
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+{% block js %}
+
+<script src="{% static 'js/pages/home.js' %}"></script>
+
+{% endblock %}

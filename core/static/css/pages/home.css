@@ -1,0 +1,316 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    background:#111111;
+    color:#ffffff;
+    font-family:"Vazirmatn",sans-serif;
+}
+
+/* ===========================
+            Hero
+=========================== */
+
+.hero{
+
+    max-width:1400px;
+
+    margin:auto;
+
+    min-height:85vh;
+
+    padding:70px 40px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:80px;
+
+}
+
+.hero-content{
+
+    flex:1;
+
+}
+
+.hero-badge{
+
+    display:inline-block;
+
+    padding:8px 18px;
+
+    border-radius:30px;
+
+    background:rgba(212,175,55,.15);
+
+    color:#D4AF37;
+
+    border:1px solid rgba(212,175,55,.3);
+
+    margin-bottom:25px;
+
+}
+
+.hero h1{
+
+    font-size:4rem;
+
+    line-height:1.3;
+
+    margin-bottom:20px;
+
+}
+
+.hero p{
+
+    color:#c8c8c8;
+
+    font-size:1.1rem;
+
+    line-height:2;
+
+    max-width:550px;
+
+    margin-bottom:35px;
+
+}
+
+.hero-buttons{
+
+    display:flex;
+
+    gap:18px;
+
+}
+
+.btn-primary,
+.btn-secondary{
+
+    text-decoration:none;
+
+    padding:15px 28px;
+
+    border-radius:14px;
+
+    transition:.3s;
+
+    font-weight:700;
+
+}
+
+.btn-primary{
+
+    background:#D4AF37;
+
+    color:#111;
+
+}
+
+.btn-primary:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:0 15px 35px rgba(212,175,55,.25);
+
+}
+
+.btn-secondary{
+
+    border:1px solid rgba(255,255,255,.12);
+
+    background:rgba(255,255,255,.04);
+
+    backdrop-filter:blur(16px);
+
+    color:white;
+
+}
+
+.btn-secondary:hover{
+
+    background:rgba(255,255,255,.08);
+
+}
+
+/* ===========================
+        Hero Image
+=========================== */
+
+.hero-image{
+
+    flex:1;
+
+    display:flex;
+
+    justify-content:center;
+
+}
+
+.hero-image img{
+
+    width:100%;
+
+    max-width:520px;
+
+    border-radius:28px;
+
+    box-shadow:0 25px 60px rgba(0,0,0,.45);
+
+}
+
+/* ===========================
+        Sections
+=========================== */
+
+.categories,
+.special-foods,
+.popular-foods{
+
+    max-width:1400px;
+
+    margin:auto;
+
+    padding:80px 40px;
+
+}
+
+.categories h2,
+.special-foods h2,
+.popular-foods h2{
+
+    font-size:2rem;
+
+    margin-bottom:35px;
+
+}
+
+/* ===========================
+        Categories
+=========================== */
+
+.categories-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+
+    gap:25px;
+
+}
+
+.category-card{
+
+    padding:35px 20px;
+
+    border-radius:20px;
+
+    background:rgba(255,255,255,.04);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    backdrop-filter:blur(16px);
+
+    text-align:center;
+
+    transition:.3s;
+
+    cursor:pointer;
+
+}
+
+.category-card:hover{
+
+    transform:translateY(-8px);
+
+    border-color:#D4AF37;
+
+}
+
+/* ===========================
+        Food Grid
+=========================== */
+
+.foods-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+
+    gap:30px;
+
+}
+
+/* ===========================
+        Responsive
+=========================== */
+
+@media(max-width:992px){
+
+    .hero{
+
+        flex-direction:column-reverse;
+
+        text-align:center;
+
+        padding:60px 25px;
+
+    }
+
+    .hero p{
+
+        margin:auto auto 35px;
+
+    }
+
+    .hero-buttons{
+
+        justify-content:center;
+
+    }
+
+}
+
+@media(max-width:768px){
+
+    .hero h1{
+
+        font-size:2.8rem;
+
+    }
+
+}
+
+@media(max-width:576px){
+
+    .hero{
+
+        padding:40px 20px;
+
+    }
+
+    .categories,
+    .special-foods,
+    .popular-foods{
+
+        padding:60px 20px;
+
+    }
+
+    .hero-buttons{
+
+        flex-direction:column;
+
+    }
+
+}
