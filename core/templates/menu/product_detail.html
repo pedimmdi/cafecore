@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+{{ product.name }} | کافه رستوران
+{% endblock %}
+
+{% block css %}
+
+<link rel="stylesheet" href="{% static 'css/menu/product_detail.css' %}">
+
+{% endblock %}
+
+{% block content %}
+
+<section class="product-detail">
+
+    <div class="container">
+
+        <div class="product-wrapper">
+
+            <div class="product-image">
+
+                {% if product.image %}
+
+                    <img
+                        src="{{ product.image.url }}"
+                        alt="{{ product.name }}">
+
+                {% else %}
+
+                    <img
+                        src="{% static 'images/menu/default-product.jpg' %}"
+                        alt="{{ product.name }}">
+
+                {% endif %}
+
+            </div>
+
+            <div class="product-info">
+
+                <span class="category">
+
+                    {{ product.category.name }}
+
+                </span>
+
+                <h1>
+
+                    {{ product.name }}
+
+                </h1>
+
+                <div class="price">
+
+                    {{ product.price }} تومان
+
+                </div>
+
+                <p class="description">
+
+                    {{ product.description }}
+
+                </p>
+
+                {% if product.ingredients %}
+
+                <div class="ingredients">
+
+                    <h3>
+
+                        مواد تشکیل‌دهنده
+
+                    </h3>
+
+                    <p>
+
+                        {{ product.ingredients }}
+
+                    </p>
+
+                </div>
+
+                {% endif %}
+
+                <div class="meta">
+
+                    <div>
+
+                        <strong>موجودی:</strong>
+
+                        {{ product.inventory }}
+
+                    </div>
+
+                    <div>
+
+                        <strong>وضعیت:</strong>
+
+                        {% if product.is_available %}
+
+                            موجود
+
+                        {% else %}
+
+                            ناموجود
+
+                        {% endif %}
+
+                    </div>
+
+                    {% if product.serving_start and product.serving_end %}
+
+                    <div>
+
+                        <strong>ساعت سرو:</strong>
+
+                        {{ product.serving_start }}
+
+                        -
+
+                        {{ product.serving_end }}
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+{% block js %}
+
+<script src="{% static 'js/menu/product_detail.js' %}"></script>
+
+{% endblock %}

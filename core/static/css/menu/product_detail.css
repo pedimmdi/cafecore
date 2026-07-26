@@ -1,0 +1,193 @@
+.product-detail {
+
+    padding: 80px 40px;
+
+}
+
+.container {
+
+    max-width: 1400px;
+    margin: auto;
+
+}
+
+.product-wrapper {
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+
+}
+
+.product-image {
+
+    background: rgba(255, 255, 255, .05);
+    border: 1px solid rgba(255, 255, 255, .08);
+    border-radius: 24px;
+    backdrop-filter: blur(20px);
+    overflow: hidden;
+    padding: 20px;
+
+}
+
+.product-image img {
+
+    width: 100%;
+    display: block;
+    border-radius: 18px;
+    object-fit: cover;
+    transition: .35s;
+
+}
+
+.product-info {
+
+    display: flex;
+    flex-direction: column;
+
+}
+
+.category {
+
+    display: inline-block;
+    width: fit-content;
+    margin-bottom: 15px;
+    padding: 8px 18px;
+    border-radius: 30px;
+    background: rgba(212, 175, 55, .15);
+    border: 1px solid rgba(212, 175, 55, .35);
+    color: #D4AF37;
+    font-size: .9rem;
+
+}
+
+.product-info h1 {
+
+    font-size: 3rem;
+    color: #ffffff;
+    margin-bottom: 20px;
+
+}
+
+.price {
+
+    color: #D4AF37;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 25px;
+
+}
+
+.description {
+
+    color: #cbd5e1;
+    line-height: 2;
+    margin-bottom: 30px;
+
+}
+
+.ingredients {
+
+    margin-bottom: 30px;
+    padding: 20px;
+    background: rgba(255, 255, 255, .04);
+    border: 1px solid rgba(255, 255, 255, .08);
+    border-radius: 18px;
+
+}
+
+.ingredients h3 {
+
+    color: #ffffff;
+    margin-bottom: 15px;
+
+}
+
+.ingredients p {
+
+    color: #9ca3af;
+    line-height: 2;
+
+}
+
+.meta {
+
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 25px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, .05);
+    border: 1px solid rgba(255, 255, 255, .08);
+
+}
+
+.meta div {
+
+    color: #d1d5db;
+    font-size: 1rem;
+
+}
+
+.meta strong {
+
+    color: #ffffff;
+    margin-left: 8px;
+
+}
+
+@media (max-width: 992px) {
+
+    .product-wrapper {
+
+        grid-template-columns: 1fr;
+        gap: 40px;
+
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    .product-detail {
+
+        padding: 60px 20px;
+
+    }
+
+    .product-info h1 {
+
+        font-size: 2.2rem;
+
+    }
+
+    .price {
+
+        font-size: 1.7rem;
+
+    }
+
+}
+
+@media (max-width: 480px) {
+
+    .product-image {
+
+        padding: 12px;
+
+    }
+
+    .product-info h1 {
+
+        font-size: 1.8rem;
+
+    }
+
+    .meta {
+
+        padding: 18px;
+
+    }
+
+}

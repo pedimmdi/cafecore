@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+دسته‌بندی‌ها | کافه رستوران
+{% endblock %}
+
+{% block css %}
+
+<link rel="stylesheet" href="{% static 'css/menu/category_list.css' %}">
+
+{% endblock %}
+
+{% block content %}
+
+<section class="categories">
+
+    <div class="container">
+
+        <div class="section-header">
+
+            <span class="section-badge">
+
+                Categories
+
+            </span>
+
+            <h1>
+
+                دسته‌بندی‌های منو
+
+            </h1>
+
+            <p>
+
+                دسته‌بندی مورد نظر خود را انتخاب کنید.
+
+            </p>
+
+        </div>
+
+        {% if categories %}
+
+        <div class="categories-grid">
+
+            {% for category in categories %}
+
+            <a href="{{ category.get_absolute_url }}" class="category-card">
+
+                <div class="category-image">
+
+                    {% if category.image %}
+
+                    <img
+                        src="{{ category.image.url }}"
+                        alt="{{ category.name }}">
+
+                    {% else %}
+
+                    <img
+                        src="{% static 'images/menu/default-category.jpg' %}"
+                        alt="{{ category.name }}">
+
+                    {% endif %}
+
+                </div>
+
+                <div class="category-content">
+
+                    <h2>
+
+                        {{ category.name }}
+
+                    </h2>
+
+                    <p>
+
+                        {{ category.description|truncatewords:18 }}
+
+                    </p>
+
+                    <span class="product-count">
+
+                        {{ category.products.count }} محصول
+
+                    </span>
+
+                </div>
+
+            </a>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-categories">
+
+            <i class="bi bi-grid"></i>
+
+            <h2>
+
+                دسته‌بندی‌ای یافت نشد.
+
+            </h2>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+{% block js %}
+
+<script src="{% static 'js/menu/category_list.js' %}"></script>
+
+{% endblock %}
