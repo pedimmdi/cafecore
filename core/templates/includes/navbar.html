@@ -1,0 +1,115 @@
+{% load static %}
+
+<header class="navbar">
+
+    <nav class="navbar-container">
+
+        <div class="navbar-right">
+
+            <a href="{% url 'pages:home' %}" class="navbar-logo">
+
+                <img src="{% static 'images/icons/logo.svg' %}" alt="CafeCore Logo">
+
+                <span>کافه رستوران</span>
+
+            </a>
+
+        </div>
+
+        <div class="navbar-center">
+
+            <ul class="navbar-menu">
+
+                <li>
+                    <a href="{% url 'pages:home' %}">
+                        خانه
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        منو
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        رزرو میز
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        درباره ما
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        تماس با ما
+                    </a>
+                </li>
+
+            </ul>
+
+        </div>
+
+        <div class="navbar-left">
+
+            <button class="navbar-search-btn">
+
+                <i class="bi bi-search"></i>
+
+            </button>
+
+            <a href="#" class="navbar-icon">
+
+                <i class="bi bi-heart"></i>
+
+            </a>
+
+            <a href="#" class="navbar-icon">
+
+                <i class="bi bi-cart3"></i>
+
+            </a>
+
+            {% if user.is_authenticated %}
+
+                <div class="navbar-user">
+
+                    <a href="{% url 'accounts:profile' %}">
+
+                        <i class="bi bi-person-circle"></i>
+
+                    </a>
+
+                </div>
+
+            {% else %}
+
+                <div class="navbar-auth">
+
+                    <a href="{% url 'accounts:login' %}">
+                        ورود
+                    </a>
+
+                    <a href="{% url 'accounts:register' %}">
+                        ثبت نام
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+        <button class="mobile-menu-btn">
+
+            <i class="bi bi-list"></i>
+
+        </button>
+
+    </nav>
+
+</header>

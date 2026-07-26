@@ -1,0 +1,179 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #141414;
+    color: #f5f5f5;
+    font-family: "Vazirmatn", sans-serif;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+ul {
+    list-style: none;
+}
+
+.navbar {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    background: rgba(20, 20, 20, .75);
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid rgba(255, 255, 255, .06);
+}
+
+.navbar-container {
+    max-width: 1400px;
+    height: 80px;
+    margin: auto;
+    padding: 0 32px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar-right,
+.navbar-center,
+.navbar-left {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    font-size: 1.15rem;
+    font-weight: 700;
+
+    color: #D4AF37;
+}
+
+.navbar-logo img {
+    width: 42px;
+    height: 42px;
+}
+
+.navbar-menu {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+}
+
+.navbar-menu a {
+    color: #ECECEC;
+    font-size: .95rem;
+    transition: .3s;
+}
+
+.navbar-menu a:hover {
+    color: #D4AF37;
+}
+
+.navbar-left {
+    gap: 18px;
+}
+
+.navbar-icon,
+.navbar-search-btn {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 50%;
+    border: none;
+
+    background: rgba(255,255,255,.05);
+
+    color: #fff;
+
+    cursor: pointer;
+
+    transition: .3s;
+}
+
+.navbar-icon:hover,
+.navbar-search-btn:hover {
+    background: #D4AF37;
+    color: #141414;
+}
+
+.navbar-auth {
+    display: flex;
+    gap: 12px;
+}
+
+.navbar-auth a:first-child {
+    color: #fff;
+}
+
+.navbar-auth a:last-child {
+    padding: 10px 18px;
+
+    border-radius: 12px;
+
+    background: #D4AF37;
+
+    color: #141414;
+
+    font-weight: 600;
+}
+
+.navbar-user a {
+    font-size: 1.6rem;
+    color: #fff;
+}
+
+.mobile-menu-btn {
+    display: none;
+
+    background: transparent;
+
+    border: none;
+
+    color: #fff;
+
+    font-size: 1.8rem;
+
+    cursor: pointer;
+}
+
+@media (max-width:992px){
+
+    .navbar-menu{
+        display:none;
+    }
+
+    .mobile-menu-btn{
+        display:block;
+    }
+
+}
+
+@media (max-width:768px){
+
+    .navbar-container{
+
+        padding:0 18px;
+
+    }
+
+    .navbar-auth{
+
+        display:none;
+
+    }
+
+}

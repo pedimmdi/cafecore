@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+ورود | کافه رستوران
+{% endblock %}
+
+{% block css %}
+
+<link rel="stylesheet" href="{% static 'css/accounts/login.css' %}">
+
+{% endblock %}
+
+{% block content %}
+
+<section class="login-section">
+
+    <div class="login-card">
+
+        <div class="login-header">
+
+            <h1>ورود</h1>
+
+            <p>
+                برای ورود به حساب کاربری، اطلاعات خود را وارد کنید.
+            </p>
+
+        </div>
+
+        <form method="post">
+
+            {% csrf_token %}
+
+            <div class="form-group">
+
+                <label for="{{ form.username.id_for_label }}">
+                    ایمیل
+                </label>
+
+                {{ form.username }}
+
+                {% if form.username.errors %}
+                    <small>{{ form.username.errors.0 }}</small>
+                {% endif %}
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="{{ form.password.id_for_label }}">
+                    رمز عبور
+                </label>
+
+                {{ form.password }}
+
+                {% if form.password.errors %}
+                    <small>{{ form.password.errors.0 }}</small>
+                {% endif %}
+
+            </div>
+
+            {% if form.non_field_errors %}
+
+                <div class="form-errors">
+
+                    {{ form.non_field_errors }}
+
+                </div>
+
+            {% endif %}
+
+            <button type="submit" class="login-btn">
+
+                ورود
+
+            </button>
+
+        </form>
+
+        <div class="login-links">
+
+            <a href="{% url 'accounts:password_reset' %}">
+
+                رمز عبور را فراموش کرده‌اید؟
+
+            </a>
+
+            <a href="{% url 'accounts:register' %}">
+
+                ایجاد حساب کاربری
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+{% block js %}
+
+<script src="{% static 'js/accounts/login.js' %}"></script>
+
+{% endblock %}

@@ -1,0 +1,96 @@
+.messages-container{
+    position:fixed;
+
+    top:100px;
+    left:30px;
+
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+
+    z-index:9999;
+}
+
+.message{
+    min-width:320px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:16px 18px;
+
+    border-radius:14px;
+
+    backdrop-filter:blur(18px);
+
+    color:#fff;
+
+    animation:messageFade .35s ease;
+}
+
+.message span{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.message.success{
+    background:rgba(46,125,50,.92);
+}
+
+.message.error{
+    background:rgba(198,40,40,.92);
+}
+
+.message.warning{
+    background:rgba(237,108,2,.92);
+}
+
+.message.info{
+    background:rgba(2,136,209,.92);
+}
+
+.message-close{
+    background:none;
+    border:none;
+
+    color:#fff;
+
+    cursor:pointer;
+
+    font-size:1rem;
+}
+
+@keyframes messageFade{
+
+    from{
+        opacity:0;
+        transform:translateY(-15px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+
+}
+
+@media(max-width:768px){
+
+    .messages-container{
+
+        left:15px;
+        right:15px;
+
+        top:85px;
+
+    }
+
+    .message{
+
+        min-width:100%;
+
+    }
+
+}

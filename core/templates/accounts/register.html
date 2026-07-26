@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+ثبت نام | کافه رستوران
+{% endblock %}
+
+{% block css %}
+
+<link rel="stylesheet" href="{% static 'css/accounts/register.css' %}">
+
+{% endblock %}
+
+{% block content %}
+
+<section class="register-section">
+
+    <div class="register-card">
+
+        <div class="register-header">
+
+            <h1>ایجاد حساب کاربری</h1>
+
+            <p>
+                برای استفاده از امکانات کافه رستوران، حساب کاربری خود را ایجاد کنید.
+            </p>
+
+        </div>
+
+        <form method="post" novalidate>
+
+            {% csrf_token %}
+
+            <div class="form-group">
+
+                <label for="{{ form.first_name.id_for_label }}">
+                    نام
+                </label>
+
+                {{ form.first_name }}
+
+                {% if form.first_name.errors %}
+                    <small>{{ form.first_name.errors.0 }}</small>
+                {% endif %}
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="{{ form.last_name.id_for_label }}">
+                    نام خانوادگی
+                </label>
+
+                {{ form.last_name }}
+
+                {% if form.last_name.errors %}
+                    <small>{{ form.last_name.errors.0 }}</small>
+                {% endif %}
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="{{ form.email.id_for_label }}">
+                    ایمیل
+                </label>
+
+                {{ form.email }}
+
+                {% if form.email.errors %}
+                    <small>{{ form.email.errors.0 }}</small>
+                {% endif %}
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="{{ form.password1.id_for_label }}">
+                    رمز عبور
+                </label>
+
+                {{ form.password1 }}
+
+                {% if form.password1.errors %}
+                    <small>{{ form.password1.errors.0 }}</small>
+                {% endif %}
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="{{ form.password2.id_for_label }}">
+                    تکرار رمز عبور
+                </label>
+
+                {{ form.password2 }}
+
+                {% if form.password2.errors %}
+                    <small>{{ form.password2.errors.0 }}</small>
+                {% endif %}
+
+            </div>
+
+            {% if form.non_field_errors %}
+
+                <div class="form-errors">
+
+                    {{ form.non_field_errors }}
+
+                </div>
+
+            {% endif %}
+
+            <button type="submit" class="register-btn">
+
+                ثبت نام
+
+            </button>
+
+        </form>
+
+        <div class="register-links">
+
+            <span>
+                قبلاً ثبت نام کرده‌اید؟
+            </span>
+
+            <a href="{% url 'accounts:login' %}">
+                ورود
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+{% block js %}
+
+<script src="{% static 'js/accounts/register.js' %}"></script>
+
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+پروفایل | کافه رستوران
+{% endblock %}
+
+{% block css %}
+
+<link rel="stylesheet" href="{% static 'css/accounts/profile.css' %}">
+
+{% endblock %}
+
+{% block content %}
+
+<section class="profile-section">
+
+    <div class="profile-card">
+
+        <div class="profile-header">
+
+            <div class="profile-avatar">
+
+                <i class="bi bi-person-circle"></i>
+
+            </div>
+
+            <div class="profile-info">
+
+                <h1>
+
+                    {{ user.first_name }} {{ user.last_name }}
+
+                </h1>
+
+                <p>
+
+                    {{ user.email }}
+
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="profile-body">
+
+            <div class="profile-item">
+
+                <span>نام</span>
+
+                <strong>{{ user.first_name }}</strong>
+
+            </div>
+
+            <div class="profile-item">
+
+                <span>نام خانوادگی</span>
+
+                <strong>{{ user.last_name }}</strong>
+
+            </div>
+
+            <div class="profile-item">
+
+                <span>ایمیل</span>
+
+                <strong>{{ user.email }}</strong>
+
+            </div>
+
+            <div class="profile-item">
+
+                <span>تاریخ عضویت</span>
+
+                <strong>{{ user.created_at|date:"Y/m/d" }}</strong>
+
+            </div>
+
+        </div>
+
+        <div class="profile-actions">
+
+            <a href="{% url 'accounts:profile_update' %}" class="btn-primary">
+
+                ویرایش پروفایل
+
+            </a>
+
+            <a href="{% url 'accounts:password_change' %}" class="btn-secondary">
+
+                تغییر رمز عبور
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+{% block js %}
+
+<script src="{% static 'js/accounts/profile.js' %}"></script>
+
+{% endblock %}

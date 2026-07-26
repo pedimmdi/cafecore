@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.forms import ModelForm
 
@@ -18,7 +19,7 @@ class RegisterForm(UserCreationForm):
 
 
 class LoginForm(AuthenticationForm):
-    pass
+    username = forms.EmailField()
 
 
 class ProfileUpdateForm(ModelForm):

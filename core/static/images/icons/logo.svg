@@ -1,0 +1,37 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+
+    <defs>
+
+        <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#F8D774"></stop>
+            <stop offset="100%" stop-color="#C28A20"></stop>
+        </linearGradient>
+
+    </defs>
+
+    <circle cx="256" cy="256" r="220" fill="#171717" stroke="url(#gold)" stroke-width="14"></circle>
+
+    <path d="M165 180
+           H347
+           V205
+           H330
+           V255
+           C330 325 300 360 256 360
+           C212 360 182 325 182 255
+           V205
+           H165
+           Z" fill="url(#gold)"></path>
+
+    <path d="M347 215
+           C390 215 390 285 347 285" fill="none" stroke="url(#gold)" stroke-width="18" stroke-linecap="round"></path>
+
+    <path d="M230 145
+           C215 125 220 105 240 85" fill="none" stroke="#E8C75F" stroke-width="12" stroke-linecap="round"></path>
+
+    <path d="M256 135
+           C242 112 248 90 268 70" fill="none" stroke="#FFD66E" stroke-width="12" stroke-linecap="round"></path>
+
+    <path d="M282 145
+           C270 125 275 105 295 85" fill="none" stroke="#E8C75F" stroke-width="12" stroke-linecap="round"></path>
+
+</svg>
