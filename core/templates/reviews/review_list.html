@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+Reviews | Cafe Restaurant
+{% endblock %}
+
+{% block css %}
+
+<link rel="stylesheet" href="{% static 'css/reviews/review.css' %}">
+
+{% endblock %}
+
+{% block content %}
+
+<section class="review-list-page">
+
+    <div class="container">
+
+        <div class="section-header">
+
+            <span class="section-badge">
+
+                Reviews
+
+            </span>
+
+            <h1>
+
+                Customer Reviews
+
+            </h1>
+
+            <p>
+
+                Read what customers think about this product.
+
+            </p>
+
+        </div>
+
+        <div class="product-card">
+
+            {% if product.image %}
+
+                <img
+                    src="{{ product.image.url }}"
+                    alt="{{ product.name }}"
+                >
+
+            {% endif %}
+
+            <div class="product-info">
+
+                <h2>
+
+                    {{ product.name }}
+
+                </h2>
+
+                <p>
+
+                    {{ product.description }}
+
+                </p>
+
+            </div>
+
+        </div>
+
+        {% if reviews %}
+
+            <div class="reviews-grid">
+
+                {% for review in reviews %}
+
+                    <div class="review-card">
+
+                        <div class="review-header">
+
+                            <h3>
+
+                                {{ review.user.first_name }}
+                                {{ review.user.last_name }}
+
+                            </h3>
+
+                            <span>
+
+                                {{ review.created_at|date:"M d, Y" }}
+
+                            </span>
+
+                        </div>
+
+                        <div class="review-rating">
+
+                            Rating:
+                            {{ review.rating }}/5
+
+                        </div>
+
+                        <p>
+
+                            {{ review.comment }}
+
+                        </p>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="empty-review">
+
+                <h3>
+
+                    No reviews yet.
+
+                </h3>
+
+                <p>
+
+                    Be the first person to write a review.
+
+                </p>
+
+            </div>
+
+        {% endif %}
+
+        {% if user.is_authenticated %}
+
+            <div class="review-action">
+
+                <a
+                    href="{% url 'reviews:review_create' product.slug %}"
+                    class="review-btn">
+
+                    Write a Review
+
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+{% block js %}
+
+<script src="{% static 'js/reviews/review.js' %}"></script>
+
+{% endblock %}

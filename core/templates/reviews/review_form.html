@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+Write Review | Cafe Restaurant
+{% endblock %}
+
+{% block css %}
+
+<link rel="stylesheet" href="{% static 'css/reviews/review.css' %}">
+
+{% endblock %}
+
+{% block content %}
+
+<section class="review-page">
+
+    <div class="container">
+
+        <div class="section-header">
+
+            <span class="section-badge">
+
+                Review
+
+            </span>
+
+            <h1>
+
+                Write Your Review
+
+            </h1>
+
+            <p>
+
+                Share your experience about this product.
+
+            </p>
+
+        </div>
+
+        <div class="review-wrapper">
+
+            <div class="product-summary">
+
+                {% if product.image %}
+
+                    <img
+                        src="{{ product.image.url }}"
+                        alt="{{ product.name }}"
+                    >
+
+                {% endif %}
+
+                <h2>
+
+                    {{ product.name }}
+
+                </h2>
+
+                <p>
+
+                    {{ product.description }}
+
+                </p>
+
+            </div>
+
+            <form
+                method="post"
+                class="review-form">
+
+                {% csrf_token %}
+
+                <div class="form-group">
+
+                    <label for="{{ form.rating.id_for_label }}">
+
+                        Rating
+
+                    </label>
+
+                    {{ form.rating }}
+
+                    {{ form.rating.errors }}
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="{{ form.comment.id_for_label }}">
+
+                        Comment
+
+                    </label>
+
+                    {{ form.comment }}
+
+                    {{ form.comment.errors }}
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="review-btn">
+
+                    Submit Review
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+{% block js %}
+
+<script src="{% static 'js/reviews/review.js' %}"></script>
+
+{% endblock %}

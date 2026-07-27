@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'menu',
     'orders',
     'reservations',
+    "reviews",
 ]
 
 
