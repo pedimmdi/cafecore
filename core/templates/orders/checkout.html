@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+ثبت سفارش | کافه رستوران
+{% endblock %}
+
+{% block css %}
+
+<link rel="stylesheet" href="{% static 'css/orders/checkout.css' %}">
+
+{% endblock %}
+
+{% block content %}
+
+<section class="checkout-page">
+
+    <div class="container">
+
+        <div class="section-header">
+
+            <span class="section-badge">
+
+                Checkout
+
+            </span>
+
+            <h1>
+
+                ثبت سفارش
+
+            </h1>
+
+        </div>
+
+        <div class="checkout-wrapper">
+
+            <form
+                method="post"
+                class="checkout-form">
+
+                {% csrf_token %}
+
+                <div class="form-group">
+
+                    <label for="{{ form.first_name.id_for_label }}">
+
+                        نام
+
+                    </label>
+
+                    {{ form.first_name }}
+
+                    {{ form.first_name.errors }}
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="{{ form.last_name.id_for_label }}">
+
+                        نام خانوادگی
+
+                    </label>
+
+                    {{ form.last_name }}
+
+                    {{ form.last_name.errors }}
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="{{ form.email.id_for_label }}">
+
+                        ایمیل
+
+                    </label>
+
+                    {{ form.email }}
+
+                    {{ form.email.errors }}
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="{{ form.phone_number.id_for_label }}">
+
+                        شماره تماس
+
+                    </label>
+
+                    {{ form.phone_number }}
+
+                    {{ form.phone_number.errors }}
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="{{ form.address.id_for_label }}">
+
+                        آدرس
+
+                    </label>
+
+                    {{ form.address }}
+
+                    {{ form.address.errors }}
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="{{ form.description.id_for_label }}">
+
+                        توضیحات
+
+                    </label>
+
+                    {{ form.description }}
+
+                    {{ form.description.errors }}
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="checkout-btn">
+
+                    ثبت نهایی سفارش
+
+                </button>
+
+            </form>
+
+            <aside class="order-summary">
+
+                <h2>
+
+                    خلاصه سفارش
+
+                </h2>
+
+                {% for item in cart %}
+
+                <div class="summary-item">
+
+                    <span>
+
+                        {{ item.product.name }}
+
+                    </span>
+
+                    <strong>
+
+                        {{ item.quantity }}
+
+                        ×
+
+                        {{ item.price }}
+
+                    </strong>
+
+                </div>
+
+                {% empty %}
+
+                <p>
+
+                    سبد خرید خالی است.
+
+                </p>
+
+                {% endfor %}
+
+                <hr>
+
+                <div class="summary-total">
+
+                    <span>
+
+                        مبلغ کل
+
+                    </span>
+
+                    <strong>
+
+                        {{ cart.get_total_price }}
+
+                        تومان
+
+                    </strong>
+
+                </div>
+
+            </aside>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+{% block js %}
+
+<script src="{% static 'js/orders/checkout.js' %}"></script>
+
+{% endblock %}

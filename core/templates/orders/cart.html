@@ -1,0 +1,250 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+سبد خرید | کافه رستوران
+{% endblock %}
+
+{% block css %}
+
+<link rel="stylesheet" href="{% static 'css/orders/cart.css' %}">
+
+{% endblock %}
+
+{% block content %}
+
+<section class="cart-page">
+
+    <div class="container">
+
+        <div class="section-header">
+
+            <span class="section-badge">
+
+                Cart
+
+            </span>
+
+            <h1>
+
+                سبد خرید
+
+            </h1>
+
+        </div>
+
+        {% if cart %}
+
+        <div class="cart-wrapper">
+
+            <div class="cart-items">
+
+                {% for item in cart %}
+
+                <article class="cart-item">
+
+                    <div class="cart-image">
+
+                        {% if item.product.image %}
+
+                        <img
+                            src="{{ item.product.image.url }}"
+                            alt="{{ item.product.name }}">
+
+                        {% else %}
+
+                        <img
+                            src="{% static 'images/menu/default-product.jpg' %}"
+                            alt="{{ item.product.name }}">
+
+                        {% endif %}
+
+                    </div>
+
+                    <div class="cart-content">
+
+                        <h3>
+
+                            {{ item.product.name }}
+
+                        </h3>
+
+                        <p>
+
+                            {{ item.product.category.name }}
+
+                        </p>
+
+                    </div>
+
+                    <div class="cart-price">
+
+                        {{ item.price }} تومان
+
+                    </div>
+
+                    <div class="cart-quantity">
+
+                        <form
+                            method="post"
+                            action="{% url 'orders:cart_update' item.product.id %}"
+                            class="quantity-form">
+
+                            {% csrf_token %}
+
+                            <input
+                                type="number"
+                                name="quantity"
+                                value="{{ item.quantity }}"
+                                min="1">
+
+                            <button type="submit">
+
+                                بروزرسانی
+
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                    <div class="cart-total">
+
+                        {{ item.total_price }} تومان
+
+                    </div>
+
+                    <div class="cart-remove">
+
+                        <form
+                            method="post"
+                            action="{% url 'orders:cart_remove' item.product.id %}">
+
+                            {% csrf_token %}
+
+                            <button
+                                type="submit"
+                                class="remove-btn">
+
+                                <i class="bi bi-trash3"></i>
+
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </article>
+
+                {% empty %}
+
+                <div class="empty-cart">
+
+                    <i class="bi bi-cart-x"></i>
+
+                    <h2>
+
+                        سبد خرید شما خالی است.
+
+                    </h2>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+            <aside class="cart-summary">
+
+                <h2>
+
+                    خلاصه سفارش
+
+                </h2>
+
+                <div class="summary-row">
+
+                    <span>
+
+                        تعداد آیتم‌ها
+
+                    </span>
+
+                    <strong>
+
+                        {{ cart|length }}
+
+                    </strong>
+
+                </div>
+
+                <div class="summary-row">
+
+                    <span>
+
+                        مبلغ کل
+
+                    </span>
+
+                    <strong>
+
+                        {{ cart.get_total_price }} تومان
+
+                    </strong>
+
+                </div>
+
+                <form
+                    method="get"
+                    action="{% url 'orders:checkout' %}">
+
+                    <button
+                        type="submit"
+                        class="checkout-btn">
+
+                        ادامه فرآیند سفارش
+
+                    </button>
+
+                </form>
+
+            </aside>
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-cart">
+
+            <i class="bi bi-cart-x"></i>
+
+            <h2>
+
+                سبد خرید شما خالی است.
+
+            </h2>
+
+            <a
+                href="{% url 'menu:product_list' %}"
+                class="shop-btn">
+
+                مشاهده منو
+
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+{% block js %}
+
+<script src="{% static 'js/orders/cart.js' %}"></script>
+
+{% endblock %}

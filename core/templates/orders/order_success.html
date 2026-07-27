@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+سفارش با موفقیت ثبت شد | کافه رستوران
+{% endblock %}
+
+{% block css %}
+
+<link rel="stylesheet" href="{% static 'css/orders/order_success.css' %}">
+
+{% endblock %}
+
+{% block content %}
+
+<section class="success-page">
+
+    <div class="container">
+
+        <div class="success-card">
+
+            <i class="bi bi-check-circle-fill"></i>
+
+            <h1>
+
+                سفارش شما با موفقیت ثبت شد.
+
+            </h1>
+
+            <p>
+
+                از اعتماد شما سپاسگزاریم.
+
+                سفارش شما دریافت شد و در سریع‌ترین زمان ممکن بررسی خواهد شد.
+
+            </p>
+
+            <div class="success-actions">
+
+                <a
+                        href="{% url 'menu:product_list' %}"
+                        class="btn-primary">
+
+                    بازگشت به منو
+
+                </a>
+
+                <a
+                        href="{% url 'pages:home' %}"
+                        class="btn-secondary">
+
+                    صفحه اصلی
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+{% block js %}
+
+<script src="{% static 'js/orders/order_success.js' %}"></script>
+
+{% endblock %}
