@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+رزرو با موفقیت ثبت شد | کافه رستوران
+{% endblock %}
+
+{% block css %}
+
+<link rel="stylesheet" href="{% static 'css/reservations/reservation_success.css' %}">
+
+{% endblock %}
+
+{% block content %}
+
+<section class="reservation-success-page">
+
+    <div class="container">
+
+        <div class="success-card">
+
+            <i class="bi bi-calendar-check-fill"></i>
+
+            <h1>
+
+                درخواست رزرو شما با موفقیت ثبت شد.
+
+            </h1>
+
+            <p>
+
+                از انتخاب کافه رستوران ما سپاسگزاریم.
+
+                درخواست رزرو شما دریافت شد و پس از بررسی توسط مدیریت،
+                نتیجه از طریق اطلاعات تماس ثبت شده به شما اطلاع داده خواهد شد.
+
+            </p>
+
+            <div class="success-actions">
+
+                <a
+                    href="{% url 'pages:home' %}"
+                    class="btn-primary">
+
+                    بازگشت به صفحه اصلی
+
+                </a>
+
+                <a
+                    href="{% url 'menu:product_list' %}"
+                    class="btn-secondary">
+
+                    مشاهده منو
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+{% block js %}
+
+<script src="{% static 'js/reservations/reservation_success.js' %}"></script>
+
+{% endblock %}
