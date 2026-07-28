@@ -18,29 +18,34 @@
 
     <div class="profile-update-card">
 
-        <div class="profile-update-header">
+        <h1>
 
-            <h1>
+            ویرایش پروفایل
 
-                ویرایش پروفایل
+        </h1>
 
-            </h1>
-
-            <p>
-
-                اطلاعات حساب کاربری خود را به‌روزرسانی کنید.
-
-            </p>
-
-        </div>
-
-        <form method="post" novalidate>
+        <form
+            method="post"
+            enctype="multipart/form-data"
+        >
 
             {% csrf_token %}
 
             <div class="form-group">
 
-                <label for="{{ form.first_name.id_for_label }}">
+                <label>
+
+                    تصویر پروفایل
+
+                </label>
+
+                {{ form.avatar }}
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
 
                     نام
 
@@ -48,15 +53,11 @@
 
                 {{ form.first_name }}
 
-                {% if form.first_name.errors %}
-                    <small>{{ form.first_name.errors.0 }}</small>
-                {% endif %}
-
             </div>
 
             <div class="form-group">
 
-                <label for="{{ form.last_name.id_for_label }}">
+                <label>
 
                     نام خانوادگی
 
@@ -64,15 +65,11 @@
 
                 {{ form.last_name }}
 
-                {% if form.last_name.errors %}
-                    <small>{{ form.last_name.errors.0 }}</small>
-                {% endif %}
-
             </div>
 
             <div class="form-group">
 
-                <label for="{{ form.email.id_for_label }}">
+                <label>
 
                     ایمیل
 
@@ -80,27 +77,53 @@
 
                 {{ form.email }}
 
-                {% if form.email.errors %}
-                    <small>{{ form.email.errors.0 }}</small>
-                {% endif %}
+            </div>
+
+            <div class="form-group">
+
+                <label>
+
+                    شماره تماس
+
+                </label>
+
+                {{ form.phone_number }}
 
             </div>
 
-            {% if form.non_field_errors %}
+            <div class="form-group">
 
-                <div class="form-errors">
+                <label>
 
-                    {{ form.non_field_errors }}
+                    تاریخ تولد
 
-                </div>
+                </label>
 
-            {% endif %}
+                {{ form.date_of_birth }}
 
-            <button type="submit" class="update-btn">
+            </div>
 
-                ذخیره تغییرات
+            <div class="form-actions">
 
-            </button>
+                <button
+                    type="submit"
+                    class="btn-primary"
+                >
+
+                    ذخیره تغییرات
+
+                </button>
+
+                <a
+                    href="{% url 'accounts:profile' %}"
+                    class="btn-secondary"
+                >
+
+                    بازگشت
+
+                </a>
+
+            </div>
 
         </form>
 

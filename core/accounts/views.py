@@ -12,6 +12,10 @@ from django.views.generic import UpdateView
 
 from .forms import RegisterForm, ProfileUpdateForm, LoginForm
 from .models import User
+from orders.models import Order
+from reservations.models import Reservation
+from reviews.models import Review
+from payments.models import Payment
 
 
 class RegisterView(View):
@@ -48,7 +52,13 @@ class ProfileView(LoginRequiredMixin, View):
     template_name = "accounts/profile.html"
 
     def get(self, request, *args, **kwargs):
-        context = {'user':request.user}
+        context = {
+            "user": request.user,
+            "orders": Order.objects.filter(user=request.user),
+            "reservations": Reservation.objects.filter(user=request.user),
+            "reviews": Review.objects.filter(user=request.user),
+            "payments": Payment.objects.filter(order__user=request.user),
+        }
         return render(request, self.template_name, context)
 
 
@@ -66,7 +76,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class CustomPasswordChangeView(PasswordChangeView):
+class CustomPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
     template_name = 'accounts/password_change.html'
     success_url = reverse_lazy('accounts:password_change_done')
 

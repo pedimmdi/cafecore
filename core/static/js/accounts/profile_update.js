@@ -2,24 +2,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const form = document.querySelector("form");
 
-    if (!form) return;
+    const submitButton = document.querySelector(".btn-primary");
 
-    const firstNameInput = form.querySelector('[name="first_name"]');
+    if (!form || !submitButton) {
 
-    if (firstNameInput) {
-        firstNameInput.focus();
+        return;
+
     }
 
     form.addEventListener("submit", () => {
 
-        const submitButton = form.querySelector(".update-btn");
+        submitButton.disabled = true;
 
-        if (submitButton) {
-
-            submitButton.disabled = true;
-            submitButton.textContent = "در حال ذخیره...";
-
-        }
+        submitButton.textContent = "در حال ذخیره...";
 
     });
 

@@ -22,7 +22,18 @@
 
             <div class="profile-avatar">
 
-                <i class="bi bi-person-circle"></i>
+                {% if user.avatar %}
+
+                    <img
+                        src="{{ user.avatar.url }}"
+                        alt="{{ user.first_name }}"
+                    >
+
+                {% else %}
+
+                    <i class="bi bi-person-circle"></i>
+
+                {% endif %}
 
             </div>
 
@@ -72,9 +83,81 @@
 
             <div class="profile-item">
 
+                <span>شماره تماس</span>
+
+                <strong>
+
+                    {{ user.phone_number|default:"ثبت نشده" }}
+
+                </strong>
+
+            </div>
+
+            <div class="profile-item">
+
+                <span>تاریخ تولد</span>
+
+                <strong>
+
+                    {% if user.date_of_birth %}
+
+                        {{ user.date_of_birth|date:"Y/m/d" }}
+
+                    {% else %}
+
+                        ثبت نشده
+
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+            <div class="profile-item">
+
                 <span>تاریخ عضویت</span>
 
-                <strong>{{ user.created_at|date:"Y/m/d" }}</strong>
+                <strong>
+
+                    {{ user.created_at|date:"Y/m/d" }}
+
+                </strong>
+
+            </div>
+
+        </div>
+
+        <div class="profile-stats">
+
+            <div class="stat-card">
+
+                <h3>{{ orders.count }}</h3>
+
+                <p>سفارش‌ها</p>
+
+            </div>
+
+            <div class="stat-card">
+
+                <h3>{{ reservations.count }}</h3>
+
+                <p>رزروها</p>
+
+            </div>
+
+            <div class="stat-card">
+
+                <h3>{{ reviews.count }}</h3>
+
+                <p>نظرات</p>
+
+            </div>
+
+            <div class="stat-card">
+
+                <h3>{{ payments.count }}</h3>
+
+                <p>پرداخت‌ها</p>
 
             </div>
 
@@ -82,17 +165,147 @@
 
         <div class="profile-actions">
 
-            <a href="{% url 'accounts:profile_update' %}" class="btn-primary">
+            <a
+                href="{% url 'accounts:profile_update' %}"
+                class="btn-primary"
+            >
 
                 ویرایش پروفایل
 
             </a>
 
-            <a href="{% url 'accounts:password_change' %}" class="btn-secondary">
+            <a
+                href="{% url 'accounts:password_change' %}"
+                class="btn-secondary"
+            >
 
                 تغییر رمز عبور
 
             </a>
+
+        </div>
+
+    </div>
+
+    <div class="dashboard-section">
+
+        <div class="dashboard-card">
+
+            <h2>آخرین سفارش‌ها</h2>
+
+            {% if orders %}
+
+                <ul>
+
+                    {% for order in orders|slice:":5" %}
+
+                        <li>
+
+                            سفارش #{{ order.id }}
+
+                        </li>
+
+                    {% endfor %}
+
+                </ul>
+
+            {% else %}
+
+                <p>هنوز سفارشی ثبت نشده است.</p>
+
+            {% endif %}
+
+        </div>
+
+        <div class="dashboard-card">
+
+            <h2>آخرین رزروها</h2>
+
+            {% if reservations %}
+
+                <ul>
+
+                    {% for reservation in reservations|slice:":5" %}
+
+                        <li>
+
+                            {{ reservation.date }}
+                            -
+                            {{ reservation.time }}
+
+                        </li>
+
+                    {% endfor %}
+
+                </ul>
+
+            {% else %}
+
+                <p>هنوز رزروی ثبت نشده است.</p>
+
+            {% endif %}
+
+        </div>
+
+        <div class="dashboard-card">
+
+            <h2>آخرین نظرات</h2>
+
+            {% if reviews %}
+
+                <ul>
+
+                    {% for review in reviews|slice:":5" %}
+
+                        <li>
+
+                            {{ review.product.name }}
+
+                            ({{ review.rating }}/5)
+
+                        </li>
+
+                    {% endfor %}
+
+                </ul>
+
+            {% else %}
+
+                <p>هنوز نظری ثبت نشده است.</p>
+
+            {% endif %}
+
+        </div>
+
+        <div class="dashboard-card">
+
+            <h2>آخرین پرداخت‌ها</h2>
+
+            {% if payments %}
+
+                <ul>
+
+                    {% for payment in payments|slice:":5" %}
+
+                        <li>
+
+                            {{ payment.amount }}
+
+                            -
+
+                            {{ payment.get_status_display }}
+
+                        </li>
+
+                    {% endfor %}
+
+                </ul>
+
+            {% else %}
+
+                <p>هنوز پرداختی انجام نشده است.</p>
+
+            {% endif %}
 
         </div>
 

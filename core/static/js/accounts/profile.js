@@ -1,18 +1,36 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-    const profileActions = document.querySelectorAll(".profile-actions a");
+    const statCards = document.querySelectorAll(".stat-card");
 
-    profileActions.forEach(button => {
+    statCards.forEach((card) => {
 
-        button.addEventListener("mouseenter", () => {
+        card.addEventListener("mouseenter", () => {
 
-            button.style.transform = "translateY(-2px)";
+            card.style.transform = "translateY(-6px)";
 
         });
 
-        button.addEventListener("mouseleave", () => {
+        card.addEventListener("mouseleave", () => {
 
-            button.style.transform = "translateY(0)";
+            card.style.transform = "translateY(0)";
+
+        });
+
+    });
+
+    const dashboardItems = document.querySelectorAll(".dashboard-card li");
+
+    dashboardItems.forEach((item) => {
+
+        item.addEventListener("mouseenter", () => {
+
+            item.style.paddingLeft = "10px";
+
+        });
+
+        item.addEventListener("mouseleave", () => {
+
+            item.style.paddingLeft = "0";
 
         });
 
