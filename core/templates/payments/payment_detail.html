@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+Payment | Cafe Restaurant
+{% endblock %}
+
+{% block css %}
+
+<link rel="stylesheet" href="{% static 'css/payments/payment.css' %}">
+
+{% endblock %}
+
+{% block content %}
+
+<section class="payment-page">
+
+    <div class="container">
+
+        <div class="payment-card">
+
+            {% if payment.status == "pending" %}
+
+                <div class="payment-icon pending">
+
+                    ⏳
+
+                </div>
+
+                <h1>
+
+                    Payment Pending
+
+                </h1>
+
+                <p>
+
+                    Your payment request has been created.
+                    Please continue to the payment gateway to complete your payment.
+
+                </p>
+
+            {% elif payment.status == "success" %}
+
+                <div class="payment-icon success">
+
+                    ✅
+
+                </div>
+
+                <h1>
+
+                    Payment Successful
+
+                </h1>
+
+                <p>
+
+                    Thank you!
+                    Your payment has been completed successfully.
+
+                </p>
+
+            {% else %}
+
+                <div class="payment-icon failed">
+
+                    ❌
+
+                </div>
+
+                <h1>
+
+                    Payment Failed
+
+                </h1>
+
+                <p>
+
+                    Unfortunately your payment was unsuccessful.
+                    Please try again.
+
+                </p>
+
+            {% endif %}
+
+            <div class="payment-information">
+
+                <div class="info-row">
+
+                    <span>
+
+                        Order ID
+
+                    </span>
+
+                    <strong>
+
+                        #{{ payment.order.id }}
+
+                    </strong>
+
+                </div>
+
+                <div class="info-row">
+
+                    <span>
+
+                        Authority
+
+                    </span>
+
+                    <strong>
+
+                        {{ payment.authority }}
+
+                    </strong>
+
+                </div>
+
+                <div class="info-row">
+
+                    <span>
+
+                        Amount
+
+                    </span>
+
+                    <strong>
+
+                        ${{ payment.amount }}
+
+                    </strong>
+
+                </div>
+
+                <div class="info-row">
+
+                    <span>
+
+                        Reference ID
+
+                    </span>
+
+                    <strong>
+
+                        {{ payment.ref_id|default:"-" }}
+
+                    </strong>
+
+                </div>
+
+                <div class="info-row">
+
+                    <span>
+
+                        Status
+
+                    </span>
+
+                    <strong>
+
+                        {{ payment.get_status_display }}
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+            <div class="payment-actions">
+
+                {% if payment.status == "pending" %}
+
+                    <a
+                        href="#"
+                        class="btn-primary">
+
+                        Go To Payment Gateway
+
+                    </a>
+
+                {% endif %}
+
+                <a
+                    href="{% url 'pages:home' %}"
+                    class="btn-secondary">
+
+                    Back To Home
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+{% block js %}
+
+<script src="{% static 'js/payments/payment.js' %}"></script>
+
+{% endblock %}
