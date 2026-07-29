@@ -7,7 +7,9 @@
 {% endblock %}
 
 {% block css %}
+
 <link rel="stylesheet" href="{% static 'css/pages/contact.css' %}">
+
 {% endblock %}
 
 {% block content %}
@@ -17,15 +19,21 @@
     <div class="contact-info">
 
         <span class="section-badge">
+
             ارتباط با ما
+
         </span>
 
         <h1>
+
             همیشه پاسخگوی شما هستیم
+
         </h1>
 
         <p>
-            اگر سوال، پیشنهاد یا انتقادی دارید از طریق اطلاعات زیر یا فرم تماس با ما در ارتباط باشید.
+
+            اگر سؤال، پیشنهاد یا انتقادی دارید، از طریق اطلاعات زیر یا فرم تماس با ما با ما در ارتباط باشید.
+
         </p>
 
         <div class="info-card">
@@ -34,9 +42,17 @@
 
             <div>
 
-                <h4>آدرس</h4>
+                <h4>
 
-                <span>تهران، خیابان نمونه، پلاک ۱۲۳</span>
+                    آدرس
+
+                </h4>
+
+                <span>
+
+                    تهران، خیابان نمونه، پلاک ۱۲۳
+
+                </span>
 
             </div>
 
@@ -48,9 +64,17 @@
 
             <div>
 
-                <h4>شماره تماس</h4>
+                <h4>
 
-                <span>021-12345678</span>
+                    شماره تماس
+
+                </h4>
+
+                <span>
+
+                    021-12345678
+
+                </span>
 
             </div>
 
@@ -62,9 +86,17 @@
 
             <div>
 
-                <h4>ایمیل</h4>
+                <h4>
 
-                <span>info@cafecore.ir</span>
+                    ایمیل
+
+                </h4>
+
+                <span>
+
+                    info@cafecore.ir
+
+                </span>
 
             </div>
 
@@ -76,9 +108,17 @@
 
             <div>
 
-                <h4>ساعات کاری</h4>
+                <h4>
 
-                <span>۸ صبح تا ۱۲ شب</span>
+                    ساعات کاری
+
+                </h4>
+
+                <span>
+
+                    همه روزه از ساعت ۸ صبح تا ۱۲ شب
+
+                </span>
 
             </div>
 
@@ -88,63 +128,86 @@
 
     <div class="contact-form">
 
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div class="alert-success">
+
+                    {{ message }}
+
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+        {% if form.errors %}
+
+            <div class="alert-error">
+
+                لطفاً خطاهای فرم را بررسی کنید.
+
+            </div>
+
+        {% endif %}
+
         <form method="post">
 
             {% csrf_token %}
 
             <div class="form-group">
 
-                <label for="name">
+                <label for="{{ form.name.id_for_label }}">
+
                     نام و نام خانوادگی
+
                 </label>
 
-                <input
-                        type="text"
-                        id="name"
-                        name="name">
+                {{ form.name }}
 
             </div>
 
             <div class="form-group">
 
-                <label for="email">
+                <label for="{{ form.email.id_for_label }}">
+
                     ایمیل
+
                 </label>
 
-                <input
-                        type="email"
-                        id="email"
-                        name="email">
+                {{ form.email }}
 
             </div>
 
             <div class="form-group">
 
-                <label for="subject">
+                <label for="{{ form.subject.id_for_label }}">
+
                     موضوع
+
                 </label>
 
-                <input
-                        type="text"
-                        id="subject"
-                        name="subject">
+                {{ form.subject }}
 
             </div>
 
             <div class="form-group">
 
-                <label for="message">
+                <label for="{{ form.message.id_for_label }}">
+
                     پیام
+
                 </label>
 
-                <textarea
-                        id="message"
-                        name="message"
-                        rows="6"></textarea>
+                {{ form.message }}
 
             </div>
 
-            <button type="submit">
+            <button
+                type="submit"
+                class="btn-primary"
+            >
 
                 ارسال پیام
 
@@ -160,7 +223,17 @@
 
     <div class="map-placeholder">
 
-        نقشه کافه در این قسمت نمایش داده خواهد شد.
+        <h2>
+
+            موقعیت کافه
+
+        </h2>
+
+        <p>
+
+            در آینده نقشه گوگل یا OpenStreetMap در این قسمت نمایش داده خواهد شد.
+
+        </p>
 
     </div>
 
@@ -169,5 +242,7 @@
 {% endblock %}
 
 {% block js %}
+
 <script src="{% static 'js/pages/contact.js' %}"></script>
+
 {% endblock %}
