@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+علاقه‌مندی‌ها | کافه رستوران
+{% endblock %}
+
+{% block css %}
+
+<link rel="stylesheet" href="{% static 'css/favorites/favorites.css' %}">
+
+{% endblock %}
+
+{% block content %}
+
+<section class="favorites">
+
+    <div class="favorites-header">
+
+        <span class="section-badge">
+
+            علاقه‌مندی‌ها
+
+        </span>
+
+        <h1>
+
+            محصولات مورد علاقه شما
+
+        </h1>
+
+        <p>
+
+            تمام محصولاتی که ذخیره کرده‌اید در این قسمت نمایش داده می‌شوند.
+
+        </p>
+
+    </div>
+
+    {% if favorites %}
+
+        <div class="favorites-grid">
+
+            {% for favorite in favorites %}
+
+                <div class="favorite-card">
+
+                    <div class="favorite-image">
+
+                        <img
+                            src="{{ favorite.product.image.url }}"
+                            alt="{{ favorite.product.name }}"
+                        >
+
+                    </div>
+
+                    <div class="favorite-body">
+
+                        <h3>
+
+                            {{ favorite.product.name }}
+
+                        </h3>
+
+                        <p>
+
+                            {{ favorite.product.price }} تومان
+
+                        </p>
+
+                    </div>
+
+                    <div class="favorite-actions">
+
+                        <a
+                            href="{% url 'menu:product_detail' favorite.product.id %}"
+                            class="btn-primary"
+                        >
+
+                            مشاهده محصول
+
+                        </a>
+
+                        <form
+                            method="post"
+                            action="{% url 'favorites:remove' favorite.product.id %}"
+                        >
+
+                            {% csrf_token %}
+
+                            <button
+                                type="submit"
+                                class="btn-danger"
+                            >
+
+                                حذف
+
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-favorites">
+
+            <i class="bi bi-heart"></i>
+
+            <h2>
+
+                هنوز محصولی به علاقه‌مندی‌ها اضافه نکرده‌اید.
+
+            </h2>
+
+            <a
+                href="{% url 'menu:menu' %}"
+                class="btn-primary"
+            >
+
+                مشاهده منو
+
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</section>
+
+{% endblock %}
+
+{% block js %}
+
+<script src="{% static 'js/favorites/favorites.js' %}"></script>
+
+{% endblock %}

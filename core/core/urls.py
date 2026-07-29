@@ -28,6 +28,7 @@ urlpatterns = [
     path("reservations/", include("reservations.urls")),
     path("reviews/", include("reviews.urls")),
     path("payments/", include("payments.urls")),
+    path("favorites/", include("favorites.urls")),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

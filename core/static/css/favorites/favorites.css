@@ -1,0 +1,261 @@
+.favorites {
+
+    max-width: 1400px;
+
+    margin: auto;
+
+    padding: 80px 40px;
+
+}
+
+.favorites-header {
+
+    text-align: center;
+
+    margin-bottom: 60px;
+
+}
+
+.section-badge {
+
+    display: inline-block;
+
+    padding: 8px 18px;
+
+    margin-bottom: 20px;
+
+    border-radius: 30px;
+
+    background: rgba(212, 175, 55, .15);
+
+    border: 1px solid rgba(212, 175, 55, .3);
+
+    color: #D4AF37;
+
+}
+
+.favorites-header h1 {
+
+    font-size: 2.8rem;
+
+    margin-bottom: 20px;
+
+}
+
+.favorites-header p {
+
+    color: #bdbdbd;
+
+    max-width: 700px;
+
+    margin: auto;
+
+    line-height: 2;
+
+}
+
+/* ==========================
+        Cards
+========================== */
+
+.favorites-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+
+    gap: 30px;
+
+}
+
+.favorite-card {
+
+    overflow: hidden;
+
+    border-radius: 22px;
+
+    background: rgba(255, 255, 255, .04);
+
+    border: 1px solid rgba(255, 255, 255, .08);
+
+    backdrop-filter: blur(12px);
+
+    transition: .3s;
+
+}
+
+.favorite-card:hover {
+
+    transform: translateY(-6px);
+
+}
+
+.favorite-image {
+
+    height: 220px;
+
+    overflow: hidden;
+
+}
+
+.favorite-image img {
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+    transition: .4s;
+
+}
+
+.favorite-card:hover img {
+
+    transform: scale(1.05);
+
+}
+
+.favorite-body {
+
+    padding: 20px;
+
+}
+
+.favorite-body h3 {
+
+    margin-bottom: 12px;
+
+}
+
+.favorite-body p {
+
+    color: #D4AF37;
+
+    font-weight: 700;
+
+    font-size: 1.1rem;
+
+}
+
+/* ==========================
+        Actions
+========================== */
+
+.favorite-actions {
+
+    display: flex;
+
+    gap: 12px;
+
+    padding: 0 20px 20px;
+
+}
+
+.favorite-actions a,
+
+.favorite-actions button {
+
+    flex: 1;
+
+    padding: 12px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    text-align: center;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition: .3s;
+
+    font-size: .95rem;
+
+    font-weight: 600;
+
+}
+
+.btn-primary {
+
+    background: #D4AF37;
+
+    color: #111111;
+
+}
+
+.btn-primary:hover {
+
+    background: #e6c14d;
+
+}
+
+.btn-danger {
+
+    background: #b42318;
+
+    color: #ffffff;
+
+}
+
+.btn-danger:hover {
+
+    background: #921b12;
+
+}
+
+/* ==========================
+      Empty State
+========================== */
+
+.empty-favorites {
+
+    text-align: center;
+
+    padding: 100px 20px;
+
+}
+
+.empty-favorites i {
+
+    font-size: 5rem;
+
+    color: #D4AF37;
+
+    margin-bottom: 25px;
+
+}
+
+.empty-favorites h2 {
+
+    margin-bottom: 30px;
+
+}
+
+/* ==========================
+      Responsive
+========================== */
+
+@media (max-width: 768px) {
+
+    .favorites {
+
+        padding: 60px 20px;
+
+    }
+
+    .favorites-header h1 {
+
+        font-size: 2rem;
+
+    }
+
+    .favorite-actions {
+
+        flex-direction: column;
+
+    }
+
+}
