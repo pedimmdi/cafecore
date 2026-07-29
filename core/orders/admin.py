@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Order, OrderItem
+from .models import Order, OrderItem, Coupon
 
 
 class OrderItemInline(admin.TabularInline):
@@ -52,3 +52,35 @@ class OrderItemAdmin(admin.ModelAdmin):
     list_display = ("order", "product", "quantity", "price", "total_price")
     search_fields = ("product__name", "order__id")
     autocomplete_fields = ("order", "product")
+
+
+@admin.register(Coupon)
+class CouponAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "code",
+        "discount",
+        "is_active",
+        "valid_from",
+        "valid_to",
+        "created_at",
+    )
+
+    list_filter = (
+        "is_active",
+        "valid_from",
+        "valid_to",
+    )
+
+    search_fields = (
+        "code",
+    )
+
+    ordering = (
+        "-created_at",
+    )
+
+    readonly_fields = (
+        "created_at",
+        "updated_at",
+    )

@@ -2,6 +2,8 @@ from decimal import Decimal
 
 from menu.models import Product
 
+from .models import Coupon
+
 
 class Cart:
 
@@ -18,6 +20,8 @@ class Cart:
             cart = self.session[self.SESSION_KEY] = {}
 
         self.cart = cart
+
+        self.coupon_id = self.session.get("coupon_id")
 
     def save(self):
 
@@ -102,7 +106,9 @@ class Cart:
 
             del self.session[self.SESSION_KEY]
 
-            self.save()
+        self.clear_coupon()
+
+        self.save()
 
     def __len__(self):
 
@@ -138,7 +144,9 @@ class Cart:
             item["price"] = Decimal(item["price"])
 
             item["total_price"] = (
+
                 item["price"] * item["quantity"]
+
             )
 
             yield item
@@ -152,6 +160,55 @@ class Cart:
             for item in self.cart.values()
 
         )
+
+    @property
+    def coupon(self):
+
+        if self.coupon_id:
+
+            try:
+
+                return Coupon.objects.get(
+                    id=self.coupon_id,
+                    is_active=True,
+                )
+
+            except Coupon.DoesNotExist:
+
+                return None
+
+        return None
+
+    def get_discount(self):
+
+        if self.coupon:
+
+            return (
+
+                self.get_total_price()
+
+                * Decimal(self.coupon.discount)
+
+                / Decimal("100")
+
+            )
+
+        return Decimal("0")
+
+    def get_final_price(self):
+
+        return self.get_total_price() - self.get_discount()
+
+    def clear_coupon(self):
+
+        self.session.pop(
+            "coupon_id",
+            None,
+        )
+
+        self.coupon_id = None
+
+        self.save()
 
     def is_empty(self):
 

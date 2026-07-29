@@ -4,6 +4,38 @@ from django.db import models
 from menu.models import Product
 
 
+class Coupon(models.Model):
+
+    code = models.CharField(
+        max_length=50,
+        unique=True,
+    )
+
+    discount = models.PositiveSmallIntegerField()
+
+    is_active = models.BooleanField(
+        default=True,
+    )
+
+    valid_from = models.DateTimeField()
+
+    valid_to = models.DateTimeField()
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True,
+    )
+
+    class Meta:
+        ordering = ("-created_at",)
+
+    def __str__(self):
+        return self.code
+
+
 class Order(models.Model):
 
     class Status(models.TextChoices):
@@ -23,6 +55,12 @@ class Order(models.Model):
     description = models.TextField(blank=True)
     status = models.CharField(
         max_length=20, choices=Status.choices, default=Status.PENDING
+    )
+    coupon = models.ForeignKey(
+        'Coupon', on_delete=models.SET_NULL, null=True, blank=True
+    )
+    discount = models.DecimalField(
+        max_digits=10, decimal_places=2, default=0
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

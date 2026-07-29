@@ -8,3 +8,9 @@ class CheckoutForm(forms.Form):
     phone_number = forms.CharField(max_length=20)
     address = forms.CharField()
     description = forms.CharField(required=False)
+
+
+class CouponApplyForm(forms.Form):
+    code = forms.CharField(
+        max_length=50,
+    )

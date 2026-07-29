@@ -6,13 +6,13 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.views.generic import View
+from django.utils import timezone
 
 from menu.models import Product
 
 from .cart import Cart
-from .forms import CheckoutForm
-from .models import Order
-from .models import OrderItem
+from .forms import CheckoutForm, CouponApplyForm
+from .models import Order, OrderItem, Coupon
 
 
 class CartDetailView(TemplateView):
@@ -248,6 +248,10 @@ class CheckoutView(LoginRequiredMixin, View):
 
             description=form.cleaned_data["description"],
 
+            coupon=cart.coupon,
+
+            discount=cart.get_discount(),
+
         )
 
         for item in cart:
@@ -291,3 +295,51 @@ class CheckoutView(LoginRequiredMixin, View):
 class OrderSuccessView(LoginRequiredMixin, TemplateView):
 
     template_name = "orders/order_success.html"
+
+
+class CouponApplyView(View):
+
+    def post(self, request):
+
+        form = CouponApplyForm(request.POST)
+
+        if not form.is_valid():
+
+            messages.error(
+                request,
+                "کد تخفیف معتبر نیست.",
+            )
+
+            return redirect("orders:cart")
+
+        code = form.cleaned_data["code"]
+
+        try:
+
+            coupon = Coupon.objects.get(
+                code__iexact=code,
+                is_active=True,
+                valid_from__lte=timezone.now(),
+                valid_to__gte=timezone.now(),
+            )
+
+            request.session["coupon_id"] = coupon.id
+
+            messages.success(
+                request,
+                "کد تخفیف با موفقیت اعمال شد.",
+            )
+
+        except Coupon.DoesNotExist:
+
+            request.session.pop(
+                "coupon_id",
+                None,
+            )
+
+            messages.error(
+                request,
+                "کد تخفیف نامعتبر یا منقضی شده است.",
+            )
+
+        return redirect("orders:cart")

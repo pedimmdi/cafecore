@@ -196,6 +196,94 @@
                 </div>
 
                 <form
+                    method="post"
+                    action="{% url 'orders:coupon_apply' %}"
+                    class="coupon-form">
+
+                    {% csrf_token %}
+
+                    <input
+                        type="text"
+                        name="code"
+                        placeholder="کد تخفیف">
+
+                    <button type="submit">
+
+                        اعمال کد
+
+                    </button>
+
+                </form>
+
+                {% if cart.coupon %}
+
+                <div class="summary-row">
+
+                    <span>
+
+                        کد تخفیف
+
+                    </span>
+
+                    <strong>
+
+                        {{ cart.coupon.code }}
+
+                    </strong>
+
+                </div>
+
+                <div class="summary-row">
+
+                    <span>
+
+                        میزان تخفیف
+
+                    </span>
+
+                    <strong>
+
+                        {{ cart.coupon.discount }}%
+
+                    </strong>
+
+                </div>
+
+                <div class="summary-row">
+
+                    <span>
+
+                        مبلغ تخفیف
+
+                    </span>
+
+                    <strong>
+
+                        - {{ cart.get_discount }} تومان
+
+                    </strong>
+
+                </div>
+
+                {% endif %}
+
+                <div class="summary-row total-price">
+
+                    <span>
+
+                        مبلغ نهایی
+
+                    </span>
+
+                    <strong>
+
+                        {{ cart.get_final_price }} تومان
+
+                    </strong>
+
+                </div>
+
+                <form
                     method="get"
                     action="{% url 'orders:checkout' %}">
 

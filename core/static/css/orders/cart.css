@@ -373,3 +373,107 @@
     transform: translateY(-2px);
 
 }
+
+/* ==========================
+        Coupon
+========================== */
+
+.coupon-form {
+
+    display: flex;
+
+    gap: 12px;
+
+    margin: 30px 0;
+
+}
+
+.coupon-form input {
+
+    flex: 1;
+
+    padding: 14px 18px;
+
+    border-radius: 12px;
+
+    border: 1px solid rgba(255,255,255,.08);
+
+    background: #181818;
+
+    color: #ffffff;
+
+    font-family: inherit;
+
+    transition: .3s;
+
+}
+
+.coupon-form input:focus {
+
+    outline: none;
+
+    border-color: #D4AF37;
+
+}
+
+.coupon-form button {
+
+    padding: 14px 24px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background: #D4AF37;
+
+    color: #111111;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: .3s;
+
+}
+
+.coupon-form button:hover {
+
+    background: #e6c14d;
+
+}
+
+.total-price {
+
+    margin-top: 20px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid rgba(255,255,255,.08);
+
+    font-size: 1.15rem;
+
+    font-weight: 700;
+
+}
+
+.total-price strong {
+
+    color: #D4AF37;
+
+}
+
+@media (max-width: 576px) {
+
+    .coupon-form {
+
+        flex-direction: column;
+
+    }
+
+    .coupon-form button {
+
+        width: 100%;
+
+    }
+
+}

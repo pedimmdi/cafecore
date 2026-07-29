@@ -7,6 +7,7 @@ from .views import (
     CartUpdateView,
     CheckoutView,
     OrderSuccessView,
+    CouponApplyView,
 )
 
 app_name = "orders"
@@ -20,6 +21,7 @@ urlpatterns = [
     path(
         "cart/update/<int:product_id>/", CartUpdateView.as_view(), name="cart_update"
     ),
+    path("coupon/apply/", CouponApplyView.as_view(), name="coupon_apply"),
     path("checkout/", CheckoutView.as_view(), name="checkout"),
     path("success/", OrderSuccessView.as_view(), name="success"),
 ]
