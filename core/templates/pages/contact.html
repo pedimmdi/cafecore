@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block title %}
-تماس با ما | کافه رستوران
+تماس با ما | {{ site_settings.site_name }}
 {% endblock %}
 
 {% block css %}
@@ -50,7 +50,7 @@
 
                 <span>
 
-                    تهران، خیابان نمونه، پلاک ۱۲۳
+                    {{ site_settings.address }}
 
                 </span>
 
@@ -72,7 +72,7 @@
 
                 <span>
 
-                    021-12345678
+                    {{ site_settings.phone_number }}
 
                 </span>
 
@@ -94,7 +94,7 @@
 
                 <span>
 
-                    info@cafecore.ir
+                    {{ site_settings.email }}
 
                 </span>
 
@@ -116,7 +116,7 @@
 
                 <span>
 
-                    همه روزه از ساعت ۸ صبح تا ۱۲ شب
+                    {{ site_settings.working_hours }}
 
                 </span>
 
@@ -225,7 +225,7 @@
 
         <h2>
 
-            موقعیت کافه
+            موقعیت {{ site_settings.site_name }}
 
         </h2>
 

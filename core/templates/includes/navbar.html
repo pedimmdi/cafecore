@@ -8,9 +8,27 @@
 
             <a href="{% url 'pages:home' %}" class="navbar-logo">
 
-                <img src="{% static 'images/icons/logo.svg' %}" alt="CafeCore Logo">
+                {% if site_settings.logo %}
 
-                <span>کافه رستوران</span>
+                    <img
+                        src="{{ site_settings.logo.url }}"
+                        alt="{{ site_settings.site_name }}"
+                    >
+
+                {% else %}
+
+                    <img
+                        src="{% static 'images/icons/logo.svg' %}"
+                        alt="{{ site_settings.site_name }}"
+                    >
+
+                {% endif %}
+
+                <span>
+
+                    {{ site_settings.site_name }}
+
+                </span>
 
             </a>
 
@@ -21,33 +39,53 @@
             <ul class="navbar-menu">
 
                 <li>
+
                     <a href="{% url 'pages:home' %}">
+
                         خانه
+
                     </a>
+
                 </li>
 
                 <li>
-                    <a href="#">
+
+                    <a href="{% url 'menu:product_list' %}">
+
                         منو
+
                     </a>
+
                 </li>
 
                 <li>
-                    <a href="#">
+
+                    <a href="{% url 'reservations:create' %}">
+
                         رزرو میز
+
                     </a>
+
                 </li>
 
                 <li>
-                    <a href="#">
+
+                    <a href="{% url 'pages:about' %}">
+
                         درباره ما
+
                     </a>
+
                 </li>
 
                 <li>
-                    <a href="#">
+
+                    <a href="{% url 'pages:contact' %}">
+
                         تماس با ما
+
                     </a>
+
                 </li>
 
             </ul>
@@ -62,13 +100,13 @@
 
             </button>
 
-            <a href="#" class="navbar-icon">
+            <a href="{% url 'favorites:list' %}" class="navbar-icon">
 
                 <i class="bi bi-heart"></i>
 
             </a>
 
-            <a href="#" class="navbar-icon">
+            <a href="{% url 'orders:cart' %}" class="navbar-icon">
 
                 <i class="bi bi-cart3"></i>
 
@@ -91,11 +129,15 @@
                 <div class="navbar-auth">
 
                     <a href="{% url 'accounts:login' %}">
+
                         ورود
+
                     </a>
 
                     <a href="{% url 'accounts:register' %}">
+
                         ثبت نام
+
                     </a>
 
                 </div>

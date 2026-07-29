@@ -8,42 +8,96 @@
 
             <a href="{% url 'pages:home' %}" class="footer-logo">
 
-                <img src="{% static 'images/icons/logo.svg' %}" alt="CafeCore Logo">
+                {% if site_settings.logo %}
 
-                <span>کافه رستوران</span>
+                    <img
+                        src="{{ site_settings.logo.url }}"
+                        alt="{{ site_settings.site_name }}"
+                    >
+
+                {% else %}
+
+                    <img
+                        src="{% static 'images/icons/logo.svg' %}"
+                        alt="{{ site_settings.site_name }}"
+                    >
+
+                {% endif %}
+
+                <span>
+
+                    {{ site_settings.site_name }}
+
+                </span>
 
             </a>
 
             <p>
-                تجربه‌ای متفاوت از طعم، کیفیت و آرامش در محیطی مدرن و دلنشین.
+
+                {{ site_settings.description }}
+
             </p>
 
         </div>
 
         <div class="footer-links">
 
-            <h3>دسترسی سریع</h3>
+            <h3>
+
+                دسترسی سریع
+
+            </h3>
 
             <ul>
 
                 <li>
-                    <a href="{% url 'pages:home' %}">خانه</a>
+
+                    <a href="{% url 'pages:home' %}">
+
+                        خانه
+
+                    </a>
+
                 </li>
 
                 <li>
-                    <a href="#">منو</a>
+
+                    <a href="{% url 'menu:product_list' %}">
+
+                        منو
+
+                    </a>
+
                 </li>
 
                 <li>
-                    <a href="#">رزرو میز</a>
+
+                    <a href="{% url 'reservations:create' %}">
+
+                        رزرو میز
+
+                    </a>
+
                 </li>
 
                 <li>
-                    <a href="#">درباره ما</a>
+
+                    <a href="{% url 'pages:about' %}">
+
+                        درباره ما
+
+                    </a>
+
                 </li>
 
                 <li>
-                    <a href="#">تماس با ما</a>
+
+                    <a href="{% url 'pages:contact' %}">
+
+                        تماس با ما
+
+                    </a>
+
                 </li>
 
             </ul>
@@ -52,23 +106,44 @@
 
         <div class="footer-contact">
 
-            <h3>اطلاعات تماس</h3>
+            <h3>
+
+                اطلاعات تماس
+
+            </h3>
 
             <ul>
 
                 <li>
+
                     <i class="bi bi-geo-alt"></i>
-                    تهران، ایران
+
+                    {{ site_settings.address }}
+
                 </li>
 
                 <li>
+
                     <i class="bi bi-telephone"></i>
-                    021-12345678
+
+                    {{ site_settings.phone_number }}
+
                 </li>
 
                 <li>
+
                     <i class="bi bi-envelope"></i>
-                    info@cafecore.ir
+
+                    {{ site_settings.email }}
+
+                </li>
+
+                <li>
+
+                    <i class="bi bi-clock"></i>
+
+                    {{ site_settings.working_hours }}
+
                 </li>
 
             </ul>
@@ -77,21 +152,69 @@
 
         <div class="footer-social">
 
-            <h3>شبکه‌های اجتماعی</h3>
+            <h3>
+
+                شبکه‌های اجتماعی
+
+            </h3>
 
             <div class="social-icons">
 
-                <a href="#">
-                    <i class="bi bi-instagram"></i>
-                </a>
+                {% if site_settings.instagram %}
 
-                <a href="#">
-                    <i class="bi bi-telegram"></i>
-                </a>
+                    <a
+                        href="{{ site_settings.instagram }}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
 
-                <a href="#">
-                    <i class="bi bi-whatsapp"></i>
-                </a>
+                        <i class="bi bi-instagram"></i>
+
+                    </a>
+
+                {% endif %}
+
+                {% if site_settings.telegram %}
+
+                    <a
+                        href="{{ site_settings.telegram }}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+
+                        <i class="bi bi-telegram"></i>
+
+                    </a>
+
+                {% endif %}
+
+                {% if site_settings.whatsapp %}
+
+                    <a
+                        href="{{ site_settings.whatsapp }}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+
+                        <i class="bi bi-whatsapp"></i>
+
+                    </a>
+
+                {% endif %}
+
+                {% if site_settings.linkedin %}
+
+                    <a
+                        href="{{ site_settings.linkedin }}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+
+                        <i class="bi bi-linkedin"></i>
+
+                    </a>
+
+                {% endif %}
 
             </div>
 
@@ -102,7 +225,11 @@
     <div class="footer-bottom">
 
         <p>
-            © 2026 تمامی حقوق برای کافه رستوران محفوظ است.
+
+            © {% now "Y" %} تمامی حقوق برای
+            {{ site_settings.site_name }}
+            محفوظ است.
+
         </p>
 
     </div>
