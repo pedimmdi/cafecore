@@ -29,6 +29,7 @@ urlpatterns = [
     path("reviews/", include("reviews.urls")),
     path("payments/", include("payments.urls")),
     path("favorites/", include("favorites.urls")),
+    path("dashboard/", include("dashboard.urls")),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

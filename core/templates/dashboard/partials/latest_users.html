@@ -1,0 +1,82 @@
+<div class="dashboard-card">
+
+    <div class="card-header">
+
+        <h2>
+
+            جدیدترین کاربران
+
+        </h2>
+
+        <a href="#">
+
+            مشاهده همه
+
+        </a>
+
+    </div>
+
+    <div class="users-grid">
+
+        {% for user in latest_users %}
+
+        <div class="user-card">
+
+            <div class="user-avatar">
+
+                <i class="bi bi-person-circle"></i>
+
+            </div>
+
+            <div class="user-info">
+
+                <h3>
+
+                    {% if user.first_name or user.last_name %}
+
+                        {{ user.first_name }} {{ user.last_name }}
+
+                    {% else %}
+
+                        بدون نام
+
+                    {% endif %}
+
+                </h3>
+
+                <p>
+
+                    {{ user.email }}
+
+                </p>
+
+                <span>
+
+                    عضویت:
+                    {{ user.date_joined|date:"Y/m/d" }}
+
+                </span>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="empty-state">
+
+            <i class="bi bi-people"></i>
+
+            <p>
+
+                هنوز کاربری ثبت نشده است.
+
+            </p>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>

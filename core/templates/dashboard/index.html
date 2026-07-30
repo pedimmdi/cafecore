@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+داشبورد | کافه رستوران
+{% endblock %}
+
+{% block css %}
+
+<link rel="stylesheet" href="{% static 'css/dashboard/dashboard.css' %}">
+
+{% endblock %}
+
+{% block content %}
+
+<section class="dashboard">
+
+    <div class="dashboard-container">
+
+        <div class="dashboard-header">
+
+            <div>
+
+                <h1>
+
+                    داشبورد مدیریت
+
+                </h1>
+
+                <p>
+
+                    نمای کلی از وضعیت کافه رستوران
+
+                </p>
+
+            </div>
+
+        </div>
+
+        {% include "dashboard/partials/statistics.html" %}
+
+        {% include "dashboard/partials/latest_orders.html" %}
+
+        {% include "dashboard/partials/latest_reservations.html" %}
+
+        {% include "dashboard/partials/latest_users.html" %}
+
+        {% include "dashboard/partials/latest_reviews.html" %}
+
+        {% include "dashboard/partials/low_inventory.html" %}
+
+        {% include "dashboard/partials/top_products.html" %}
+
+        <div class="dashboard-row">
+
+            {% include "dashboard/partials/revenue_chart.html" %}
+
+            {% include "dashboard/partials/orders_chart.html" %}
+
+        </div>
+
+        {% include "dashboard/partials/activity_timeline.html" %}
+
+    </div>
+
+</section>
+
+{{ orders_chart_labels|json_script:"orders-labels" }}
+
+{{ orders_chart_values|json_script:"orders-values" }}
+
+{{ revenue_chart_labels|json_script:"revenue-labels" }}
+
+{{ revenue_chart_values|json_script:"revenue-values" }}
+
+{% endblock %}
+
+{% block js %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="{% static 'js/dashboard/dashboard.js' %}"></script>
+
+{% endblock %}
