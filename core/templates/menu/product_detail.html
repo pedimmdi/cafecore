@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% load static %}
-
+{% load humanize %}
 {% block title %}
 {{ product.name }} | کافه رستوران
 {% endblock %}
@@ -53,9 +53,7 @@
                 </h1>
 
                 <div class="price">
-
-                    {{ product.price }} تومان
-
+                    {{ product.price|intcomma }} تومان
                 </div>
 
                 <p class="description">
@@ -111,19 +109,12 @@
                     </div>
 
                     {% if product.serving_start and product.serving_end %}
-
                     <div>
-
                         <strong>ساعت سرو:</strong>
-
-                        {{ product.serving_start }}
-
-                        -
-
-                        {{ product.serving_end }}
-
+                        {{ product.serving_start|time:"H:i" }}
+                        –
+                        {{ product.serving_end|time:"H:i" }}
                     </div>
-
                     {% endif %}
 
                 </div>

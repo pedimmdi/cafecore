@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% load static %}
-
+{% load humanize %}
 {% block title %}
 منوی کافه رستوران
 {% endblock %}
@@ -94,7 +94,7 @@
 
                         <span class="price">
 
-                            {{ product.price }} تومان
+                            {{ product.price|intcomma }} تومان
 
                         </span>
 
