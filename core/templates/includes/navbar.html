@@ -114,14 +114,16 @@
 
             {% if user.is_authenticated %}
 
-                <div class="navbar-user">
-
-                    <a href="{% url 'accounts:profile' %}">
-
-                        <i class="bi bi-person-circle"></i>
-
+                {% if user.is_staff %}
+                    <a href="{% url 'dashboard:index' %}" class="navbar-icon" title="داشبورد">
+                        <i class="bi bi-speedometer2"></i>
                     </a>
+                {% endif %}
 
+                <div class="navbar-user">
+                    <a href="{% url 'accounts:profile' %}" title="پروفایل">
+                        <i class="bi bi-person-circle"></i>
+                    </a>
                 </div>
 
             {% else %}

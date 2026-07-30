@@ -1,6 +1,5 @@
 from django.contrib.admin.views.decorators import staff_member_required
-from django.db.models import Count
-from django.db.models import Sum
+from django.db.models import Count, Sum
 from django.db.models.functions import TruncMonth
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
@@ -14,289 +13,162 @@ from reviews.models import Review
 
 @method_decorator(staff_member_required, name="dispatch")
 class DashboardView(TemplateView):
-
     template_name = "dashboard/index.html"
 
     def get_context_data(self, **kwargs):
-
         context = super().get_context_data(**kwargs)
 
         # ======================
         # Statistics
         # ======================
-
         context["users_count"] = User.objects.count()
-
         context["products_count"] = Product.objects.count()
-
         context["orders_count"] = Order.objects.count()
-
         context["reservations_count"] = Reservation.objects.count()
-
         context["reviews_count"] = Review.objects.count()
 
         # ======================
-        # Orders
+        # Orders by status
         # ======================
-
-        context["paid_orders_count"] = (
-            Order.objects.filter(
-                status=Order.Status.PAID
-            ).count()
-        )
-
-        context["pending_orders_count"] = (
-            Order.objects.filter(
-                status=Order.Status.PENDING
-            ).count()
-        )
-
-        context["cancelled_orders_count"] = (
-            Order.objects.filter(
-                status=Order.Status.CANCELLED
-            ).count()
-        )
+        context["paid_orders_count"] = Order.objects.filter(
+            status=Order.Status.PAID
+        ).count()
+        context["pending_orders_count"] = Order.objects.filter(
+            status=Order.Status.PENDING
+        ).count()
+        context["cancelled_orders_count"] = Order.objects.filter(
+            status=Order.Status.CANCELLED
+        ).count()
 
         # ======================
-        # Latest Orders
+        # Latest data
         # ======================
-
         latest_orders = (
-            Order.objects
-            .select_related("user")
-            .prefetch_related(
-                "items",
-                "items__product",
-            )
+            Order.objects.select_related("user")
+            .prefetch_related("items", "items__product")
             .order_by("-created_at")[:10]
         )
-
         context["latest_orders"] = latest_orders
 
-        # ======================
-        # Latest Reservations
-        # ======================
-
-        context["latest_reservations"] = (
-            Reservation.objects
-            .select_related("user")
+        latest_reservations = (
+            Reservation.objects.select_related("user")
             .order_by("-created_at")[:10]
         )
+        context["latest_reservations"] = latest_reservations
 
-        # ======================
-        # Latest Users
-        # ======================
+        latest_users = User.objects.order_by("-created_at")[:10]
+        context["latest_users"] = latest_users
 
-        context["latest_users"] = (
-            User.objects
-            .order_by("-date_joined")[:10]
-        )
-
-        # ======================
-        # Latest Reviews
-        # ======================
-
-        context["latest_reviews"] = (
-            Review.objects
-            .select_related(
-                "user",
-                "product",
-            )
+        latest_reviews = (
+            Review.objects.select_related("user", "product")
             .order_by("-created_at")[:10]
         )
+        context["latest_reviews"] = latest_reviews
 
         # ======================
-        # Low Inventory
+        # Low inventory
         # ======================
-
         context["low_inventory_products"] = (
-            Product.objects.filter(
-                inventory__lte=10,
-                is_available=True,
-            ).order_by(
-                "inventory"
-            )[:10]
+            Product.objects.filter(inventory__lte=10, is_available=True)
+            .order_by("inventory")[:10]
         )
 
         # ======================
-        # Top Products
+        # Top products
         # ======================
-
         context["top_products"] = (
             Product.objects.annotate(
-                total_sales=Sum(
-                    "order_items__quantity"
-                )
-            ).order_by(
-                "-total_sales",
-                "name",
-            )[:10]
+                total_sales=Sum("order_items__quantity")
+            )
+            .order_by("-total_sales", "name")[:10]
         )
 
         # ======================
-        # Orders Chart
+        # Orders chart (monthly count)
         # ======================
-
-        context["orders_chart"] = (
-            Order.objects
-            .annotate(
-                month=TruncMonth(
-                    "created_at"
-                )
-            )
-            .values(
-                "month"
-            )
-            .annotate(
-                total=Count(
-                    "id"
-                )
-            )
-            .order_by(
-                "month"
-            )
+        orders_by_month = (
+            Order.objects.annotate(month=TruncMonth("created_at"))
+            .values("month")
+            .annotate(total=Count("id"))
+            .order_by("month")
         )
 
+        orders_chart_labels = []
+        orders_chart_values = []
+        for item in orders_by_month:
+            if item["month"]:
+                orders_chart_labels.append(item["month"].strftime("%Y/%m"))
+                orders_chart_values.append(item["total"])
+
+        context["orders_chart_labels"] = orders_chart_labels
+        context["orders_chart_values"] = orders_chart_values
+
         # ======================
-        # Revenue
+        # Revenue chart (monthly revenue from paid orders)
         # ======================
+        # Note: total_price is a property, so we calculate in Python
+        revenue_by_month = {}
+        paid_orders = (
+            Order.objects.filter(status=Order.Status.PAID)
+            .prefetch_related("items")
+            .order_by("created_at")
+        )
 
         total_revenue = 0
+        for order in paid_orders:
+            order_total = order.total_price
+            # apply coupon discount if exists
+            if order.discount:
+                order_total = max(order_total - order.discount, 0)
+            total_revenue += order_total
 
-        for order in Order.objects.filter(
-            status=Order.Status.PAID
-        ).prefetch_related(
-            "items"
-        ):
-
-            total_revenue += order.total_price
+            month_key = order.created_at.strftime("%Y/%m")
+            revenue_by_month[month_key] = (
+                revenue_by_month.get(month_key, 0) + order_total
+            )
 
         context["total_revenue"] = total_revenue
+        context["revenue_chart_labels"] = list(revenue_by_month.keys())
+        context["revenue_chart_values"] = list(revenue_by_month.values())
 
         # ======================
-        # Activity Timeline
+        # Activity timeline
         # ======================
-
         activities = []
 
         for order in latest_orders:
-
             activities.append({
-
-                "type": "order",
-
-                "title": f"Order #{order.id}",
-
-                "created_at": order.created_at,
-
-            })
-
-        for reservation in context["latest_reservations"]:
-
-            activities.append({
-
-                "type": "reservation",
-
-                "title": (
-                    f"{reservation.first_name} "
-                    f"{reservation.last_name}"
-                ),
-
-                "created_at": reservation.created_at,
-
-            })
-
-        for review in context["latest_reviews"]:
-
-            activities.append({
-
-                "type": "review",
-
-                "title": review.product.name,
-
-                "created_at": review.created_at,
-
-            })
-
-        activities.sort(
-            key=lambda item: item["created_at"],
-            reverse=True,
-        )
-
-        context["activities"] = activities[:20]
-
-        activities = []
-
-        for order in latest_orders:
-
-            activities.append({
-
                 "icon": "bi-cart-check",
-
                 "title": f"سفارش #{order.id} ثبت شد",
-
                 "subtitle": f"{order.first_name} {order.last_name}",
-
                 "time": order.created_at,
-
             })
 
         for reservation in latest_reservations:
-
             activities.append({
-
                 "icon": "bi-calendar-check",
-
                 "title": "رزرو جدید",
-
-                "subtitle": (
-
-                    f"{reservation.first_name} "
-
-                    f"{reservation.last_name}"
-
-                ),
-
+                "subtitle": f"{reservation.first_name} {reservation.last_name}",
                 "time": reservation.created_at,
-
             })
 
         for review in latest_reviews:
-
             activities.append({
-
                 "icon": "bi-chat-left-text",
-
                 "title": "نظر جدید",
-
                 "subtitle": review.product.name,
-
                 "time": review.created_at,
-
             })
 
         for user in latest_users:
-
             activities.append({
-
                 "icon": "bi-person-plus",
-
                 "title": "کاربر جدید",
-
                 "subtitle": user.email,
-
-                "time": user.date_joined,
-
+                "time": user.created_at,
             })
 
-        activities.sort(
-
-            key=lambda activity: activity["time"],
-
-            reverse=True,
-
-        )
-
+        activities.sort(key=lambda a: a["time"], reverse=True)
         context["activities"] = activities[:20]
 
         return context

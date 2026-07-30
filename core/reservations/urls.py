@@ -6,8 +6,7 @@ from .views import ReservationSuccessView
 
 app_name = "reservations"
 
-
 urlpatterns = [
-    path("", ReservationCreateView.as_view(), name="reservation"),
+    path("", ReservationCreateView.as_view(), name="create"),
     path("success/", ReservationSuccessView.as_view(), name="success"),
 ]
