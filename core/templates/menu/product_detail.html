@@ -2,112 +2,81 @@
 
 {% load static %}
 {% load humanize %}
+
 {% block title %}
-{{ product.name }} | کافه رستوران
+{{ product.name }} | {% if site_settings %}{{ site_settings.site_name }}{% else %}کافه رستوران{% endif %}
 {% endblock %}
 
 {% block css %}
-
 <link rel="stylesheet" href="{% static 'css/menu/product_detail.css' %}">
-
 {% endblock %}
 
 {% block content %}
 
 <section class="product-detail">
-
     <div class="container">
 
         <div class="product-wrapper">
 
             <div class="product-image">
-
                 {% if product.image %}
-
-                    <img
-                        src="{{ product.image.url }}"
-                        alt="{{ product.name }}">
-
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
                 {% else %}
-
-                    <img
-                        src="{% static 'images/menu/default-product.jpg' %}"
-                        alt="{{ product.name }}">
-
+                    <img src="{% static 'images/menu/default-product.jpg' %}" alt="{{ product.name }}">
                 {% endif %}
-
             </div>
 
             <div class="product-info">
 
-                <span class="category">
-
+                <a href="{{ product.category.get_absolute_url }}" class="category">
                     {{ product.category.name }}
+                </a>
 
-                </span>
+                <h1>{{ product.name }}</h1>
 
-                <h1>
-
-                    {{ product.name }}
-
-                </h1>
+                {% if reviews_count %}
+                <div class="product-rating">
+                    <div class="stars">
+                        {% for i in "12345" %}
+                            {% if forloop.counter <= avg_rating %}
+                                <i class="bi bi-star-fill"></i>
+                            {% else %}
+                                <i class="bi bi-star"></i>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <span>{{ avg_rating }} از ۵ ({{ reviews_count }} نظر)</span>
+                </div>
+                {% endif %}
 
                 <div class="price">
                     {{ product.price|intcomma }} تومان
                 </div>
 
                 <p class="description">
-
                     {{ product.description }}
-
                 </p>
 
                 {% if product.ingredients %}
-
                 <div class="ingredients">
-
-                    <h3>
-
-                        مواد تشکیل‌دهنده
-
-                    </h3>
-
-                    <p>
-
-                        {{ product.ingredients }}
-
-                    </p>
-
+                    <h3>مواد تشکیل‌دهنده</h3>
+                    <p>{{ product.ingredients }}</p>
                 </div>
-
                 {% endif %}
 
                 <div class="meta">
-
                     <div>
-
                         <strong>موجودی:</strong>
-
                         {{ product.inventory }}
-
                     </div>
-
                     <div>
-
                         <strong>وضعیت:</strong>
-
                         {% if product.is_available %}
-
                             موجود
-
                         {% else %}
-
                             ناموجود
-
                         {% endif %}
-
                     </div>
-
                     {% if product.serving_start and product.serving_end %}
                     <div>
                         <strong>ساعت سرو:</strong>
@@ -116,21 +85,126 @@
                         {{ product.serving_end|time:"H:i" }}
                     </div>
                     {% endif %}
+                </div>
+
+                <!-- Actions -->
+                <div class="product-actions">
+
+                    {% if product.is_available and product.inventory > 0 %}
+                    <form method="post" action="{% url 'orders:cart_add' product.id %}" class="add-to-cart-form">
+                        {% csrf_token %}
+                        <div class="qty-box">
+                            <label for="quantity">تعداد</label>
+                            <input
+                                type="number"
+                                id="quantity"
+                                name="quantity"
+                                value="1"
+                                min="1"
+                                max="{{ product.inventory }}"
+                            >
+                        </div>
+                        <button type="submit" class="btn-cart">
+                            <i class="bi bi-cart-plus"></i>
+                            افزودن به سبد
+                        </button>
+                    </form>
+                    {% else %}
+                    <div class="out-of-stock">
+                        این محصول در حال حاضر موجود نیست.
+                    </div>
+                    {% endif %}
+
+                    {% if user.is_authenticated %}
+                        {% if is_favorited %}
+                        <form method="post" action="{% url 'favorites:remove' product.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-favorite active">
+                                <i class="bi bi-heart-fill"></i>
+                                حذف از علاقه‌مندی
+                            </button>
+                        </form>
+                        {% else %}
+                        <form method="post" action="{% url 'favorites:add' product.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-favorite">
+                                <i class="bi bi-heart"></i>
+                                افزودن به علاقه‌مندی
+                            </button>
+                        </form>
+                        {% endif %}
+                    {% else %}
+                        <a href="{% url 'accounts:login' %}" class="btn-favorite">
+                            <i class="bi bi-heart"></i>
+                            ورود برای علاقه‌مندی
+                        </a>
+                    {% endif %}
 
                 </div>
 
             </div>
+        </div>
 
+        <!-- Reviews -->
+        <div class="reviews-section">
+            <div class="reviews-header">
+                <h2>نظرات کاربران</h2>
+
+                {% if user.is_authenticated %}
+                    {% if not user_has_reviewed %}
+                        <a href="{% url 'reviews:review_create' product.slug %}" class="btn-review">
+                            ثبت نظر
+                        </a>
+                    {% else %}
+                        <span class="review-done">شما قبلاً برای این محصول نظر داده‌اید.</span>
+                    {% endif %}
+                {% else %}
+                    <a href="{% url 'accounts:login' %}" class="btn-review">
+                        ورود برای ثبت نظر
+                    </a>
+                {% endif %}
+            </div>
+
+            <div class="reviews-list">
+                {% for review in reviews %}
+                <div class="review-item">
+                    <div class="review-top">
+                        <div>
+                            <strong>
+                                {% if review.user.first_name or review.user.last_name %}
+                                    {{ review.user.first_name }} {{ review.user.last_name }}
+                                {% else %}
+                                    {{ review.user.email }}
+                                {% endif %}
+                            </strong>
+                            <div class="stars">
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= review.rating %}
+                                        <i class="bi bi-star-fill"></i>
+                                    {% else %}
+                                        <i class="bi bi-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <small>{{ review.created_at|date:"Y/m/d" }}</small>
+                    </div>
+                    <p>{{ review.comment }}</p>
+                </div>
+                {% empty %}
+                <div class="reviews-empty">
+                    <i class="bi bi-chat-square-text"></i>
+                    <p>هنوز نظری برای این محصول ثبت نشده است.</p>
+                </div>
+                {% endfor %}
+            </div>
         </div>
 
     </div>
-
 </section>
 
 {% endblock %}
 
 {% block js %}
-
 <script src="{% static 'js/menu/product_detail.js' %}"></script>
-
 {% endblock %}

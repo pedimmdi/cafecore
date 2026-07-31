@@ -1,5 +1,8 @@
-from django.db.models import Q
+from django.db.models import Avg, Q
 from django.views.generic import DetailView, ListView
+
+from favorites.models import Favorite
+from reviews.models import Review
 
 from .models import Category, Product
 
@@ -32,6 +35,41 @@ class ProductDetailView(DetailView):
             .filter(is_available=True)
             .select_related("category")
         )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        product = self.object
+
+        reviews = (
+            Review.objects.filter(
+                product=product,
+                status=Review.Status.APPROVED,
+            )
+            .select_related("user")
+            .order_by("-created_at")
+        )
+        context["reviews"] = reviews
+        context["reviews_count"] = reviews.count()
+
+        avg = reviews.aggregate(avg=Avg("rating"))["avg"]
+        context["avg_rating"] = round(avg, 1) if avg else 0
+
+        is_favorited = False
+        user_has_reviewed = False
+        if self.request.user.is_authenticated:
+            is_favorited = Favorite.objects.filter(
+                user=self.request.user,
+                product=product,
+            ).exists()
+            user_has_reviewed = Review.objects.filter(
+                user=self.request.user,
+                product=product,
+            ).exists()
+
+        context["is_favorited"] = is_favorited
+        context["user_has_reviewed"] = user_has_reviewed
+
+        return context
 
 
 class CategoryListView(ListView):

@@ -3,6 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import ListView
 from django.views.generic import View
+from django.urls import reverse
 
 from menu.models import Product
 
@@ -55,7 +56,7 @@ class FavoriteAddView(LoginRequiredMixin, View):
                 "این محصول قبلاً در علاقه‌مندی‌های شما وجود دارد.",
             )
 
-        return redirect(request.META.get("HTTP_REFERER", "menu:products"))
+        return redirect(request.META.get("HTTP_REFERER") or reverse("menu:product_list"))
 
 
 class FavoriteRemoveView(LoginRequiredMixin, View):

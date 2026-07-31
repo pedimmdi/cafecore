@@ -46,10 +46,7 @@ class ReviewCreateView(LoginRequiredMixin, View):
             product=product,
         ).exists():
 
-            messages.warning(
-                request,
-                "You have already submitted a review for this product.",
-            )
+            messages.warning(request, "شما قبلاً برای این محصول نظر ثبت کرده‌اید.")
 
             return redirect(
                 product.get_absolute_url(),
@@ -80,10 +77,7 @@ class ReviewCreateView(LoginRequiredMixin, View):
 
         )
 
-        messages.success(
-            request,
-            "Your review has been submitted successfully.",
-        )
+        messages.success(request, "نظر شما با موفقیت ثبت شد و پس از تأیید نمایش داده می‌شود.")
 
         return redirect(
             product.get_absolute_url(),
