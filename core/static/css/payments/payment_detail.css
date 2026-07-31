@@ -1,0 +1,178 @@
+.payment-detail {
+    padding: 80px 20px;
+    min-height: 70vh;
+}
+
+.payment-detail .container {
+    max-width: 560px;
+    margin: 0 auto;
+}
+
+.payment-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 28px;
+    padding: 40px 36px;
+    backdrop-filter: blur(18px);
+}
+
+/* Header */
+.payment-header {
+    text-align: center;
+    margin-bottom: 36px;
+}
+
+.payment-header .section-badge {
+    display: inline-block;
+    padding: 7px 16px;
+    border-radius: 999px;
+    background: rgba(212, 175, 55, 0.15);
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    color: #D4AF37;
+    font-size: 0.85rem;
+    margin-bottom: 14px;
+}
+
+.payment-header h1 {
+    color: #fff;
+    font-size: 1.75rem;
+    margin: 0 0 10px;
+}
+
+.payment-header p {
+    color: #9ca3af;
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+/* Info list */
+.payment-info {
+    list-style: none;
+    margin: 0 0 28px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.payment-info li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 18px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.payment-info .label {
+    color: #9ca3af;
+    font-size: 0.92rem;
+    flex-shrink: 0;
+}
+
+.payment-info .value {
+    color: #fff;
+    font-weight: 600;
+    text-align: left;
+    word-break: break-all;
+}
+
+.payment-info .value.mono {
+    font-family: ui-monospace, monospace;
+    font-size: 0.88rem;
+    color: #d1d5db;
+}
+
+.payment-info .value.amount {
+    color: #D4AF37;
+    font-size: 1.05rem;
+}
+
+/* Status */
+.status-badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.status-badge.status-pending {
+    background: rgba(234, 179, 8, 0.15);
+    color: #fde047;
+}
+
+.status-badge.status-success {
+    background: rgba(34, 197, 94, 0.15);
+    color: #86efac;
+}
+
+.status-badge.status-failed {
+    background: rgba(239, 68, 68, 0.15);
+    color: #fca5a5;
+}
+
+/* Actions */
+.payment-actions .hint {
+    text-align: center;
+    color: #9ca3af;
+    font-size: 0.88rem;
+    line-height: 1.7;
+    margin: 0 0 18px;
+}
+
+.actions-row {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 20px;
+    border-radius: 14px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    transition: 0.25s;
+    border: 1px solid transparent;
+}
+
+.btn-success {
+    background: rgba(34, 197, 94, 0.18);
+    border-color: rgba(34, 197, 94, 0.4);
+    color: #86efac;
+}
+
+.btn-success:hover {
+    background: rgba(34, 197, 94, 0.28);
+}
+
+.btn-danger {
+    background: rgba(239, 68, 68, 0.12);
+    border-color: rgba(239, 68, 68, 0.35);
+    color: #fca5a5;
+}
+
+.btn-danger:hover {
+    background: rgba(239, 68, 68, 0.2);
+}
+
+.btn-primary {
+    background: #D4AF37;
+    color: #111;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(212, 175, 55, 0.25);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.05);
+    border-color:

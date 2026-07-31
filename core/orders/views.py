@@ -287,9 +287,11 @@ class CheckoutView(LoginRequiredMixin, View):
             "Your order has been created successfully.",
         )
 
-        return redirect(
-            "orders:success",
+        messages.success(
+            request,
+            "سفارش شما ثبت شد. لطفاً پرداخت را انجام دهید.",
         )
+        return redirect("payments:payment_request", order_id=order.id)
 
 
 class OrderSuccessView(LoginRequiredMixin, TemplateView):

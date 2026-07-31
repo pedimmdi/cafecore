@@ -72,12 +72,17 @@ class Order(models.Model):
         return f"Order #{self.pk}"
 
     @property
-    def total_price(self):
-        return sum(
-            item.total_price
-            for item in self.items.all()
-        )
+    def items_total(self):
+        return sum(item.total_price for item in self.items.all())
 
+    @property
+    def total_price(self):
+        total = self.items_total
+        if self.discount:
+            total = total - self.discount
+        if total < 0:
+            return 0
+        return total
 
 class OrderItem(models.Model):
     order = models.ForeignKey(

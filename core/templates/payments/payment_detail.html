@@ -1,208 +1,115 @@
 {% extends "base.html" %}
 
 {% load static %}
+{% load humanize %}
+{% load jalali %}
 
 {% block title %}
-Payment | Cafe Restaurant
+پرداخت | {% if site_settings %}{{ site_settings.site_name }}{% else %}کافه رستوران{% endif %}
 {% endblock %}
 
 {% block css %}
-
-<link rel="stylesheet" href="{% static 'css/payments/payment.css' %}">
-
+<link rel="stylesheet" href="{% static 'css/payments/payment_detail.css' %}">
 {% endblock %}
 
 {% block content %}
 
-<section class="payment-page">
-
+<section class="payment-detail">
     <div class="container">
-
         <div class="payment-card">
 
+            <div class="payment-header">
+                <span class="section-badge">پرداخت</span>
+                <h1>جزئیات پرداخت</h1>
+                <p>وضعیت و اطلاعات پرداخت سفارش شما</p>
+            </div>
+
+            <ul class="payment-info">
+                <li>
+                    <span class="label">شماره سفارش</span>
+                    <span class="value">#{{ payment.order.id }}</span>
+                </li>
+                <li>
+                    <span class="label">شناسه پرداخت</span>
+                    <span class="value mono">{{ payment.authority }}</span>
+                </li>
+                <li>
+                    <span class="label">مبلغ</span>
+                    <span class="value amount">{{ payment.amount|intcomma }} تومان</span>
+                </li>
+                <li>
+                    <span class="label">وضعیت</span>
+                    <span class="value">
+                        <span class="status-badge status-{{ payment.status }}">
+                            {{ payment.get_status_display }}
+                        </span>
+                    </span>
+                </li>
+                {% if payment.ref_id %}
+                <li>
+                    <span class="label">کد پیگیری</span>
+                    <span class="value mono">{{ payment.ref_id }}</span>
+                </li>
+                {% endif %}
+                <li>
+                    <span class="label">تاریخ</span>
+                    <span class="value">{{ payment.created_at|to_jalali }}</span>
+                </li>
+            </ul>
+
             {% if payment.status == "pending" %}
-
-                <div class="payment-icon pending">
-
-                    ⏳
-
-                </div>
-
-                <h1>
-
-                    Payment Pending
-
-                </h1>
-
-                <p>
-
-                    Your payment request has been created.
-                    Please continue to the payment gateway to complete your payment.
-
+            <div class="payment-actions">
+                <p class="hint">
+                    این بخش برای تست است. در نسخه نهایی به درگاه واقعی وصل می‌شود.
                 </p>
+                <div class="actions-row">
+                    <a
+                        href="{% url 'payments:payment_verify' %}?Authority={{ payment.authority }}"
+                        class="btn btn-success"
+                    >
+                        <i class="bi bi-check-lg"></i>
+                        پرداخت موفق (تست)
+                    </a>
+                    <a
+                        href="{% url 'payments:payment_failed' %}?Authority={{ payment.authority }}"
+                        class="btn btn-danger"
+                    >
+                        <i class="bi bi-x-lg"></i>
+                        پرداخت ناموفق (تست)
+                    </a>
+                </div>
+            </div>
 
             {% elif payment.status == "success" %}
-
-                <div class="payment-icon success">
-
-                    ✅
-
+            <div class="payment-result success">
+                <i class="bi bi-check-circle-fill"></i>
+                <h2>پرداخت با موفقیت انجام شد</h2>
+                <p>سفارش شما ثبت و پرداخت شده است.</p>
+                <div class="actions-row">
+                    <a href="{% url 'accounts:profile' %}" class="btn btn-primary">مشاهده پروفایل</a>
+                    <a href="{% url 'menu:product_list' %}" class="btn btn-secondary">بازگشت به منو</a>
                 </div>
-
-                <h1>
-
-                    Payment Successful
-
-                </h1>
-
-                <p>
-
-                    Thank you!
-                    Your payment has been completed successfully.
-
-                </p>
+            </div>
 
             {% else %}
-
-                <div class="payment-icon failed">
-
-                    ❌
-
+            <div class="payment-result failed">
+                <i class="bi bi-x-circle-fill"></i>
+                <h2>پرداخت ناموفق بود</h2>
+                <p>می‌توانید دوباره تلاش کنید یا با پشتیبانی تماس بگیرید.</p>
+                <div class="actions-row">
+                    <a
+                        href="{% url 'payments:payment_request' payment.order.id %}"
+                        class="btn btn-primary"
+                    >
+                        تلاش مجدد
+                    </a>
+                    <a href="{% url 'accounts:profile' %}" class="btn btn-secondary">پروفایل</a>
                 </div>
-
-                <h1>
-
-                    Payment Failed
-
-                </h1>
-
-                <p>
-
-                    Unfortunately your payment was unsuccessful.
-                    Please try again.
-
-                </p>
-
+            </div>
             {% endif %}
 
-            <div class="payment-information">
-
-                <div class="info-row">
-
-                    <span>
-
-                        Order ID
-
-                    </span>
-
-                    <strong>
-
-                        #{{ payment.order.id }}
-
-                    </strong>
-
-                </div>
-
-                <div class="info-row">
-
-                    <span>
-
-                        Authority
-
-                    </span>
-
-                    <strong>
-
-                        {{ payment.authority }}
-
-                    </strong>
-
-                </div>
-
-                <div class="info-row">
-
-                    <span>
-
-                        Amount
-
-                    </span>
-
-                    <strong>
-
-                        ${{ payment.amount }}
-
-                    </strong>
-
-                </div>
-
-                <div class="info-row">
-
-                    <span>
-
-                        Reference ID
-
-                    </span>
-
-                    <strong>
-
-                        {{ payment.ref_id|default:"-" }}
-
-                    </strong>
-
-                </div>
-
-                <div class="info-row">
-
-                    <span>
-
-                        Status
-
-                    </span>
-
-                    <strong>
-
-                        {{ payment.get_status_display }}
-
-                    </strong>
-
-                </div>
-
-            </div>
-
-            <div class="payment-actions">
-
-                {% if payment.status == "pending" %}
-
-                    <a
-                        href="#"
-                        class="btn-primary">
-
-                        Go To Payment Gateway
-
-                    </a>
-
-                {% endif %}
-
-                <a
-                    href="{% url 'pages:home' %}"
-                    class="btn-secondary">
-
-                    Back To Home
-
-                </a>
-
-            </div>
-
         </div>
-
     </div>
-
 </section>
-
-{% endblock %}
-
-{% block js %}
-
-<script src="{% static 'js/payments/payment.js' %}"></script>
 
 {% endblock %}
