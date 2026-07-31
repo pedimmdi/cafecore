@@ -93,11 +93,16 @@ class CategoryDetailView(DetailView):
     slug_url_kwarg = "slug"
 
     def get_queryset(self):
-        return (
-            Category.objects
-            .filter(is_active=True)
-            .prefetch_related("products")
+        return Category.objects.filter(is_active=True)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["products"] = (
+            self.object.products.filter(is_available=True)
+            .select_related("category")
+            .order_by("name")
         )
+        return context
 
 
 class SearchView(ListView):

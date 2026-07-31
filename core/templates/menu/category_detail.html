@@ -44,7 +44,7 @@
 
         <div class="products-grid">
 
-            {% for product in category.products.all %}
+            {% for product in products %}
                 {% if product.is_available %}
                     <article class="product-card">
 
@@ -79,13 +79,7 @@
                     </article>
                 {% endif %}
             {% empty %}
-
-                <h2>
-
-                    محصولی برای این دسته‌بندی وجود ندارد.
-
-                </h2>
-
+                <h2>محصولی برای این دسته‌بندی وجود ندارد.</h2>
             {% endfor %}
 
         </div>

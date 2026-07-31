@@ -1,5 +1,5 @@
 from decimal import Decimal
-
+from django.utils import timezone
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
@@ -26,21 +26,33 @@ class PaymentRequestView(LoginRequiredMixin, View):
                     "payments:payment_detail",
                     payment_id=order.payment.id,
                 )
-            return redirect("orders:success")
-
-        if hasattr(order, "payment"):
-            return redirect(
-                "payments:payment_detail",
-                payment_id=order.payment.id,
-            )
+            return redirect("accounts:profile")
 
         amount = order.total_price
 
-        payment = Payment.objects.create(
-            order=order,
-            authority=f"PAY-{order.id}-{order.created_at.timestamp():.0f}",
-            amount=amount,
-        )
+        if hasattr(order, "payment"):
+            payment = order.payment
+
+            if payment.status == Payment.Status.SUCCESS:
+                return redirect(
+                    "payments:payment_detail",
+                    payment_id=payment.id,
+                )
+
+            # pending یا failed → از همان رکورد استفاده کن
+            payment.amount = amount
+            payment.status = Payment.Status.PENDING
+            payment.ref_id = ""
+            payment.authority = (
+                f"PAY-{order.id}-{timezone.now().timestamp():.0f}"
+            )
+            payment.save()
+        else:
+            payment = Payment.objects.create(
+                order=order,
+                authority=f"PAY-{order.id}-{timezone.now().timestamp():.0f}",
+                amount=amount,
+            )
 
         messages.success(request, "درخواست پرداخت ایجاد شد.")
         return redirect(
