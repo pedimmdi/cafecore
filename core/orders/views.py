@@ -64,17 +64,11 @@ class CartAddView(View):
 
         if added:
 
-            messages.success(
-                request,
-                "Product added to cart successfully.",
-            )
+            messages.success(request, "محصول به سبد اضافه شد.")
 
         else:
 
-            messages.error(
-                request,
-                "This product is currently unavailable.",
-            )
+            messages.error(request, "امکان افزودن این محصول به سبد وجود ندارد.")
 
         return redirect(
             "orders:cart",
@@ -112,7 +106,7 @@ class CartUpdateView(View):
 
         messages.success(
             request,
-            "Cart updated successfully.",
+            "سبد خرید با موفقیت به‌روزرسانی شد.",
         )
 
         return redirect(
@@ -135,7 +129,7 @@ class CartRemoveView(View):
 
         messages.success(
             request,
-            "Product removed from cart.",
+            "محصول از سبد خرید حذف شد.",
         )
 
         return redirect(
@@ -153,7 +147,7 @@ class CheckoutView(LoginRequiredMixin, View):
 
             messages.warning(
                 request,
-                "Your cart is empty.",
+                "سبد خرید شما خالی است.",
             )
 
             return redirect(
@@ -186,7 +180,7 @@ class CheckoutView(LoginRequiredMixin, View):
 
             messages.warning(
                 request,
-                "Your cart is empty.",
+                "سبد خرید شما خالی است.",
             )
 
             return redirect(
@@ -214,7 +208,7 @@ class CheckoutView(LoginRequiredMixin, View):
 
                 messages.error(
                     request,
-                    f"{product.name} is currently unavailable.",
+                    f"{product.name} در حال حاضر در دسترس نیست.",
                 )
 
                 return redirect(
@@ -223,10 +217,7 @@ class CheckoutView(LoginRequiredMixin, View):
 
             if item["quantity"] > product.inventory:
 
-                messages.error(
-                    request,
-                    f"Only {product.inventory} units of {product.name} are available.",
-                )
+                messages.warning(request, f"فقط {product.inventory} عدد از {product.name} موجود است.")
 
                 return redirect(
                     "orders:cart",
@@ -284,7 +275,7 @@ class CheckoutView(LoginRequiredMixin, View):
 
         messages.success(
             request,
-            "Your order has been created successfully.",
+            "سفارش شما با موفقیت ایجاد شد.",
         )
 
         messages.success(

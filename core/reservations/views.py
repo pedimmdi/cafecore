@@ -54,7 +54,7 @@ class ReservationCreateView(LoginRequiredMixin, View):
             description=form.cleaned_data["description"],
         )
 
-        messages.success(request, "Your reservation has been submitted successfully.")
+        messages.success(request, "رزرو شما با موفقیت ثبت شد.")
         return redirect("reservations:success")
 
 
