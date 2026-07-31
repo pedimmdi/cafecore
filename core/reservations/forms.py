@@ -13,10 +13,6 @@ class ReservationForm(forms.Form):
 
     def clean_number_of_guests(self):
         number_of_guests = self.cleaned_data["number_of_guests"]
-
         if number_of_guests > 20:
-            raise forms.ValidationError(
-                "Maximum number of guests is 20."
-            )
-
+            raise forms.ValidationError("حداکثر تعداد نفرات ۲۰ نفر است.")
         return number_of_guests

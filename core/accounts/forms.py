@@ -23,10 +23,12 @@ class LoginForm(AuthenticationForm):
 
 
 class ProfileUpdateForm(ModelForm):
-
     class Meta:
         model = User
         fields = (
             "first_name",
             "last_name",
+            "phone_number",
+            "date_of_birth",
+            "avatar",
         )

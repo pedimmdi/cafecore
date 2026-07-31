@@ -39,9 +39,9 @@ class Coupon(models.Model):
 class Order(models.Model):
 
     class Status(models.TextChoices):
-        PENDING = "pending", "Pending"
-        PAID = "paid", "Paid"
-        CANCELLED = "cancelled", "Cancelled"
+        PENDING = "pending", "در انتظار"
+        PAID = "paid", "پرداخت شده"
+        CANCELLED = "cancelled", "لغو شده"
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,

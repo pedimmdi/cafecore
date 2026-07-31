@@ -3,138 +3,104 @@
 {% load static %}
 
 {% block title %}
-ویرایش پروفایل | کافه رستوران
+ویرایش پروفایل | {% if site_settings %}{{ site_settings.site_name }}{% else %}کافه رستوران{% endif %}
 {% endblock %}
 
 {% block css %}
-
 <link rel="stylesheet" href="{% static 'css/accounts/profile_update.css' %}">
-
 {% endblock %}
 
 {% block content %}
 
 <section class="profile-update-section">
-
     <div class="profile-update-card">
+        <h1>ویرایش پروفایل</h1>
 
-        <h1>
-
-            ویرایش پروفایل
-
-        </h1>
-
-        <form
-            method="post"
-            enctype="multipart/form-data"
-        >
-
+        <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
 
             <div class="form-group">
-
-                <label>
-
-                    تصویر پروفایل
-
-                </label>
-
-                {{ form.avatar }}
-
+                <label for="id_avatar">تصویر پروفایل</label>
+                <input type="file" name="avatar" id="id_avatar" accept="image/*">
+                {% if user.avatar %}
+                    <small style="color:#9ca3af;">
+                        تصویر فعلی موجود است. با انتخاب فایل جدید جایگزین می‌شود.
+                    </small>
+                {% endif %}
+                {{ form.avatar.errors }}
             </div>
 
             <div class="form-group">
-
-                <label>
-
-                    نام
-
-                </label>
-
-                {{ form.first_name }}
-
+                <label for="id_first_name">نام</label>
+                <input
+                    type="text"
+                    name="first_name"
+                    id="id_first_name"
+                    value="{{ form.first_name.value|default_if_none:user.first_name }}"
+                    placeholder="نام"
+                    required
+                >
+                {{ form.first_name.errors }}
             </div>
 
             <div class="form-group">
-
-                <label>
-
-                    نام خانوادگی
-
-                </label>
-
-                {{ form.last_name }}
-
+                <label for="id_last_name">نام خانوادگی</label>
+                <input
+                    type="text"
+                    name="last_name"
+                    id="id_last_name"
+                    value="{{ form.last_name.value|default_if_none:user.last_name }}"
+                    placeholder="نام خانوادگی"
+                    required
+                >
+                {{ form.last_name.errors }}
             </div>
 
             <div class="form-group">
-
-                <label>
-
-                    ایمیل
-
-                </label>
-
-                {{ form.email }}
-
+                <label for="id_email">ایمیل</label>
+                <input
+                    type="email"
+                    id="id_email"
+                    value="{{ user.email }}"
+                    readonly
+                >
+                <small style="color:#9ca3af;">ایمیل قابل تغییر نیست.</small>
             </div>
 
             <div class="form-group">
-
-                <label>
-
-                    شماره تماس
-
-                </label>
-
-                {{ form.phone_number }}
-
+                <label for="id_phone_number">شماره تماس</label>
+                <input
+                    type="text"
+                    name="phone_number"
+                    id="id_phone_number"
+                    value="{{ form.phone_number.value|default_if_none:user.phone_number }}"
+                    placeholder="مثال: 09121234567"
+                >
+                {{ form.phone_number.errors }}
             </div>
 
             <div class="form-group">
-
-                <label>
-
-                    تاریخ تولد
-
-                </label>
-
-                {{ form.date_of_birth }}
-
+                <label for="id_date_of_birth">تاریخ تولد</label>
+                <input
+                    type="date"
+                    name="date_of_birth"
+                    id="id_date_of_birth"
+                    value="{% if form.date_of_birth.value %}{{ form.date_of_birth.value|date:'Y-m-d' }}{% elif user.date_of_birth %}{{ user.date_of_birth|date:'Y-m-d' }}{% endif %}"
+                    placeholder="از تقویم انتخاب کنید"
+                >
+                {{ form.date_of_birth.errors }}
             </div>
 
             <div class="form-actions">
-
-                <button
-                    type="submit"
-                    class="btn-primary"
-                >
-
-                    ذخیره تغییرات
-
-                </button>
-
-                <a
-                    href="{% url 'accounts:profile' %}"
-                    class="btn-secondary"
-                >
-
-                    بازگشت
-
-                </a>
-
+                <button type="submit" class="btn-primary">ذخیره تغییرات</button>
+                <a href="{% url 'accounts:profile' %}" class="btn-secondary">بازگشت</a>
             </div>
-
         </form>
-
     </div>
-
 </section>
 
 {% endblock %}
 
 {% block js %}
-
 <script src="{% static 'js/accounts/profile_update.js' %}"></script>
-
 {% endblock %}

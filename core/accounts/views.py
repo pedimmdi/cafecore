@@ -52,12 +52,40 @@ class ProfileView(LoginRequiredMixin, View):
     template_name = "accounts/profile.html"
 
     def get(self, request, *args, **kwargs):
+        from favorites.models import Favorite
+
+        orders = (
+            Order.objects.filter(user=request.user)
+            .prefetch_related("items", "items__product")
+            .order_by("-created_at")
+        )
+        reservations = (
+            Reservation.objects.filter(user=request.user)
+            .order_by("-created_at")
+        )
+        reviews = (
+            Review.objects.filter(user=request.user)
+            .select_related("product")
+            .order_by("-created_at")
+        )
+        payments = (
+            Payment.objects.filter(order__user=request.user)
+            .select_related("order")
+            .order_by("-created_at")
+        )
+        favorites = (
+            Favorite.objects.filter(user=request.user)
+            .select_related("product", "product__category")
+            .order_by("-created_at")
+        )
+
         context = {
             "user": request.user,
-            "orders": Order.objects.filter(user=request.user),
-            "reservations": Reservation.objects.filter(user=request.user),
-            "reviews": Review.objects.filter(user=request.user),
-            "payments": Payment.objects.filter(order__user=request.user),
+            "orders": orders,
+            "reservations": reservations,
+            "reviews": reviews,
+            "payments": payments,
+            "favorites": favorites,
         }
         return render(request, self.template_name, context)
 

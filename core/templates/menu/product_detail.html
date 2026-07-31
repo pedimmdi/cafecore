@@ -2,7 +2,7 @@
 
 {% load static %}
 {% load humanize %}
-
+{% load jalali %}
 {% block title %}
 {{ product.name }} | {% if site_settings %}{{ site_settings.site_name }}{% else %}کافه رستوران{% endif %}
 {% endblock %}
@@ -187,7 +187,7 @@
                                 {% endfor %}
                             </div>
                         </div>
-                        <small>{{ review.created_at|date:"Y/m/d" }}</small>
+                        <small>{{ review.created_at|to_jalali }}</small>
                     </div>
                     <p>{{ review.comment }}</p>
                 </div>

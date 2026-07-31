@@ -7,10 +7,9 @@ from menu.models import Product
 class Review(models.Model):
 
     class Status(models.TextChoices):
-
-        PENDING = "pending", "Pending"
-        APPROVED = "approved", "Approved"
-        REJECTED = "rejected", "Rejected"
+        PENDING = "pending", "در انتظار"
+        APPROVED = "approved", "تأیید شده"
+        REJECTED = "rejected", "رد شده"
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,

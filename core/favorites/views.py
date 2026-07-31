@@ -82,4 +82,4 @@ class FavoriteRemoveView(LoginRequiredMixin, View):
                 "محصول از علاقه‌مندی‌ها حذف شد.",
             )
 
-        return redirect(request.META.get("HTTP_REFERER", "favorites:list"))
+        return redirect(request.META.get("HTTP_REFERER") or reverse("favorites:list"))

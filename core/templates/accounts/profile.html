@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 
 {% load static %}
+{% load humanize %}
+{% load jalali %}
 
 {% block title %}
-پروفایل | کافه رستوران
+پروفایل | {% if site_settings %}{{ site_settings.site_name }}{% else %}کافه رستوران{% endif %}
 {% endblock %}
 
 {% block css %}
-
 <link rel="stylesheet" href="{% static 'css/accounts/profile.css' %}">
-
 {% endblock %}
 
 {% block content %}
@@ -17,306 +17,226 @@
 <section class="profile-section">
 
     <div class="profile-card">
-
         <div class="profile-header">
-
             <div class="profile-avatar">
-
                 {% if user.avatar %}
-
-                    <img
-                        src="{{ user.avatar.url }}"
-                        alt="{{ user.first_name }}"
-                    >
-
+                    <img src="{{ user.avatar.url }}" alt="{{ user.first_name }}">
                 {% else %}
-
                     <i class="bi bi-person-circle"></i>
-
                 {% endif %}
-
             </div>
 
             <div class="profile-info">
-
                 <h1>
-
-                    {{ user.first_name }} {{ user.last_name }}
-
+                    {% if user.first_name or user.last_name %}
+                        {{ user.first_name }} {{ user.last_name }}
+                    {% else %}
+                        کاربر
+                    {% endif %}
                 </h1>
-
-                <p>
-
-                    {{ user.email }}
-
-                </p>
-
+                <p>{{ user.email }}</p>
             </div>
-
         </div>
 
         <div class="profile-body">
-
             <div class="profile-item">
-
                 <span>نام</span>
-
-                <strong>{{ user.first_name }}</strong>
-
+                <strong>{{ user.first_name|default:"—" }}</strong>
             </div>
 
             <div class="profile-item">
-
                 <span>نام خانوادگی</span>
-
-                <strong>{{ user.last_name }}</strong>
-
+                <strong>{{ user.last_name|default:"—" }}</strong>
             </div>
 
             <div class="profile-item">
-
                 <span>ایمیل</span>
-
                 <strong>{{ user.email }}</strong>
-
             </div>
 
             <div class="profile-item">
-
                 <span>شماره تماس</span>
-
-                <strong>
-
-                    {{ user.phone_number|default:"ثبت نشده" }}
-
-                </strong>
-
+                <strong>{{ user.phone_number|default:"—" }}</strong>
             </div>
 
             <div class="profile-item">
-
                 <span>تاریخ تولد</span>
-
                 <strong>
-
                     {% if user.date_of_birth %}
-
-                        {{ user.date_of_birth|date:"Y/m/d" }}
-
+                        {{ user.date_of_birth|to_jalali }}
                     {% else %}
-
-                        ثبت نشده
-
+                        —
                     {% endif %}
-
                 </strong>
-
             </div>
 
             <div class="profile-item">
-
                 <span>تاریخ عضویت</span>
-
-                <strong>
-
-                    {{ user.created_at|date:"Y/m/d" }}
-
-                </strong>
-
+                <strong>{{ user.created_at|to_jalali }}</strong>
             </div>
-
         </div>
 
         <div class="profile-stats">
-
             <div class="stat-card">
-
                 <h3>{{ orders.count }}</h3>
-
                 <p>سفارش‌ها</p>
-
             </div>
-
             <div class="stat-card">
-
                 <h3>{{ reservations.count }}</h3>
-
                 <p>رزروها</p>
-
             </div>
-
             <div class="stat-card">
-
                 <h3>{{ reviews.count }}</h3>
-
                 <p>نظرات</p>
-
             </div>
-
             <div class="stat-card">
-
-                <h3>{{ payments.count }}</h3>
-
-                <p>پرداخت‌ها</p>
-
+                <h3>{{ favorites.count }}</h3>
+                <p>علاقه‌مندی‌ها</p>
             </div>
-
         </div>
 
         <div class="profile-actions">
-
-            <a
-                href="{% url 'accounts:profile_update' %}"
-                class="btn-primary"
-            >
-
+            <a href="{% url 'accounts:profile_edit' %}" class="btn-primary">
                 ویرایش پروفایل
-
             </a>
-
-            <a
-                href="{% url 'accounts:password_change' %}"
-                class="btn-secondary"
-            >
-
+            <a href="{% url 'accounts:password_change' %}" class="btn-secondary">
                 تغییر رمز عبور
-
             </a>
-
+            <form method="post" action="{% url 'accounts:logout' %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn-secondary">خروج</button>
+            </form>
         </div>
-
     </div>
 
     <div class="dashboard-section">
 
+        <!-- Orders -->
         <div class="dashboard-card">
-
             <h2>آخرین سفارش‌ها</h2>
-
             {% if orders %}
-
-                <ul>
-
+                <ul class="profile-list">
                     {% for order in orders|slice:":5" %}
-
                         <li>
-
-                            سفارش #{{ order.id }}
-
+                            <div>
+                                <strong>سفارش #{{ order.id }}</strong>
+                                <small>{{ order.created_at|to_jalali }}</small>
+                            </div>
+                            <div class="list-meta">
+                                <span class="status-badge status-{{ order.status }}">
+                                    {{ order.get_status_display }}
+                                </span>
+                                <span class="amount">{{ order.total_price|intcomma }} تومان</span>
+                            </div>
                         </li>
-
                     {% endfor %}
-
                 </ul>
-
             {% else %}
-
-                <p>هنوز سفارشی ثبت نشده است.</p>
-
+                <p class="empty-text">هنوز سفارشی ثبت نشده است.</p>
             {% endif %}
-
         </div>
 
+        <!-- Reservations -->
         <div class="dashboard-card">
-
             <h2>آخرین رزروها</h2>
-
             {% if reservations %}
-
-                <ul>
-
+                <ul class="profile-list">
                     {% for reservation in reservations|slice:":5" %}
-
                         <li>
-
-                            {{ reservation.date }}
-                            -
-                            {{ reservation.time }}
-
+                            <div>
+                                <strong>
+                                    {{ reservation.reservation_date|to_jalali }}
+                                    –
+                                    {{ reservation.reservation_time|time:"H:i" }}
+                                </strong>
+                                <small>{{ reservation.number_of_guests }} نفر</small>
+                            </div>
+                            <span class="status-badge status-{{ reservation.status }}">
+                                {{ reservation.get_status_display }}
+                            </span>
                         </li>
-
                     {% endfor %}
-
                 </ul>
-
             {% else %}
-
-                <p>هنوز رزروی ثبت نشده است.</p>
-
+                <p class="empty-text">هنوز رزروی ثبت نشده است.</p>
             {% endif %}
-
         </div>
 
+        <!-- Favorites -->
         <div class="dashboard-card">
+            <h2>علاقه‌مندی‌ها</h2>
+            {% if favorites %}
+                <ul class="profile-list">
+                    {% for fav in favorites|slice:":5" %}
+                        <li>
+                            <div>
+                                <a href="{{ fav.product.get_absolute_url }}">
+                                    <strong>{{ fav.product.name }}</strong>
+                                </a>
+                                <small>{{ fav.product.category.name }}</small>
+                            </div>
+                            <span class="amount">{{ fav.product.price|intcomma }} تومان</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <a href="{% url 'favorites:list' %}" class="card-link">مشاهده همه</a>
+            {% else %}
+                <p class="empty-text">هنوز محصولی به علاقه‌مندی‌ها اضافه نشده است.</p>
+            {% endif %}
+        </div>
 
+        <!-- Reviews -->
+        <div class="dashboard-card">
             <h2>آخرین نظرات</h2>
-
             {% if reviews %}
-
-                <ul>
-
+                <ul class="profile-list">
                     {% for review in reviews|slice:":5" %}
-
                         <li>
-
-                            {{ review.product.name }}
-
-                            ({{ review.rating }}/5)
-
+                            <div>
+                                <a href="{{ review.product.get_absolute_url }}">
+                                    <strong>{{ review.product.name }}</strong>
+                                </a>
+                                <small>{{ review.rating }}/5 – {{ review.get_status_display }}</small>
+                            </div>
+                            <small>{{ review.created_at|to_jalali }}</small>
                         </li>
-
                     {% endfor %}
-
                 </ul>
-
             {% else %}
-
-                <p>هنوز نظری ثبت نشده است.</p>
-
+                <p class="empty-text">هنوز نظری ثبت نشده است.</p>
             {% endif %}
-
         </div>
 
+        <!-- Payments -->
         <div class="dashboard-card">
-
             <h2>آخرین پرداخت‌ها</h2>
-
             {% if payments %}
-
-                <ul>
-
+                <ul class="profile-list">
                     {% for payment in payments|slice:":5" %}
-
                         <li>
-
-                            {{ payment.amount }}
-
-                            -
-
-                            {{ payment.get_status_display }}
-
+                            <div>
+                                <strong>سفارش #{{ payment.order_id }}</strong>
+                                <small>{{ payment.created_at|to_jalali }}</small>
+                            </div>
+                            <div class="list-meta">
+                                <span class="status-badge status-{{ payment.status }}">
+                                    {{ payment.get_status_display }}
+                                </span>
+                                <span class="amount">{{ payment.amount|intcomma }} تومان</span>
+                            </div>
                         </li>
-
                     {% endfor %}
-
                 </ul>
-
             {% else %}
-
-                <p>هنوز پرداختی انجام نشده است.</p>
-
+                <p class="empty-text">هنوز پرداختی انجام نشده است.</p>
             {% endif %}
-
         </div>
 
     </div>
-
 </section>
 
 {% endblock %}
 
 {% block js %}
-
 <script src="{% static 'js/accounts/profile.js' %}"></script>
-
 {% endblock %}

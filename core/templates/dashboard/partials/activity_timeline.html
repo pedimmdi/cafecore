@@ -1,3 +1,5 @@
+{% load jalali %}
+
 <div class="dashboard-card">
 
     <div class="card-header">
@@ -38,7 +40,7 @@
 
                 <small>
 
-                    {{ activity.time|date:"Y/m/d H:i" }}
+                    {{ activity.time|to_jalali }}
 
                 </small>
 

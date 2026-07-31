@@ -6,9 +6,9 @@ from orders.models import Order
 class Payment(models.Model):
 
     class Status(models.TextChoices):
-        PENDING = "pending", "Pending"
-        SUCCESS = "success", "Success"
-        FAILED = "failed", "Failed"
+        PENDING = "pending", "در انتظار"
+        SUCCESS = "success", "موفق"
+        FAILED = "failed", "ناموفق"
 
     order = models.OneToOneField(
         Order, on_delete=models.CASCADE, related_name="payment"

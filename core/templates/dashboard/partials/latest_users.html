@@ -1,3 +1,5 @@
+{% load jalali %}
+
 <div class="dashboard-card">
 
     <div class="card-header">
@@ -53,7 +55,7 @@
                 <span>
 
                     عضویت:
-                    {{ user.created_at|date:"Y/m/d" }}
+                    {{ user.created_at|to_jalali }}
 
                 </span>
 

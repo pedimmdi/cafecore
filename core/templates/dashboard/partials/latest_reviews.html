@@ -1,3 +1,4 @@
+{% load jalali %}
 <div class="dashboard-card">
 
     <div class="card-header">
@@ -75,7 +76,7 @@
 
             <div class="review-footer">
 
-                {{ review.created_at|date:"Y/m/d H:i" }}
+                {{ review.created_at|to_jalali }}
 
             </div>
 

@@ -5,9 +5,9 @@ from django.db import models
 class Reservation(models.Model):
 
     class Status(models.TextChoices):
-        PENDING = "pending", "Pending"
-        CONFIRMED = "confirmed", "Confirmed"
-        CANCELLED = "cancelled", "Cancelled"
+        PENDING = "pending", "در انتظار"
+        CONFIRMED = "confirmed", "تأیید شده"
+        CANCELLED = "cancelled", "لغو شده"
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE,

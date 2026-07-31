@@ -105,31 +105,29 @@
                 </div>
 
                 <div class="form-group">
-
-                    <label for="{{ form.reservation_date.id_for_label }}">
-
-                        تاریخ رزرو
-
-                    </label>
-
-                    {{ form.reservation_date }}
-
+                    <label for="id_reservation_date">تاریخ رزرو</label>
+                    <input
+                        type="date"
+                        name="reservation_date"
+                        id="id_reservation_date"
+                        value="{{ form.reservation_date.value|default_if_none:'' }}"
+                        placeholder="از تقویم انتخاب کنید"
+                        required
+                    >
                     {{ form.reservation_date.errors }}
-
                 </div>
 
                 <div class="form-group">
-
-                    <label for="{{ form.reservation_time.id_for_label }}">
-
-                        ساعت رزرو
-
-                    </label>
-
-                    {{ form.reservation_time }}
-
+                    <label for="id_reservation_time">ساعت رزرو</label>
+                    <input
+                        type="time"
+                        name="reservation_time"
+                        id="id_reservation_time"
+                        value="{{ form.reservation_time.value|default_if_none:'' }}"
+                        placeholder="مثلاً 19:30"
+                        required
+                    >
                     {{ form.reservation_time.errors }}
-
                 </div>
 
                 <div class="form-group">
