@@ -154,12 +154,59 @@
 
         </div>
 
-        <button class="mobile-menu-btn">
-
+        <button class="mobile-menu-btn" type="button" aria-label="منو" aria-expanded="false">
             <i class="bi bi-list"></i>
-
         </button>
 
     </nav>
+
+    <div class="mobile-nav-overlay"></div>
+
+    <div class="mobile-nav-panel" id="mobileNavPanel">
+        <div class="mobile-nav-header">
+            <span>منو</span>
+            <button type="button" class="mobile-nav-close" aria-label="بستن">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <ul class="mobile-nav-menu">
+            <li><a href="{% url 'pages:home' %}">خانه</a></li>
+            <li><a href="{% url 'menu:product_list' %}">منو</a></li>
+            <li><a href="{% url 'reservations:create' %}">رزرو میز</a></li>
+            <li><a href="{% url 'pages:about' %}">درباره ما</a></li>
+            <li><a href="{% url 'pages:contact' %}">تماس با ما</a></li>
+        </ul>
+
+        <div class="mobile-nav-actions">
+            <a href="{% url 'menu:search' %}" class="mobile-nav-action">
+                <i class="bi bi-search"></i> جستجو
+            </a>
+            <a href="{% url 'favorites:list' %}" class="mobile-nav-action">
+                <i class="bi bi-heart"></i> علاقه‌مندی‌ها
+            </a>
+            <a href="{% url 'orders:cart' %}" class="mobile-nav-action">
+                <i class="bi bi-cart3"></i> سبد خرید
+            </a>
+
+            {% if user.is_authenticated %}
+                {% if user.is_staff %}
+                    <a href="{% url 'dashboard:index' %}" class="mobile-nav-action">
+                        <i class="bi bi-speedometer2"></i> داشبورد
+                    </a>
+                {% endif %}
+                <a href="{% url 'accounts:profile' %}" class="mobile-nav-action">
+                    <i class="bi bi-person"></i> پروفایل
+                </a>
+            {% else %}
+                <a href="{% url 'accounts:login' %}" class="mobile-nav-action">
+                    <i class="bi bi-box-arrow-in-left"></i> ورود
+                </a>
+                <a href="{% url 'accounts:register' %}" class="mobile-nav-action mobile-nav-register">
+                    ثبت نام
+                </a>
+            {% endif %}
+        </div>
+    </div>
 
 </header>

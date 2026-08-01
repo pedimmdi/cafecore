@@ -101,33 +101,38 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
+# AUTH_PASSWORD_VALIDATORS = [
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+#     },
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+#     },
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+#     },
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+#     },
+# ]
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {"NAME": "accounts.validators.PersianUserAttributeSimilarityValidator"},
+    {"NAME": "accounts.validators.PersianMinimumLengthValidator"},
+    {"NAME": "accounts.validators.PersianCommonPasswordValidator"},
+    {"NAME": "accounts.validators.PersianNumericPasswordValidator"},
 ]
 
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = 'fa-ir'
 
-TIME_ZONE = "Asia/Tehran"
+TIME_ZONE = 'Asia/Tehran'
 
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
@@ -153,3 +158,6 @@ LOGIN_REDIRECT_URL = "accounts:profile"
 LOGOUT_REDIRECT_URL = "pages:home"
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+
+DEFAULT_FROM_EMAIL = "CafeCore <noreply@cafecore.local>"

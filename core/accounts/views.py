@@ -10,7 +10,10 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import UpdateView
 
-from .forms import RegisterForm, ProfileUpdateForm, LoginForm
+from .forms import(
+    RegisterForm, ProfileUpdateForm, LoginForm,
+    PersianPasswordChangeForm, PersianSetPasswordForm
+)
 from .models import User
 from orders.models import Order
 from reservations.models import Reservation
@@ -105,6 +108,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
 
 
 class CustomPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
+    form_class = PersianPasswordChangeForm
     template_name = 'accounts/password_change.html'
     success_url = reverse_lazy('accounts:password_change_done')
 
@@ -125,6 +129,7 @@ class CustomPasswordResetDoneView(PasswordResetDoneView):
 
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+    form_class = PersianSetPasswordForm
     template_name = 'accounts/password_reset_confirm.html'
     success_url = reverse_lazy('accounts:password_reset_complete')
 
