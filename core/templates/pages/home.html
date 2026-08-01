@@ -2,6 +2,8 @@
 
 {% load static %}
 {% load humanize %}
+{% load jalali %}
+
 {% block title %}
 {% if site_settings %}{{ site_settings.site_name }}{% else %}کافه رستوران{% endif %}
 {% endblock %}
@@ -13,63 +15,60 @@
 {% block content %}
 
 <!-- Hero -->
-<section class="hero">
-    <div class="hero-content">
-        <span class="hero-badge">خوش آمدید</span>
-
-        <h1>
-            {% if site_settings %}
-                {{ site_settings.site_name }}
-            {% else %}
-                کافه رستوران
-            {% endif %}
-        </h1>
-
-        <p>
-            {% if site_settings and site_settings.description %}
-                {{ site_settings.description }}
-            {% else %}
-                تجربه‌ای متفاوت از قهوه، غذا و لحظاتی آرام در فضایی مدرن.
-            {% endif %}
-        </p>
-
-        <div class="hero-features">
-            <span><i class="bi bi-cup-hot"></i> منوی متنوع</span>
-            <span><i class="bi bi-clock"></i> سرو سریع</span>
-            <span><i class="bi bi-calendar-check"></i> رزرو آنلاین</span>
-            <span><i class="bi bi-geo-alt"></i> فضای مدرن</span>
-        </div>
-
-        <div class="hero-buttons">
-            <a href="{% url 'menu:product_list' %}" class="btn-primary">
-                مشاهده منو
-            </a>
-            <a href="{% url 'reservations:create' %}" class="btn-secondary">
-                رزرو میز
-            </a>
-        </div>
-
-        <div class="hero-stats">
-            <div class="hero-stat">
-                <strong>{{ categories|length }}+</strong>
-                <span>دسته‌بندی</span>
-            </div>
-            <div class="hero-stat">
-                <strong>{{ products_count }}+</strong>
-                <span>آیتم منو</span>
-            </div>
-            <div class="hero-stat">
-                <strong>۱۰–۲۴</strong>
-                <span>ساعات کاری</span>
-            </div>
-        </div>
+<section class="hero-slider">
+    <div class="hero-slider-bg">
+        <img
+            src="{% static 'images/pages/hero-bg.jpg' %}"
+            alt="CafeCore"
+            onerror="this.src='{% static 'images/pages/hero.png' %}'"
+        >
+        <div class="hero-slider-overlay"></div>
     </div>
 
-    <div class="hero-image">
-        <img src="{% static 'images/pages/hero.png' %}" alt="Cafe">
-        <div class="hero-image-badge">
-            <i class="bi bi-star-fill"></i>
-            <span>انتخاب ویژه امروز</span>
+    <div class="hero-slider-inner">
+        <div class="hero-slider-content">
+            <span class="hero-badge">خوش آمدید به کافه</span>
+
+            <h1>
+                {% if site_settings %}
+                    {{ site_settings.site_name }}
+                {% else %}
+                    کافه کور
+                {% endif %}
+            </h1>
+
+            <p class="hero-lead">
+                {% if site_settings and site_settings.description %}
+                    {{ site_settings.description }}
+                {% else %}
+                    عشق در هواست… و بوی قهوه همه‌جا پیچیده.
+                    تجربه‌ای متفاوت از قهوه، غذا و لحظاتی آرام.
+                {% endif %}
+            </p>
+
+            <div class="hero-buttons">
+                <a href="{% url 'menu:product_list' %}" class="btn-primary">
+                    مشاهده منو
+                </a>
+                <a href="{% url 'reservations:create' %}" class="btn-secondary">
+                    رزرو میز
+                </a>
+            </div>
+
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <strong>{{ categories|length|to_persian }}+</strong>
+                    <span>دسته‌بندی</span>
+                </div>
+                <div class="hero-stat">
+                    <strong>{{ products_count|to_persian }}+</strong>
+                    <span>آیتم منو</span>
+                </div>
+                <div class="hero-stat">
+                    <strong>{{ "۱۰–۲۴" }}</strong>
+                    <span>ساعات کاری</span>
+                </div>
+            </div>
         </div>
     </div>
 </section>
@@ -111,7 +110,7 @@
                     </h3>
                     <p>{{ product.description|truncatewords:15 }}</p>
                     <div class="home-product-footer">
-                        <span class="home-product-price">{{ product.price|intcomma }} تومان</span>
+                        <span class="home-product-price">{{ product.price|persian_price }} تومان</span>
                         <a href="{{ product.get_absolute_url }}" class="home-product-btn">مشاهده</a>
                     </div>
                 </div>
@@ -144,7 +143,7 @@
                     </h3>
                     <p>{{ product.description|truncatewords:15 }}</p>
                     <div class="home-product-footer">
-                        <span class="home-product-price">{{ product.price }} تومان</span>
+                        <span class="home-product-price">{{ product.price|persian_price }} تومان</span>
                         <a href="{{ product.get_absolute_url }}" class="home-product-btn">مشاهده</a>
                     </div>
                 </div>

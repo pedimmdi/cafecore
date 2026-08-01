@@ -177,3 +177,36 @@ ul {
     }
 
 }
+
+.navbar-avatar-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.05);
+    transition: 0.3s;
+}
+
+.navbar-avatar-link:hover {
+    background: rgba(212, 175, 55, 0.2);
+    box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.45);
+}
+
+.navbar-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.navbar-user a {
+    font-size: 1.6rem;
+    color: #fff;
+}
+
+a.navbar-search-btn {
+    text-decoration: none;
+}

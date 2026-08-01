@@ -94,11 +94,9 @@
 
         <div class="navbar-left">
 
-            <button class="navbar-search-btn">
-
+            <a href="{% url 'menu:search' %}" class="navbar-search-btn" title="جستجو">
                 <i class="bi bi-search"></i>
-
-            </button>
+            </a>
 
             <a href="{% url 'favorites:list' %}" class="navbar-icon">
 
@@ -121,8 +119,16 @@
                 {% endif %}
 
                 <div class="navbar-user">
-                    <a href="{% url 'accounts:profile' %}" title="پروفایل">
-                        <i class="bi bi-person-circle"></i>
+                    <a href="{% url 'accounts:profile' %}" title="پروفایل" class="navbar-avatar-link">
+                        {% if user.avatar %}
+                            <img
+                                src="{{ user.avatar.url }}"
+                                alt="{{ user.first_name }}"
+                                class="navbar-avatar"
+                            >
+                        {% else %}
+                            <i class="bi bi-person-circle"></i>
+                        {% endif %}
                     </a>
                 </div>
 
