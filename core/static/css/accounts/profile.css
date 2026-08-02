@@ -99,7 +99,7 @@
     border-radius: 16px;
     padding: 24px;
     text-align: center;
-    transition: .3s;
+    transition: 0.3s;
 }
 
 .stat-card:hover {
@@ -117,19 +117,39 @@
     color: #9ca3af;
 }
 
+/* ========== Actions ========== */
+
 .profile-actions {
     display: flex;
-    gap: 14px;
+    gap: 12px;
     flex-wrap: wrap;
+    align-items: center;
+}
+
+.profile-actions form {
+    display: inline-flex;
+    margin: 0;
 }
 
 .profile-actions .btn-primary,
-.profile-actions .btn-secondary {
-    padding: 14px 28px;
+.profile-actions .btn-secondary,
+.profile-actions .btn-logout {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 22px;
+    min-height: 48px;
     border-radius: 12px;
     text-decoration: none;
     font-weight: 700;
-    transition: .3s;
+    font-size: 0.95rem;
+    font-family: inherit;
+    line-height: 1;
+    transition: 0.25s;
+    box-sizing: border-box;
+    cursor: pointer;
+    border: 1px solid transparent;
 }
 
 .profile-actions .btn-primary {
@@ -144,13 +164,31 @@
 
 .profile-actions .btn-secondary {
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.12);
     color: #fff;
 }
 
 .profile-actions .btn-secondary:hover {
     border-color: rgba(212, 175, 55, 0.4);
 }
+
+.profile-actions .btn-logout {
+    background: rgba(239, 68, 68, 0.12);
+    border-color: rgba(239, 68, 68, 0.45);
+    color: #f87171;
+}
+
+.profile-actions .btn-logout:hover {
+    background: rgba(239, 68, 68, 0.22);
+    border-color: #ef4444;
+    color: #fecaca;
+}
+
+.profile-actions .btn-logout i {
+    font-size: 1.1rem;
+}
+
+/* ========== Lists ========== */
 
 .dashboard-section {
     display: grid;
@@ -263,10 +301,20 @@
     text-decoration: underline;
 }
 
+/* ========== Responsive ========== */
+
 @media (max-width: 992px) {
-    .profile-body { grid-template-columns: 1fr; }
-    .profile-stats { grid-template-columns: repeat(2, 1fr); }
-    .dashboard-section { grid-template-columns: 1fr; }
+    .profile-body {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .dashboard-section {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media (max-width: 768px) {
@@ -274,11 +322,23 @@
         flex-direction: column;
         text-align: center;
     }
-    .profile-stats { grid-template-columns: 1fr; }
-    .profile-actions { flex-direction: column; }
-    .profile-actions .btn-primary,
-    .profile-actions .btn-secondary {
+
+    .profile-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .profile-actions form {
         width: 100%;
-        text-align: center;
+    }
+
+    .profile-actions .btn-primary,
+    .profile-actions .btn-secondary,
+    .profile-actions .btn-logout {
+        width: 100%;
     }
 }

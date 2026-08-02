@@ -259,3 +259,23 @@
     }
 
 }
+
+.empty-favorites .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 28px;
+    border-radius: 14px;
+    background: #D4AF37;
+    color: #111;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1rem;
+    transition: 0.25s;
+}
+
+.empty-favorites .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(212, 175, 55, 0.3);
+    background: #e6c14d;
+}

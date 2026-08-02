@@ -45,12 +45,12 @@
                             {% endif %}
                         {% endfor %}
                     </div>
-                    <span>{{ avg_rating }} از ۵ ({{ reviews_count }} نظر)</span>
+                    <span>{{ avg_rating|to_persian }} از ۵ ({{ reviews_count|to_persian }} نظر)</span>
                 </div>
                 {% endif %}
 
                 <div class="price">
-                    {{ product.price|intcomma }} تومان
+                    {{ product.price|persian_price }} تومان
                 </div>
 
                 <p class="description">
@@ -67,7 +67,7 @@
                 <div class="meta">
                     <div>
                         <strong>موجودی:</strong>
-                        {{ product.inventory }}
+                        {{ product.inventory|to_persian }}
                     </div>
                     <div>
                         <strong>وضعیت:</strong>
@@ -80,9 +80,9 @@
                     {% if product.serving_start and product.serving_end %}
                     <div>
                         <strong>ساعت سرو:</strong>
-                        {{ product.serving_start|time:"H:i" }}
+                        {{ product.serving_start|time:"H:i"|to_persian }}
                         –
-                        {{ product.serving_end|time:"H:i" }}
+                        {{ product.serving_end|time:"H:i"|to_persian }}
                     </div>
                     {% endif %}
                 </div>

@@ -193,15 +193,15 @@
             </div>
 
             <div class="form-group">
-
-                <label for="{{ form.message.id_for_label }}">
-
-                    پیام
-
-                </label>
-
-                {{ form.message }}
-
+                <label for="id_message">پیام</label>
+                <textarea
+                    name="message"
+                    id="id_message"
+                    rows="6"
+                    placeholder="پیام خود را بنویسید..."
+                    required
+                >{% if form.message.value %}{{ form.message.value }}{% endif %}</textarea>
+                {{ form.message.errors }}
             </div>
 
             <button
@@ -220,23 +220,16 @@
 </section>
 
 <section class="map">
-
-    <div class="map-placeholder">
-
-        <h2>
-
-            موقعیت {{ site_settings.site_name }}
-
-        </h2>
-
-        <p>
-
-            در آینده نقشه گوگل یا OpenStreetMap در این قسمت نمایش داده خواهد شد.
-
-        </p>
-
+    <h2 class="map-title">موقعیت {{ site_settings.site_name }}</h2>
+    <div class="map-frame">
+        <iframe
+            title="نقشه کافه"
+            src="https://maps.google.com/maps?q={{ site_settings.address|urlencode }}&z=15&output=embed"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen
+        ></iframe>
     </div>
-
 </section>
 
 {% endblock %}

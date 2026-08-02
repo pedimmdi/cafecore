@@ -56,7 +56,7 @@
 
             <div class="profile-item">
                 <span>شماره تماس</span>
-                <strong>{{ user.phone_number|default:"—" }}</strong>
+                <strong>{{ user.phone_number|to_persian|default:"—" }}</strong>
             </div>
 
             <div class="profile-item">
@@ -78,19 +78,19 @@
 
         <div class="profile-stats">
             <div class="stat-card">
-                <h3>{{ orders.count }}</h3>
+                <h3>{{ orders.count|to_persian }}</h3>
                 <p>سفارش‌ها</p>
             </div>
             <div class="stat-card">
-                <h3>{{ reservations.count }}</h3>
+                <h3>{{ reservations.count|to_persian }}</h3>
                 <p>رزروها</p>
             </div>
             <div class="stat-card">
-                <h3>{{ reviews.count }}</h3>
+                <h3>{{ reviews.count|to_persian }}</h3>
                 <p>نظرات</p>
             </div>
             <div class="stat-card">
-                <h3>{{ favorites.count }}</h3>
+                <h3>{{ favorites.count|to_persian }}</h3>
                 <p>علاقه‌مندی‌ها</p>
             </div>
         </div>
@@ -102,9 +102,12 @@
             <a href="{% url 'accounts:password_change' %}" class="btn-secondary">
                 تغییر رمز عبور
             </a>
-            <form method="post" action="{% url 'accounts:logout' %}" style="display:inline;">
+            <form method="post" action="{% url 'accounts:logout' %}">
                 {% csrf_token %}
-                <button type="submit" class="btn-secondary">خروج</button>
+                <button type="submit" class="btn-logout">
+                    <i class="bi bi-box-arrow-right"></i>
+                    خروج
+                </button>
             </form>
         </div>
     </div>
@@ -119,14 +122,14 @@
                     {% for order in orders|slice:":5" %}
                         <li>
                             <div>
-                                <strong>سفارش #{{ order.id }}</strong>
+                                <strong>سفارش #{{ order.id|to_persian }}</strong>
                                 <small>{{ order.created_at|to_jalali }}</small>
                             </div>
                             <div class="list-meta">
                                 <span class="status-badge status-{{ order.status }}">
                                     {{ order.get_status_display }}
                                 </span>
-                                <span class="amount">{{ order.total_price|intcomma }} تومان</span>
+                                <span class="amount">{{ order.total_price|persian_price }} تومان</span>
                             </div>
                         </li>
                     {% endfor %}
@@ -147,9 +150,9 @@
                                 <strong>
                                     {{ reservation.reservation_date|to_jalali }}
                                     –
-                                    {{ reservation.reservation_time|time:"H:i" }}
+                                    {{ reservation.reservation_time|time:"H:i"|to_persian }}
                                 </strong>
-                                <small>{{ reservation.number_of_guests }} نفر</small>
+                                <small>{{ reservation.number_of_guests|to_persian }} نفر</small>
                             </div>
                             <span class="status-badge status-{{ reservation.status }}">
                                 {{ reservation.get_status_display }}
@@ -175,7 +178,7 @@
                                 </a>
                                 <small>{{ fav.product.category.name }}</small>
                             </div>
-                            <span class="amount">{{ fav.product.price|intcomma }} تومان</span>
+                            <span class="amount">{{ fav.product.price|persian_price }} تومان</span>
                         </li>
                     {% endfor %}
                 </ul>
@@ -196,7 +199,7 @@
                                 <a href="{{ review.product.get_absolute_url }}">
                                     <strong>{{ review.product.name }}</strong>
                                 </a>
-                                <small>{{ review.rating }}/5 – {{ review.get_status_display }}</small>
+                                <small>{{ review.rating|to_persian }}/۵ – {{ review.get_status_display }}</small>
                             </div>
                             <small>{{ review.created_at|to_jalali }}</small>
                         </li>
@@ -215,14 +218,14 @@
                     {% for payment in payments|slice:":5" %}
                         <li>
                             <div>
-                                <strong>سفارش #{{ payment.order_id }}</strong>
+                                <strong>سفارش #{{ payment.order_id|to_persian }}</strong>
                                 <small>{{ payment.created_at|to_jalali }}</small>
                             </div>
                             <div class="list-meta">
                                 <span class="status-badge status-{{ payment.status }}">
                                     {{ payment.get_status_display }}
                                 </span>
-                                <span class="amount">{{ payment.amount|intcomma }} تومان</span>
+                                <span class="amount">{{ payment.amount|persian_price }} تومان</span>
                             </div>
                         </li>
                     {% endfor %}

@@ -1,221 +1,111 @@
 {% extends "base.html" %}
-
 {% load static %}
+{% load jalali %}
 
-{% block title %}
-رزرو میز | کافه رستوران
-{% endblock %}
+{% block title %}رزرو میز | {% if site_settings %}{{ site_settings.site_name }}{% else %}کافه رستوران{% endif %}{% endblock %}
 
 {% block css %}
-
 <link rel="stylesheet" href="{% static 'css/reservations/reservation.css' %}">
-
 {% endblock %}
 
 {% block content %}
-
 <section class="reservation-page">
-
     <div class="container">
 
         <div class="section-header">
-
-            <span class="section-badge">
-
-                Reservation
-
-            </span>
-
-            <h1>
-
-                رزرو میز
-
-            </h1>
-
-            <p>
-
-                میز خود را به صورت آنلاین رزرو کنید.
-
-            </p>
-
+            {% comment %} <span class="section-badge">رزرو میز</span> {% endcomment %}
+            <h1>میز خود را رزرو کنید</h1>
+            <p>تاریخ و ساعت دلخواه را انتخاب کنید؛ پس از بررسی، رزرو شما تأیید می‌شود.</p>
         </div>
 
         <div class="reservation-wrapper">
 
-            <form
-                method="post"
-                class="reservation-form">
-
+            <form method="post" class="reservation-form">
                 {% csrf_token %}
 
-                <div class="form-group">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="id_first_name">نام</label>
+                        <input type="text" name="first_name" id="id_first_name"
+                               value="{{ form.first_name.value|default_if_none:'' }}" required>
+                        {{ form.first_name.errors }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_last_name">نام خانوادگی</label>
+                        <input type="text" name="last_name" id="id_last_name"
+                               value="{{ form.last_name.value|default_if_none:'' }}" required>
+                        {{ form.last_name.errors }}
+                    </div>
+                </div>
 
-                    <label for="{{ form.first_name.id_for_label }}">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="id_email">ایمیل</label>
+                        <input type="email" name="email" id="id_email"
+                               value="{{ form.email.value|default_if_none:'' }}" required>
+                        {{ form.email.errors }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_phone_number">شماره تماس</label>
+                        <input type="text" name="phone_number" id="id_phone_number"
+                               value="{% if form.phone_number.value %}{{ form.phone_number.value|to_persian }}{% endif %}"
+                               required>
+                        {{ form.phone_number.errors }}
+                    </div>
+                </div>
 
-                        نام
-
-                    </label>
-
-                    {{ form.first_name }}
-
-                    {{ form.first_name.errors }}
-
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="id_reservation_date">تاریخ رزرو</label>
+                        <input type="date" name="reservation_date" id="id_reservation_date"
+                               value="{{ form.reservation_date.value|default_if_none:'' }}" required>
+                        {{ form.reservation_date.errors }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_reservation_time">ساعت رزرو</label>
+                        <input type="time" name="reservation_time" id="id_reservation_time"
+                               value="{{ form.reservation_time.value|default_if_none:'' }}" required>
+                        {{ form.reservation_time.errors }}
+                    </div>
                 </div>
 
                 <div class="form-group">
-
-                    <label for="{{ form.last_name.id_for_label }}">
-
-                        نام خانوادگی
-
-                    </label>
-
-                    {{ form.last_name }}
-
-                    {{ form.last_name.errors }}
-
-                </div>
-
-                <div class="form-group">
-
-                    <label for="{{ form.email.id_for_label }}">
-
-                        ایمیل
-
-                    </label>
-
-                    {{ form.email }}
-
-                    {{ form.email.errors }}
-
-                </div>
-
-                <div class="form-group">
-
-                    <label for="{{ form.phone_number.id_for_label }}">
-
-                        شماره تماس
-
-                    </label>
-
-                    {{ form.phone_number }}
-
-                    {{ form.phone_number.errors }}
-
-                </div>
-
-                <div class="form-group">
-                    <label for="id_reservation_date">تاریخ رزرو</label>
-                    <input
-                        type="date"
-                        name="reservation_date"
-                        id="id_reservation_date"
-                        value="{{ form.reservation_date.value|default_if_none:'' }}"
-                        placeholder="از تقویم انتخاب کنید"
-                        required
-                    >
-                    {{ form.reservation_date.errors }}
-                </div>
-
-                <div class="form-group">
-                    <label for="id_reservation_time">ساعت رزرو</label>
-                    <input
-                        type="time"
-                        name="reservation_time"
-                        id="id_reservation_time"
-                        value="{{ form.reservation_time.value|default_if_none:'' }}"
-                        placeholder="مثلاً 19:30"
-                        required
-                    >
-                    {{ form.reservation_time.errors }}
-                </div>
-
-                <div class="form-group">
-
-                    <label for="{{ form.number_of_guests.id_for_label }}">
-
-                        تعداد نفرات
-
-                    </label>
-
-                    {{ form.number_of_guests }}
-
+                    <label for="id_number_of_guests">تعداد نفرات</label>
+                    <input type="number" name="number_of_guests" id="id_number_of_guests"
+                           min="1" max="20"
+                           value="{{ form.number_of_guests.value|default_if_none:'2' }}" required>
                     {{ form.number_of_guests.errors }}
-
                 </div>
 
                 <div class="form-group">
-
-                    <label for="{{ form.description.id_for_label }}">
-
-                        توضیحات
-
-                    </label>
-
-                    {{ form.description }}
-
+                    <label for="id_description">توضیحات (اختیاری)</label>
+                    <textarea name="description" id="id_description" rows="4"
+                              placeholder="مثلاً مناسبت خاص یا درخواست ویژه...">{% if form.description.value %}{{ form.description.value }}{% endif %}</textarea>
                     {{ form.description.errors }}
-
                 </div>
 
-                <button
-                    type="submit"
-                    class="reservation-btn">
-
+                <button type="submit" class="reservation-btn">
+                    <i class="bi bi-calendar-check"></i>
                     ثبت درخواست رزرو
-
                 </button>
-
             </form>
 
             <aside class="reservation-info">
-
-                <h2>
-
-                    اطلاعات رزرو
-
-                </h2>
-
+                <div class="info-icon"><i class="bi bi-info-circle"></i></div>
+                <h2>نکات مهم</h2>
                 <ul>
-
-                    <li>
-
-                        رزرو پس از بررسی توسط مدیریت تأیید خواهد شد.
-
-                    </li>
-
-                    <li>
-
-                        لطفاً حداقل چند ساعت قبل از مراجعه، رزرو خود را ثبت کنید.
-
-                    </li>
-
-                    <li>
-
-                        در صورت نیاز می‌توانید توضیحات تکمیلی را در فرم وارد کنید.
-
-                    </li>
-
-                    <li>
-
-                        پس از تأیید، در صورت نیاز با شما تماس گرفته خواهد شد.
-
-                    </li>
-
+                    <li>رزرو پس از بررسی مدیریت تأیید می‌شود.</li>
+                    <li>حداقل چند ساعت قبل از مراجعه ثبت کنید.</li>
+                    <li>حداکثر تعداد نفرات ۲۰ نفر است.</li>
+                    <li>در صورت نیاز پس از تأیید با شما تماس گرفته می‌شود.</li>
                 </ul>
-
             </aside>
 
         </div>
-
     </div>
-
 </section>
-
 {% endblock %}
 
 {% block js %}
-
 <script src="{% static 'js/reservations/reservation.js' %}"></script>
-
 {% endblock %}

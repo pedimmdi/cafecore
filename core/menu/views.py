@@ -1,4 +1,4 @@
-from django.db.models import Avg, Q
+from django.db.models import Avg, Case, IntegerField, Q, Value, When
 from django.views.generic import DetailView, ListView
 
 from favorites.models import Favorite
@@ -112,7 +112,7 @@ class SearchView(ListView):
     paginate_by = 12
 
     def get_queryset(self):
-        query = self.request.GET.get("q")
+        query = (self.request.GET.get("q") or "").strip()
 
         queryset = (
             Product.objects
@@ -120,14 +120,24 @@ class SearchView(ListView):
             .select_related("category")
         )
 
-        if query:
-            queryset = queryset.filter(
-                Q(name__icontains=query) |
-                Q(description__icontains=query) |
-                Q(ingredients__icontains=query)
-            )
+        if not query:
+            return queryset.order_by("name")
 
-        return queryset.order_by("name")
+        queryset = queryset.filter(
+            Q(name__icontains=query)
+            | Q(description__icontains=query)
+            | Q(ingredients__icontains=query)
+        ).annotate(
+            search_rank=Case(
+                When(name__icontains=query, then=Value(0)),
+                When(description__icontains=query, then=Value(1)),
+                When(ingredients__icontains=query, then=Value(2)),
+                default=Value(3),
+                output_field=IntegerField(),
+            )
+        ).order_by("search_rank", "name")
+
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

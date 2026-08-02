@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% load static %}
+{% load jalali %}
 
 {% block title %}
 سبد خرید | کافه رستوران
@@ -20,11 +21,11 @@
 
         <div class="section-header">
 
-            <span class="section-badge">
+            {% comment %} <span class="section-badge">
 
                 Cart
 
-            </span>
+            </span> {% endcomment %}
 
             <h1>
 
@@ -80,7 +81,7 @@
 
                     <div class="cart-price">
 
-                        {{ item.price }} تومان
+                        {{ item.price|persian_price }} تومان
 
                     </div>
 
@@ -111,7 +112,7 @@
 
                     <div class="cart-total">
 
-                        {{ item.total_price }} تومان
+                        {{ item.total_price|persian_price }} تومان
 
                     </div>
 
@@ -171,11 +172,7 @@
 
                     </span>
 
-                    <strong>
-
-                        {{ cart|length }}
-
-                    </strong>
+                    <strong>{{ cart|length|to_persian }}</strong>
 
                 </div>
 
@@ -187,11 +184,7 @@
 
                     </span>
 
-                    <strong>
-
-                        {{ cart.get_total_price }} تومان
-
-                    </strong>
+                    <strong>{{ cart.get_total_price|persian_price }} تومان</strong>
 
                 </div>
 
@@ -241,11 +234,7 @@
 
                     </span>
 
-                    <strong>
-
-                        {{ cart.coupon.discount }}%
-
-                    </strong>
+                    <strong>{{ cart.coupon.discount|to_persian }}٪</strong>
 
                 </div>
 
@@ -257,11 +246,7 @@
 
                     </span>
 
-                    <strong>
-
-                        - {{ cart.get_discount }} تومان
-
-                    </strong>
+                    <strong>- {{ cart.get_discount|persian_price }} تومان</strong>
 
                 </div>
 
@@ -275,11 +260,7 @@
 
                     </span>
 
-                    <strong>
-
-                        {{ cart.get_final_price }} تومان
-
-                    </strong>
+                    <strong>{{ cart.get_final_price|persian_price }} تومان</strong>
 
                 </div>
 

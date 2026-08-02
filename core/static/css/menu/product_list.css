@@ -54,128 +54,102 @@
 
 }
 
-.products-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
-    gap:30px;
-    justify-content:start;
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+    justify-content: start;
 }
 
-.product-card{
-    background:rgba(255,255,255,.05);
-    border:1px solid rgba(255,255,255,.08);
-    border-radius:24px;
-    overflow:hidden;
-    backdrop-filter:blur(18px);
-    transition:.35s;
-    max-width:360px;
-    width:100%;
+.product-card {
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    overflow: hidden;
+    backdrop-filter: blur(18px);
+    transition: 0.35s;
+    max-width: 360px;
+    width: 100%;
+    height: 100%;
 }
 
-.product-card:hover{
-
-    transform:translateY(-10px);
-
-    border-color:rgba(212,175,55,.35);
-
-    box-shadow:0 25px 45px rgba(0,0,0,.35);
-
+.product-card:hover {
+    transform: translateY(-10px);
+    border-color: rgba(212, 175, 55, 0.35);
+    box-shadow: 0 25px 45px rgba(0, 0, 0, 0.35);
 }
 
-.product-card img{
-
-    width:100%;
-
-    height:240px;
-
-    object-fit:cover;
-
-    display:block;
-
+.product-image-link {
+    display: block;
 }
 
-.product-body{
-
-    padding:25px;
-
+.product-card img {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+    display: block;
 }
 
-.category{
-
-    color:#D4AF37;
-
-    font-size:.9rem;
-
+.product-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 25px;
 }
 
-.product-body h3{
-
-    margin:12px 0;
-
+.product-top {
+    flex: 1;
 }
 
-.product-body h3 a{
-
-    color:#ffffff;
-
-    text-decoration:none;
-
+.category {
+    color: #D4AF37;
+    font-size: 0.9rem;
 }
 
-.product-body p{
-
-    color:#a1a1aa;
-
-    line-height:1.9;
-
-    min-height:60px;
-
+.product-body h3 {
+    margin: 12px 0;
 }
 
-.product-footer{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    margin-top:25px;
-
+.product-body h3 a {
+    color: #ffffff;
+    text-decoration: none;
 }
 
-.price{
-
-    font-size:1.1rem;
-
-    font-weight:700;
-
-    color:#D4AF37;
-
+.product-body p {
+    color: #a1a1aa;
+    line-height: 1.9;
+    margin: 0;
 }
 
-.details-btn{
-
-    padding:10px 22px;
-
-    border-radius:12px;
-
-    background:#D4AF37;
-
-    color:#111827;
-
-    text-decoration:none;
-
-    font-weight:700;
-
-    transition:.3s;
-
+/* قیمت و دکمه همیشه پایین کارت */
+.product-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 20px;
 }
 
-.details-btn:hover{
+.price {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #D4AF37;
+}
 
-    transform:translateY(-2px);
+.details-btn {
+    padding: 10px 22px;
+    border-radius: 12px;
+    background: #D4AF37;
+    color: #111827;
+    text-decoration: none;
+    font-weight: 700;
+    transition: 0.3s;
+}
 
+.details-btn:hover {
+    transform: translateY(-2px);
 }
 
 .empty-products{

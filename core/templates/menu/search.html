@@ -20,11 +20,11 @@
 
         <div class="section-header">
 
-            <span class="section-badge">
+            {% comment %} <span class="section-badge">
 
                 Search
 
-            </span>
+            </span> {% endcomment %}
 
             <h1>
 
@@ -34,41 +34,39 @@
 
         </div>
 
-        <form
-                method="get"
-                class="search-form">
+        <form method="get" class="search-form" role="search">
+            <div class="search-box">
+                <i class="bi bi-search search-icon"></i>
 
-            <input
-                    type="text"
+                <input
+                    type="search"
                     name="q"
                     value="{{ query }}"
                     autocomplete="off"
                     spellcheck="false"
-                    placeholder="جستجوی غذا، نوشیدنی یا مواد اولیه...">
+                    placeholder="جستجوی غذا، نوشیدنی یا مواد اولیه..."
+                    aria-label="جستجوی محصولات"
+                >
 
-            <button type="submit">
+                {% if query %}
+                    <a href="{% url 'menu:search' %}" class="search-clear" title="پاک کردن">
+                        <i class="bi bi-x-lg"></i>
+                    </a>
+                {% endif %}
 
-                <i class="bi bi-search"></i>
-
-            </button>
-
+                <button type="submit" class="search-submit">
+                    جستجو
+                </button>
+            </div>
         </form>
 
         {% if query %}
-
         <p class="search-result">
-
             نتیجه جستجو برای
-
-            <strong>
-
-                "{{ query }}"
-
-            </strong>
-
+            <strong>«{{ query }}»</strong>
         </p>
-
         {% endif %}
+
 
         {% if products %}
 
