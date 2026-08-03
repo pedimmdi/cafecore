@@ -1,289 +1,227 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", function () {
+    // سایدبار موبایل
+    var toggle = document.getElementById("dashSidebarToggle");
+    var sidebar = document.getElementById("dashSidebar");
+    if (toggle && sidebar) {
+        toggle.addEventListener("click", function () {
+            sidebar.classList.toggle("open");
+        });
+    }
 
-    initializeRevenueChart();
+    var gold = "#D4AF37";
+    var goldSoft = "rgba(212,175,55,0.15)";
+    var gridColor = "rgba(255,255,255,0.05)";
+    var tickColor = "#999";
 
-    initializeOrdersChart();
+    var tooltipOpts = {
+        backgroundColor: "#1b1b1b",
+        titleColor: "#fff",
+        bodyColor: "#ddd",
+        borderColor: gold,
+        borderWidth: 1,
+    };
 
-});
+    var scaleOpts = {
+        x: {
+            grid: { display: false },
+            ticks: { color: tickColor },
+        },
+        y: {
+            beginAtZero: true,
+            grid: { color: gridColor },
+            ticks: { color: tickColor },
+        },
+    };
 
+    function readJson(id) {
+        var el = document.getElementById(id);
+        if (!el) return null;
+        try {
+            return JSON.parse(el.textContent);
+        } catch (e) {
+            return null;
+        }
+    }
 
-function initializeRevenueChart() {
-
-    const canvas = document.getElementById("revenueChart");
-
-    if (!canvas) return;
-
-    const labels = JSON.parse(
-        document.getElementById("revenue-labels").textContent
-    );
-
-    const values = JSON.parse(
-        document.getElementById("revenue-values").textContent
-    );
-
-    new Chart(canvas, {
-
-        type: "line",
-
-        data: {
-
-            labels: labels,
-
-            datasets: [
-
-                {
-
+    // درآمد — Line
+    var revLabels = readJson("revenue-labels");
+    var revValues = readJson("revenue-values");
+    var revCanvas = document.getElementById("revenueChart");
+    if (revCanvas && revLabels) {
+        new Chart(revCanvas, {
+            type: "line",
+            data: {
+                labels: revLabels,
+                datasets: [{
                     label: "درآمد",
-
-                    data: values,
-
-                    borderColor: "#D4AF37",
-
-                    backgroundColor: "rgba(212,175,55,.15)",
-
+                    data: revValues,
+                    borderColor: gold,
+                    backgroundColor: goldSoft,
                     fill: true,
-
-                    tension: .35,
-
+                    tension: 0.35,
                     borderWidth: 3,
-
-                    pointRadius: 5,
-
-                    pointHoverRadius: 7,
-
-                    pointBackgroundColor: "#D4AF37",
-
-                    pointBorderColor: "#111",
-
-                    pointBorderWidth: 2,
-
-                }
-
-            ]
-
-        },
-
-        options: {
-
-            responsive: true,
-
-            maintainAspectRatio: false,
-
-            interaction: {
-
-                mode: "index",
-
-                intersect: false,
-
+                    pointRadius: 4,
+                    pointBackgroundColor: gold,
+                }],
             },
-
-            plugins: {
-
-                legend: {
-
-                    display: false,
-
-                },
-
-                tooltip: {
-
-                    backgroundColor: "#1b1b1b",
-
-                    titleColor: "#fff",
-
-                    bodyColor: "#ddd",
-
-                    borderColor: "#D4AF37",
-
-                    borderWidth: 1,
-
-                }
-
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false }, tooltip: tooltipOpts },
+                scales: scaleOpts,
             },
+        });
+    }
 
-            scales: {
-
-                x: {
-
-                    grid: {
-
-                        display: false,
-
-                    },
-
-                    ticks: {
-
-                        color: "#bbb",
-
-                    }
-
-                },
-
-                y: {
-
-                    beginAtZero: true,
-
-                    grid: {
-
-                        color: "rgba(255,255,255,.05)",
-
-                    },
-
-                    ticks: {
-
-                        color: "#bbb",
-
-                    }
-
-                }
-
-            }
-
-        }
-
-    });
-
-}
-
-
-function initializeOrdersChart() {
-
-    const canvas = document.getElementById("ordersChart");
-
-    if (!canvas) return;
-
-    const labels = JSON.parse(
-        document.getElementById("orders-labels").textContent
-    );
-
-    const values = JSON.parse(
-        document.getElementById("orders-values").textContent
-    );
-
-    new Chart(canvas, {
-
-        type: "bar",
-
-        data: {
-
-            labels: labels,
-
-            datasets: [
-
-                {
-
+    // سفارش ماهانه — Bar
+    var ordLabels = readJson("orders-labels");
+    var ordValues = readJson("orders-values");
+    var ordCanvas = document.getElementById("ordersChart");
+    if (ordCanvas && ordLabels) {
+        new Chart(ordCanvas, {
+            type: "bar",
+            data: {
+                labels: ordLabels,
+                datasets: [{
                     label: "سفارش‌ها",
-
-                    data: values,
-
-                    backgroundColor: [
-
-                        "#D4AF37",
-
-                        "#C9A227",
-
-                        "#B8911E",
-
-                        "#A57D15",
-
-                        "#8F6B10",
-
-                        "#D4AF37",
-
-                        "#C9A227",
-
-                        "#B8911E",
-
-                        "#A57D15",
-
-                        "#8F6B10",
-
-                        "#D4AF37",
-
-                        "#C9A227",
-
-                    ],
-
+                    data: ordValues,
+                    backgroundColor: gold,
                     borderRadius: 8,
-
-                    maxBarThickness: 45,
-
-                }
-
-            ]
-
-        },
-
-        options: {
-
-            responsive: true,
-
-            maintainAspectRatio: false,
-
-            plugins: {
-
-                legend: {
-
-                    display: false,
-
-                },
-
-                tooltip: {
-
-                    backgroundColor: "#1b1b1b",
-
-                    titleColor: "#fff",
-
-                    bodyColor: "#ddd",
-
-                    borderColor: "#D4AF37",
-
-                    borderWidth: 1,
-
-                }
-
+                    maxBarThickness: 40,
+                }],
             },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false }, tooltip: tooltipOpts },
+                scales: scaleOpts,
+            },
+        });
+    }
 
-            scales: {
-
-                x: {
-
-                    grid: {
-
-                        display: false,
-
+    // وضعیت سفارش — Doughnut
+    var osLabels = readJson("order-status-labels");
+    var osValues = readJson("order-status-values");
+    var osCanvas = document.getElementById("orderStatusChart");
+    if (osCanvas && osLabels) {
+        new Chart(osCanvas, {
+            type: "doughnut",
+            data: {
+                labels: osLabels,
+                datasets: [{
+                    data: osValues,
+                    backgroundColor: ["#facc15", "#22c55e", "#ef4444"],
+                    borderWidth: 0,
+                }],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: "bottom",
+                        labels: { color: "#ccc", padding: 16 },
                     },
-
-                    ticks: {
-
-                        color: "#bbb",
-
-                    }
-
+                    tooltip: tooltipOpts,
                 },
+            },
+        });
+    }
 
-                y: {
-
-                    beginAtZero: true,
-
-                    grid: {
-
-                        color: "rgba(255,255,255,.05)",
-
+    // وضعیت رزرو — Doughnut
+    var rsLabels = readJson("reservation-status-labels");
+    var rsValues = readJson("reservation-status-values");
+    var rsCanvas = document.getElementById("reservationStatusChart");
+    if (rsCanvas && rsLabels) {
+        new Chart(rsCanvas, {
+            type: "doughnut",
+            data: {
+                labels: rsLabels,
+                datasets: [{
+                    data: rsValues,
+                    backgroundColor: ["#facc15", "#22c55e", "#ef4444"],
+                    borderWidth: 0,
+                }],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: "bottom",
+                        labels: { color: "#ccc", padding: 16 },
                     },
+                    tooltip: tooltipOpts,
+                },
+            },
+        });
+    }
 
-                    ticks: {
+    // امتیاز نظرات — Bar
+    var rtLabels = readJson("rating-labels");
+    var rtValues = readJson("rating-values");
+    var rtCanvas = document.getElementById("ratingChart");
+    if (rtCanvas && rtLabels) {
+        new Chart(rtCanvas, {
+            type: "bar",
+            data: {
+                labels: rtLabels,
+                datasets: [{
+                    data: rtValues,
+                    backgroundColor: [
+                        "#ef4444",
+                        "#f97316",
+                        "#facc15",
+                        "#84cc16",
+                        "#22c55e",
+                    ],
+                    borderRadius: 6,
+                    maxBarThickness: 28,
+                }],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false }, tooltip: tooltipOpts },
+                scales: scaleOpts,
+            },
+        });
+    }
 
-                        color: "#bbb",
-
-                    }
-
-                }
-
-            }
-
-        }
-
-    });
-
-}
+    // محصولات پرفروش — Horizontal Bar
+    var tpLabels = readJson("top-products-labels");
+    var tpValues = readJson("top-products-values");
+    var tpCanvas = document.getElementById("topProductsChart");
+    if (tpCanvas && tpLabels) {
+        new Chart(tpCanvas, {
+            type: "bar",
+            data: {
+                labels: tpLabels,
+                datasets: [{
+                    label: "فروش",
+                    data: tpValues,
+                    backgroundColor: gold,
+                    borderRadius: 8,
+                    maxBarThickness: 28,
+                }],
+            },
+            options: {
+                indexAxis: "y",
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false }, tooltip: tooltipOpts },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        grid: { color: gridColor },
+                        ticks: { color: tickColor },
+                    },
+                    y: {
+                        grid: { display: false },
+                        ticks: { color: tickColor },
+                    },
+                },
+            },
+        });
+    }
+});

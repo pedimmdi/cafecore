@@ -1,85 +1,320 @@
-{% extends "base.html" %}
-
+{% extends "dashboard/base_dashboard.html" %}
 {% load static %}
+{% load jalali %}
 
-{% block title %}
-داشبورد | کافه رستوران
-{% endblock %}
+{% block title %}داشبورد | کافه رستوران{% endblock %}
 
-{% block css %}
+{% block dash_title %}نمای کلی{% endblock %}
 
-<link rel="stylesheet" href="{% static 'css/dashboard/dashboard.css' %}">
+{% block dash_content %}
 
-{% endblock %}
-
-{% block content %}
-
-<section class="dashboard">
-
-    <div class="dashboard-container">
-
-        <div class="dashboard-header">
-
-            <div>
-
-                <h1>
-
-                    داشبورد مدیریت
-
-                </h1>
-
-                <p>
-
-                    نمای کلی از وضعیت کافه رستوران
-
-                </p>
-
-            </div>
-
+<!-- کارت‌های آمار -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon"><i class="bi bi-people"></i></div>
+        <div class="stat-body">
+            <span class="stat-label">کاربران</span>
+            <strong class="stat-value">{{ users_count|to_persian }}</strong>
         </div>
-
-        {% include "dashboard/partials/statistics.html" %}
-
-        {% include "dashboard/partials/latest_orders.html" %}
-
-        {% include "dashboard/partials/latest_reservations.html" %}
-
-        {% include "dashboard/partials/latest_users.html" %}
-
-        {% include "dashboard/partials/latest_reviews.html" %}
-
-        {% include "dashboard/partials/low_inventory.html" %}
-
-        {% include "dashboard/partials/top_products.html" %}
-
-        <div class="dashboard-row">
-
-            {% include "dashboard/partials/revenue_chart.html" %}
-
-            {% include "dashboard/partials/orders_chart.html" %}
-
-        </div>
-
-        {% include "dashboard/partials/activity_timeline.html" %}
-
     </div>
+    <div class="stat-card">
+        <div class="stat-icon"><i class="bi bi-egg-fried"></i></div>
+        <div class="stat-body">
+            <span class="stat-label">محصولات</span>
+            <strong class="stat-value">{{ products_count|to_persian }}</strong>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon"><i class="bi bi-bag-check"></i></div>
+        <div class="stat-body">
+            <span class="stat-label">سفارش‌ها</span>
+            <strong class="stat-value">{{ orders_count|to_persian }}</strong>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon"><i class="bi bi-calendar-check"></i></div>
+        <div class="stat-body">
+            <span class="stat-label">رزروها</span>
+            <strong class="stat-value">{{ reservations_count|to_persian }}</strong>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon"><i class="bi bi-chat-left-text"></i></div>
+        <div class="stat-body">
+            <span class="stat-label">نظرات</span>
+            <strong class="stat-value">{{ reviews_count|to_persian }}</strong>
+        </div>
+    </div>
+    <div class="stat-card success">
+        <div class="stat-icon"><i class="bi bi-cash-stack"></i></div>
+        <div class="stat-body">
+            <span class="stat-label">درآمد کل</span>
+            <strong class="stat-value">{{ total_revenue|persian_price }} <small>تومان</small></strong>
+        </div>
+    </div>
+    <div class="stat-card warning">
+        <div class="stat-icon"><i class="bi bi-hourglass-split"></i></div>
+        <div class="stat-body">
+            <span class="stat-label">سفارش در انتظار</span>
+            <strong class="stat-value">{{ pending_orders_count|to_persian }}</strong>
+        </div>
+    </div>
+    <div class="stat-card danger">
+        <div class="stat-icon"><i class="bi bi-exclamation-triangle"></i></div>
+        <div class="stat-body">
+            <span class="stat-label">موجودی کم</span>
+            <strong class="stat-value">{{ low_inventory_count|to_persian }}</strong>
+        </div>
+    </div>
+</div>
 
-</section>
+<!-- نمودارها ردیف ۱ -->
+<div class="charts-row">
+    <div class="dash-card chart-card">
+        <div class="card-header">
+            <h2>درآمد ماهانه</h2>
+        </div>
+        <div class="chart-wrap">
+            <canvas id="revenueChart"></canvas>
+        </div>
+    </div>
+    <div class="dash-card chart-card">
+        <div class="card-header">
+            <h2>تعداد سفارش ماهانه</h2>
+        </div>
+        <div class="chart-wrap">
+            <canvas id="ordersChart"></canvas>
+        </div>
+    </div>
+</div>
 
-{{ orders_chart_labels|json_script:"orders-labels" }}
+<!-- نمودارها ردیف ۲ -->
+<div class="charts-row charts-row-3">
+    <div class="dash-card chart-card">
+        <div class="card-header">
+            <h2>وضعیت سفارش‌ها</h2>
+        </div>
+        <div class="chart-wrap chart-wrap-sm">
+            <canvas id="orderStatusChart"></canvas>
+        </div>
+    </div>
+    <div class="dash-card chart-card">
+        <div class="card-header">
+            <h2>وضعیت رزروها</h2>
+        </div>
+        <div class="chart-wrap chart-wrap-sm">
+            <canvas id="reservationStatusChart"></canvas>
+        </div>
+    </div>
+    <div class="dash-card chart-card">
+        <div class="card-header">
+            <h2>توزیع امتیاز نظرات</h2>
+        </div>
+        <div class="chart-wrap chart-wrap-sm">
+            <canvas id="ratingChart"></canvas>
+        </div>
+    </div>
+</div>
 
-{{ orders_chart_values|json_script:"orders-values" }}
+<!-- محصولات پرفروش (نمودار افقی) -->
+<div class="dash-card">
+    <div class="card-header">
+        <h2>محصولات پرفروش</h2>
+    </div>
+    <div class="chart-wrap">
+        <canvas id="topProductsChart"></canvas>
+    </div>
+</div>
+
+<!-- آخرین سفارش‌ها -->
+<div class="dash-card" id="orders">
+    <div class="card-header">
+        <h2>آخرین سفارش‌ها</h2>
+        <a href="{% url 'dashboard:orders' %}" class="card-link">مشاهده همه</a>
+    </div>
+    <div class="table-wrap">
+        <table class="dash-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>مشتری</th>
+                    <th>مبلغ</th>
+                    <th>وضعیت</th>
+                    <th>تاریخ</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in latest_orders %}
+                <tr>
+                    <td>#{{ order.id|to_persian }}</td>
+                    <td>{{ order.first_name }} {{ order.last_name }}</td>
+                    <td class="price-cell">{{ order.total_price|persian_price }} تومان</td>
+                    <td><span class="status status-{{ order.status }}">{{ order.get_status_display }}</span></td>
+                    <td>{{ order.created_at|to_jalali }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" class="empty-cell">سفارشی ثبت نشده است.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- آخرین رزروها -->
+<div class="dash-card" id="reservations">
+    <div class="card-header">
+        <h2>آخرین رزروها</h2>
+        <a href="#" class="card-link">مشاهده همه</a>
+    </div>
+    <div class="table-wrap">
+        <table class="dash-table">
+            <thead>
+                <tr>
+                    <th>نام</th>
+                    <th>تاریخ رزرو</th>
+                    <th>ساعت</th>
+                    <th>نفرات</th>
+                    <th>وضعیت</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in latest_reservations %}
+                <tr>
+                    <td>{{ r.first_name }} {{ r.last_name }}</td>
+                    <td>{{ r.reservation_date|to_jalali }}</td>
+                    <td>{{ r.reservation_time|time:"H:i"|to_persian }}</td>
+                    <td>{{ r.number_of_guests|to_persian }}</td>
+                    <td><span class="status status-{{ r.status }}">{{ r.get_status_display }}</span></td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" class="empty-cell">رزروی ثبت نشده است.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- آخرین نظرات -->
+<div class="dash-card" id="reviews">
+    <div class="card-header">
+        <h2>آخرین نظرات</h2>
+        <a href="#" class="card-link">مشاهده همه</a>
+    </div>
+    <div class="table-wrap">
+        <table class="dash-table">
+            <thead>
+                <tr>
+                    <th>کاربر</th>
+                    <th>محصول</th>
+                    <th>امتیاز</th>
+                    <th>وضعیت</th>
+                    <th>تاریخ</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for review in latest_reviews %}
+                <tr>
+                    <td>{{ review.user.first_name|default:review.user.email }}</td>
+                    <td>{{ review.product.name }}</td>
+                    <td class="rating-cell">
+                        {% for i in "12345" %}
+                            {% if forloop.counter <= review.rating %}
+                                <i class="bi bi-star-fill"></i>
+                            {% else %}
+                                <i class="bi bi-star"></i>
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td><span class="status status-{{ review.status }}">{{ review.get_status_display }}</span></td>
+                    <td>{{ review.created_at|to_jalali }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" class="empty-cell">نظری ثبت نشده است.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- موجودی کم -->
+<div class="dash-card" id="inventory">
+    <div class="card-header">
+        <h2>موجودی کم</h2>
+        <a href="{% url 'dashboard:inventory' %}" class="card-link">مشاهده همه</a>
+    </div>
+    <div class="table-wrap">
+        <table class="dash-table">
+            <thead>
+                <tr>
+                    <th>محصول</th>
+                    <th>دسته</th>
+                    <th>موجودی</th>
+                    <th>وضعیت</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in low_inventory_products %}
+                <tr>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.category.name }}</td>
+                    <td class="price-cell">{{ product.inventory|to_persian }}</td>
+                    <td>
+                        {% if product.inventory == 0 %}
+                            <span class="status status-cancelled">ناموجود</span>
+                        {% else %}
+                            <span class="status status-pending">کم</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4" class="empty-cell">همه محصولات موجودی کافی دارند.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- آخرین کاربران -->
+<div class="dash-card" id="users">
+    <div class="card-header">
+        <h2>آخرین کاربران</h2>
+        <a href="#" class="card-link">مشاهده همه</a>
+    </div>
+    <div class="table-wrap">
+        <table class="dash-table">
+            <thead>
+                <tr>
+                    <th>نام</th>
+                    <th>ایمیل</th>
+                    <th>تاریخ عضویت</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in latest_users %}
+                <tr>
+                    <td>{{ u.first_name }} {{ u.last_name }}</td>
+                    <td>{{ u.email }}</td>
+                    <td>{{ u.created_at|to_jalali }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="3" class="empty-cell">کاربری وجود ندارد.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 
 {{ revenue_chart_labels|json_script:"revenue-labels" }}
-
 {{ revenue_chart_values|json_script:"revenue-values" }}
-
-{% endblock %}
-
-{% block js %}
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<script src="{% static 'js/dashboard/dashboard.js' %}"></script>
+{{ orders_chart_labels|json_script:"orders-labels" }}
+{{ orders_chart_values|json_script:"orders-values" }}
+{{ order_status_labels|json_script:"order-status-labels" }}
+{{ order_status_values|json_script:"order-status-values" }}
+{{ reservation_status_labels|json_script:"reservation-status-labels" }}
+{{ reservation_status_values|json_script:"reservation-status-values" }}
+{{ top_products_labels|json_script:"top-products-labels" }}
+{{ top_products_values|json_script:"top-products-values" }}
+{{ rating_labels|json_script:"rating-labels" }}
+{{ rating_values|json_script:"rating-values" }}
 
 {% endblock %}

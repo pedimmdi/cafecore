@@ -1,0 +1,118 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% load jalali %}
+
+{% block title %}محصولات | داشبورد{% endblock %}
+{% block dash_title %}محصولات{% endblock %}
+
+{% block dash_content %}
+
+<div class="page-actions">
+    <a href="{% url 'dashboard:product_create' %}" class="btn-primary-dash">
+        <i class="bi bi-plus-lg"></i>
+        افزودن محصول
+    </a>
+    <a href="{% url 'dashboard:categories' %}" class="btn-secondary-dash">
+        <i class="bi bi-tags"></i>
+        دسته‌بندی‌ها
+    </a>
+</div>
+
+<div class="filter-tabs">
+    <a href="?q={{ search_q }}" class="filter-tab {% if not current_availability %}active{% endif %}">
+        همه <span class="tab-count">{{ counts.all|to_persian }}</span>
+    </a>
+    <a href="?availability=available&q={{ search_q }}" class="filter-tab {% if current_availability == 'available' %}active{% endif %}">
+        موجود <span class="tab-count">{{ counts.available|to_persian }}</span>
+    </a>
+    <a href="?availability=unavailable&q={{ search_q }}" class="filter-tab {% if current_availability == 'unavailable' %}active{% endif %}">
+        ناموجود <span class="tab-count">{{ counts.unavailable|to_persian }}</span>
+    </a>
+    <a href="?availability=low&q={{ search_q }}" class="filter-tab {% if current_availability == 'low' %}active{% endif %}">
+        موجودی کم <span class="tab-count">{{ counts.low|to_persian }}</span>
+    </a>
+</div>
+
+<form method="get" class="dash-search-form">
+    {% if current_availability %}<input type="hidden" name="availability" value="{{ current_availability }}">{% endif %}
+    <div class="dash-search-box">
+        <i class="bi bi-search"></i>
+        <input type="search" name="q" value="{{ search_q }}" placeholder="جستجوی نام محصول..." autocomplete="off">
+        <select name="category" onchange="this.form.submit()">
+            <option value="">همه دسته‌ها</option>
+            {% for cat in categories %}
+            <option value="{{ cat.id }}" {% if current_category == cat.id|stringformat:"s" %}selected{% endif %}>
+                {{ cat.name }}
+            </option>
+            {% endfor %}
+        </select>
+        <button type="submit">جستجو</button>
+    </div>
+</form>
+
+<div class="dash-card">
+    <div class="table-wrap">
+        <table class="dash-table">
+            <thead>
+                <tr>
+                    <th>محصول</th>
+                    <th>دسته</th>
+                    <th>قیمت</th>
+                    <th>موجودی</th>
+                    <th>وضعیت</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr>
+                    <td>
+                        <div class="product-cell">
+                            {% if product.image %}
+                                <img src="{{ product.image.url }}" alt="" class="thumb">
+                            {% else %}
+                                <div class="thumb placeholder"><i class="bi bi-image"></i></div>
+                            {% endif %}
+                            <div>
+                                <div class="cell-main">{{ product.name }}</div>
+                                {% if product.is_featured %}
+                                    <span class="badge-featured">ویژه</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </td>
+                    <td>{{ product.category.name }}</td>
+                    <td class="price-cell">{{ product.price|persian_price }} تومان</td>
+                    <td>{{ product.inventory|to_persian }}</td>
+                    <td>
+                        {% if product.is_available %}
+                            <span class="status status-paid">موجود</span>
+                        {% else %}
+                            <span class="status status-cancelled">ناموجود</span>
+                        {% endif %}
+                    </td>
+                    <td class="actions-cell">
+                        <a href="{% url 'dashboard:product_edit' product.pk %}" class="btn-sm">ویرایش</a>
+                        <a href="{% url 'dashboard:product_delete' product.pk %}" class="btn-sm btn-danger-sm">حذف</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" class="empty-cell">محصولی یافت نشد.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if is_paginated %}
+    <div class="dash-pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}&q={{ search_q }}&availability={{ current_availability }}&category={{ current_category }}">قبلی</a>
+        {% endif %}
+        <span>صفحه {{ page_obj.number|to_persian }} از {{ page_obj.paginator.num_pages|to_persian }}</span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}&q={{ search_q }}&availability={{ current_availability }}&category={{ current_category }}">بعدی</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% load jalali %}
+
+{% block title %}موجودی | داشبورد{% endblock %}
+{% block dash_title %}مدیریت موجودی{% endblock %}
+
+{% block dash_content %}
+
+<div class="filter-tabs">
+    <a href="?filter=low" class="filter-tab {% if current_filter == 'low' %}active{% endif %}">
+        موجودی کم <span class="tab-count">{{ counts.low|to_persian }}</span>
+    </a>
+    <a href="?filter=zero" class="filter-tab {% if current_filter == 'zero' %}active{% endif %}">
+        ناموجود <span class="tab-count">{{ counts.zero|to_persian }}</span>
+    </a>
+    <a href="?filter=all" class="filter-tab {% if current_filter == 'all' %}active{% endif %}">
+        همه <span class="tab-count">{{ counts.all|to_persian }}</span>
+    </a>
+</div>
+
+<div class="dash-card">
+    <div class="table-wrap">
+        <table class="dash-table">
+            <thead>
+                <tr>
+                    <th>محصول</th>
+                    <th>دسته</th>
+                    <th>موجودی فعلی</th>
+                    <th>به‌روزرسانی</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr>
+                    <td>
+                        <div class="product-cell">
+                            {% if product.image %}
+                                <img src="{{ product.image.url }}" alt="" class="thumb">
+                            {% else %}
+                                <div class="thumb placeholder"><i class="bi bi-image"></i></div>
+                            {% endif %}
+                            <div class="cell-main">{{ product.name }}</div>
+                        </div>
+                    </td>
+                    <td>{{ product.category.name }}</td>
+                    <td>
+                        <strong class="{% if product.inventory == 0 %}text-danger{% elif product.inventory <= 10 %}text-warning{% endif %}">
+                            {{ product.inventory|to_persian }}
+                        </strong>
+                    </td>
+                    <td>
+                        <form method="post" class="inv-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="product_id" value="{{ product.id }}">
+                            <input type="number" name="inventory" value="{{ product.inventory }}" min="0" class="inv-input">
+                            <label class="check-label inline">
+                                <input type="checkbox" name="is_available" {% if product.is_available %}checked{% endif %}>
+                                موجود
+                            </label>
+                            <button type="submit" class="btn-sm">ذخیره</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4" class="empty-cell">موردی یافت نشد.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if is_paginated %}
+    <div class="dash-pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}&filter={{ current_filter }}">قبلی</a>
+        {% endif %}
+        <span>صفحه {{ page_obj.number|to_persian }} از {{ page_obj.paginator.num_pages|to_persian }}</span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}&filter={{ current_filter }}">بعدی</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

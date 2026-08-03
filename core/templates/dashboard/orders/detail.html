@@ -1,0 +1,174 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% load jalali %}
+
+{% block title %}سفارش #{{ order.id }} | داشبورد{% endblock %}
+{% block dash_title %}جزئیات سفارش #{{ order.id|to_persian }}{% endblock %}
+
+{% block dash_content %}
+
+<div class="detail-top">
+    <a href="{% url 'dashboard:orders' %}" class="back-link">
+        <i class="bi bi-arrow-right"></i>
+        بازگشت به لیست
+    </a>
+</div>
+
+<div class="detail-grid">
+
+    <!-- اطلاعات سفارش -->
+    <div class="dash-card">
+        <div class="card-header">
+            <h2>اطلاعات سفارش</h2>
+            <span class="status status-{{ order.status }}">{{ order.get_status_display }}</span>
+        </div>
+
+        <div class="info-list">
+            <div class="info-row">
+                <span class="info-label">شماره سفارش</span>
+                <span class="info-value">#{{ order.id|to_persian }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">تاریخ ثبت</span>
+                <span class="info-value">{{ order.created_at|to_jalali }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">آخرین بروزرسانی</span>
+                <span class="info-value">{{ order.updated_at|to_jalali }}</span>
+            </div>
+            {% if order.coupon %}
+            <div class="info-row">
+                <span class="info-label">کد تخفیف</span>
+                <span class="info-value">{{ order.coupon.code }} ({{ order.coupon.discount|to_persian }}٪)</span>
+            </div>
+            {% endif %}
+            {% if order.discount %}
+            <div class="info-row">
+                <span class="info-label">مبلغ تخفیف</span>
+                <span class="info-value price-cell">{{ order.discount|persian_price }} تومان</span>
+            </div>
+            {% endif %}
+            <div class="info-row">
+                <span class="info-label">مبلغ نهایی</span>
+                <span class="info-value price-cell large">{{ order.total_price|persian_price }} تومان</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- مشتری -->
+    <div class="dash-card">
+        <div class="card-header">
+            <h2>اطلاعات مشتری</h2>
+        </div>
+        <div class="info-list">
+            <div class="info-row">
+                <span class="info-label">نام</span>
+                <span class="info-value">{{ order.first_name }} {{ order.last_name }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">ایمیل</span>
+                <span class="info-value">{{ order.email }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">تلفن</span>
+                <span class="info-value">{{ order.phone_number|to_persian }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">آدرس</span>
+                <span class="info-value">{{ order.address }}</span>
+            </div>
+            {% if order.description %}
+            <div class="info-row">
+                <span class="info-label">توضیحات</span>
+                <span class="info-value">{{ order.description }}</span>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- آیتم‌های سفارش -->
+<div class="dash-card">
+    <div class="card-header">
+        <h2>اقلام سفارش</h2>
+    </div>
+    <div class="table-wrap">
+        <table class="dash-table">
+            <thead>
+                <tr>
+                    <th>محصول</th>
+                    <th>قیمت واحد</th>
+                    <th>تعداد</th>
+                    <th>جمع</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order.items.all %}
+                <tr>
+                    <td>{{ item.product.name }}</td>
+                    <td class="price-cell">{{ item.price|persian_price }} تومان</td>
+                    <td>{{ item.quantity|to_persian }}</td>
+                    <td class="price-cell">{{ item.total_price|persian_price }} تومان</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4" class="empty-cell">آیتمی ثبت نشده.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- پرداخت -->
+{% if payment %}
+<div class="dash-card">
+    <div class="card-header">
+        <h2>اطلاعات پرداخت</h2>
+        <span class="status status-{{ payment.status }}">{{ payment.get_status_display }}</span>
+    </div>
+    <div class="info-list">
+        <div class="info-row">
+            <span class="info-label">شناسه</span>
+            <span class="info-value">{{ payment.authority }}</span>
+        </div>
+        {% if payment.ref_id %}
+        <div class="info-row">
+            <span class="info-label">کد پیگیری</span>
+            <span class="info-value">{{ payment.ref_id }}</span>
+        </div>
+        {% endif %}
+        <div class="info-row">
+            <span class="info-label">مبلغ</span>
+            <span class="info-value price-cell">{{ payment.amount|persian_price }} تومان</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">تاریخ</span>
+            <span class="info-value">{{ payment.created_at|to_jalali }}</span>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- تغییر وضعیت -->
+<div class="dash-card">
+    <div class="card-header">
+        <h2>تغییر وضعیت سفارش</h2>
+    </div>
+    <form method="post" action="{% url 'dashboard:order_status' order.pk %}" class="status-form">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{% url 'dashboard:order_detail' order.pk %}">
+        <div class="status-actions">
+            {% for value, label in status_choices %}
+            <button
+                type="submit"
+                name="status"
+                value="{{ value }}"
+                class="status-btn status-btn-{{ value }} {% if order.status == value %}current{% endif %}"
+                {% if order.status == value %}disabled{% endif %}
+            >
+                {{ label }}
+            </button>
+            {% endfor %}
+        </div>
+    </form>
+</div>
+
+{% endblock %}

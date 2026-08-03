@@ -1,0 +1,112 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% load jalali %}
+
+{% block title %}سفارش‌ها | داشبورد{% endblock %}
+{% block dash_title %}سفارش‌ها{% endblock %}
+
+{% block dash_content %}
+
+<!-- فیلتر وضعیت -->
+<div class="filter-tabs">
+    <a href="?q={{ search_q }}"
+       class="filter-tab {% if not current_status %}active{% endif %}">
+        همه
+        <span class="tab-count">{{ counts.all|to_persian }}</span>
+    </a>
+    <a href="?status=pending&q={{ search_q }}"
+       class="filter-tab {% if current_status == 'pending' %}active{% endif %}">
+        در انتظار
+        <span class="tab-count">{{ counts.pending|to_persian }}</span>
+    </a>
+    <a href="?status=paid&q={{ search_q }}"
+       class="filter-tab {% if current_status == 'paid' %}active{% endif %}">
+        پرداخت‌شده
+        <span class="tab-count">{{ counts.paid|to_persian }}</span>
+    </a>
+    <a href="?status=cancelled&q={{ search_q }}"
+       class="filter-tab {% if current_status == 'cancelled' %}active{% endif %}">
+        لغوشده
+        <span class="tab-count">{{ counts.cancelled|to_persian }}</span>
+    </a>
+</div>
+
+<!-- جستجو -->
+<form method="get" class="dash-search-form">
+    {% if current_status %}
+        <input type="hidden" name="status" value="{{ current_status }}">
+    {% endif %}
+    <div class="dash-search-box">
+        <i class="bi bi-search"></i>
+        <input
+            type="search"
+            name="q"
+            value="{{ search_q }}"
+            placeholder="جستجو: نام، ایمیل، تلفن یا شماره سفارش..."
+            autocomplete="off"
+        >
+        <button type="submit">جستجو</button>
+    </div>
+</form>
+
+<div class="dash-card">
+    <div class="card-header">
+        <h2>لیست سفارش‌ها</h2>
+    </div>
+    <div class="table-wrap">
+        <table class="dash-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>مشتری</th>
+                    <th>تلفن</th>
+                    <th>مبلغ</th>
+                    <th>وضعیت</th>
+                    <th>تاریخ</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>#{{ order.id|to_persian }}</td>
+                    <td>
+                        <div class="cell-main">{{ order.first_name }} {{ order.last_name }}</div>
+                        <div class="cell-sub">{{ order.email }}</div>
+                    </td>
+                    <td>{{ order.phone_number|to_persian }}</td>
+                    <td class="price-cell">{{ order.total_price|persian_price }} تومان</td>
+                    <td>
+                        <span class="status status-{{ order.status }}">
+                            {{ order.get_status_display }}
+                        </span>
+                    </td>
+                    <td>{{ order.created_at|to_jalali }}</td>
+                    <td>
+                        <a href="{% url 'dashboard:order_detail' order.pk %}" class="btn-sm">
+                            جزئیات
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="empty-cell">سفارشی یافت نشد.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if is_paginated %}
+    <div class="dash-pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}&status={{ current_status }}&q={{ search_q }}">قبلی</a>
+        {% endif %}
+        <span>صفحه {{ page_obj.number|to_persian }} از {{ page_obj.paginator.num_pages|to_persian }}</span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}&status={{ current_status }}&q={{ search_q }}">بعدی</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

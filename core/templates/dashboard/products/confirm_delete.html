@@ -1,0 +1,19 @@
+{% extends "dashboard/base_dashboard.html" %}
+
+{% block title %}حذف محصول | داشبورد{% endblock %}
+{% block dash_title %}حذف محصول{% endblock %}
+
+{% block dash_content %}
+<div class="dash-card confirm-card">
+    <div class="confirm-icon"><i class="bi bi-exclamation-triangle"></i></div>
+    <h2>آیا از حذف «{{ object.name }}» مطمئن هستید؟</h2>
+    <p>این عمل قابل بازگشت نیست.</p>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-actions center">
+            <button type="submit" class="btn-danger-dash">بله، حذف شود</button>
+            <a href="{% url 'dashboard:products' %}" class="btn-secondary-dash">انصراف</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

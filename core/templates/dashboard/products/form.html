@@ -1,0 +1,96 @@
+{% extends "dashboard/base_dashboard.html" %}
+
+{% block title %}{{ page_title }} | داشبورد{% endblock %}
+{% block dash_title %}{{ page_title }}{% endblock %}
+
+{% block dash_content %}
+
+<div class="detail-top">
+    <a href="{% url 'dashboard:products' %}" class="back-link">
+        <i class="bi bi-arrow-right"></i>
+        بازگشت به محصولات
+    </a>
+</div>
+
+<div class="dash-card form-card">
+    <form method="post" enctype="multipart/form-data" class="dash-form">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="form-errors">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="id_name">نام محصول *</label>
+                {{ form.name }}
+                {{ form.name.errors }}
+            </div>
+            <div class="form-group">
+                <label for="id_slug">اسلاگ</label>
+                {{ form.slug }}
+                {{ form.slug.errors }}
+            </div>
+            <div class="form-group">
+                <label for="id_category">دسته‌بندی *</label>
+                {{ form.category }}
+                {{ form.category.errors }}
+            </div>
+            <div class="form-group">
+                <label for="id_price">قیمت (تومان) *</label>
+                {{ form.price }}
+                {{ form.price.errors }}
+            </div>
+            <div class="form-group">
+                <label for="id_inventory">موجودی *</label>
+                {{ form.inventory }}
+                {{ form.inventory.errors }}
+            </div>
+            <div class="form-group">
+                <label for="id_image">تصویر</label>
+                {{ form.image }}
+                {{ form.image.errors }}
+                {% if form.instance.image %}
+                    <img src="{{ form.instance.image.url }}" alt="" class="form-preview">
+                {% endif %}
+            </div>
+            <div class="form-group full">
+                <label for="id_description">توضیحات *</label>
+                {{ form.description }}
+                {{ form.description.errors }}
+            </div>
+            <div class="form-group full">
+                <label for="id_ingredients">مواد اولیه</label>
+                {{ form.ingredients }}
+                {{ form.ingredients.errors }}
+            </div>
+            <div class="form-group">
+                <label for="id_serving_start">شروع سرو</label>
+                {{ form.serving_start }}
+            </div>
+            <div class="form-group">
+                <label for="id_serving_end">پایان سرو</label>
+                {{ form.serving_end }}
+            </div>
+            <div class="form-group check-group">
+                <label class="check-label">
+                    {{ form.is_available }}
+                    <span>موجود است</span>
+                </label>
+            </div>
+            <div class="form-group check-group">
+                <label class="check-label">
+                    {{ form.is_featured }}
+                    <span>محصول ویژه</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-primary-dash">{{ submit_label }}</button>
+            <a href="{% url 'dashboard:products' %}" class="btn-secondary-dash">انصراف</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
