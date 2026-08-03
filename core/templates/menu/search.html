@@ -1,37 +1,23 @@
 {% extends "base.html" %}
 
 {% load static %}
+{% load jalali %}
 
 {% block title %}
 جستجوی محصولات | کافه رستوران
 {% endblock %}
 
 {% block css %}
-
 <link rel="stylesheet" href="{% static 'css/menu/search.css' %}">
-
 {% endblock %}
 
 {% block content %}
 
 <section class="search-page">
-
     <div class="container">
 
         <div class="section-header">
-
-            {% comment %} <span class="section-badge">
-
-                Search
-
-            </span> {% endcomment %}
-
-            <h1>
-
-                جستجوی محصولات
-
-            </h1>
-
+            <h1>جستجوی محصولات</h1>
         </div>
 
         <form method="get" class="search-form" role="search">
@@ -67,145 +53,61 @@
         </p>
         {% endif %}
 
-
         {% if products %}
-
         <div class="products-grid">
-
             {% for product in products %}
-
             <article class="product-card">
-
-                <a href="{{ product.get_absolute_url }}">
-
+                <a href="{{ product.get_absolute_url }}" class="product-image-link">
                     {% if product.image %}
-
-                    <img
-                            src="{{ product.image.url }}"
-                            alt="{{ product.name }}">
-
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
                     {% else %}
-
-                    <img
-                            src="{% static 'images/menu/default-product.jpg' %}"
-                            alt="{{ product.name }}">
-
+                        <img src="{% static 'images/menu/default-product.jpg' %}" alt="{{ product.name }}">
                     {% endif %}
-
                 </a>
 
                 <div class="product-body">
-
-                    <span class="category">
-
-                        {{ product.category.name }}
-
-                    </span>
-
-                    <h3>
-
-                        <a href="{{ product.get_absolute_url }}">
-
-                            {{ product.name }}
-
-                        </a>
-
-                    </h3>
-
-                    <p>
-
-                        {{ product.description|truncatewords:18 }}
-
-                    </p>
-
-                    <div class="product-footer">
-
-                        <span class="price">
-
-                            {{ product.price }} تومان
-
-                        </span>
-
-                        <a
-                                href="{{ product.get_absolute_url }}"
-                                class="details-btn">
-
-                            مشاهده
-
-                        </a>
-
+                    <div class="product-top">
+                        <span class="category">{{ product.category.name }}</span>
+                        <h3>
+                            <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+                        </h3>
+                        <p>{{ product.description|truncatewords:18 }}</p>
                     </div>
 
+                    <div class="product-footer">
+                        <span class="price">{{ product.price|persian_price }} تومان</span>
+                        <a href="{{ product.get_absolute_url }}" class="details-btn">مشاهده</a>
+                    </div>
                 </div>
-
             </article>
-
             {% endfor %}
-
         </div>
-
         {% else %}
-
-        {% if query %}
-
-        <div class="empty-products">
-
-            <i class="bi bi-search"></i>
-
-            <h2>
-
-                محصولی پیدا نشد.
-
-            </h2>
-
-        </div>
-
-        {% endif %}
-
+            {% if query %}
+            <div class="empty-products">
+                <i class="bi bi-search"></i>
+                <h2>محصولی پیدا نشد.</h2>
+            </div>
+            {% endif %}
         {% endif %}
 
         {% if is_paginated %}
-
         <div class="pagination">
-
             {% if page_obj.has_previous %}
-
-            <a href="?q={{ query }}&page={{ page_obj.previous_page_number }}">
-
-                قبلی
-
-            </a>
-
+            <a href="?q={{ query }}&page={{ page_obj.previous_page_number }}">قبلی</a>
             {% endif %}
-
-            <span>
-
-                صفحه {{ page_obj.number }} از {{ page_obj.paginator.num_pages }}
-
-            </span>
-
+            <span>صفحه {{ page_obj.number }} از {{ page_obj.paginator.num_pages }}</span>
             {% if page_obj.has_next %}
-
-            <a href="?q={{ query }}&page={{ page_obj.next_page_number }}">
-
-                بعدی
-
-            </a>
-
+            <a href="?q={{ query }}&page={{ page_obj.next_page_number }}">بعدی</a>
             {% endif %}
-
         </div>
-
         {% endif %}
 
     </div>
-
 </section>
 
 {% endblock %}
 
 {% block js %}
-
 <script src="{% static 'js/menu/search.js' %}"></script>
-
 {% endblock %}

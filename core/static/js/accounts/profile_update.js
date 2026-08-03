@@ -1,17 +1,26 @@
 (function () {
     document.addEventListener("DOMContentLoaded", function () {
         var H = window.CafeJalali;
-        if (!H) {
-            console.error("CafeJalali missing");
-            return;
-        }
-
-        var phoneInput = document.getElementById("id_phone_number");
         var displayInput = document.getElementById("id_date_of_birth_display");
         var hiddenInput = document.getElementById("id_date_of_birth");
         var btn = document.getElementById("datePickerBtn");
         var form = document.querySelector(".profile-update-card form") || document.querySelector("form");
+        var phoneInput = document.getElementById("id_phone_number");
 
+        if (!H) {
+            console.error("CafeJalali missing — check jalali-helpers.js");
+            return;
+        }
+        if (typeof jalaliDatepicker === "undefined") {
+            console.error("jalaliDatepicker missing — check vendor js path");
+            return;
+        }
+        if (!displayInput || !hiddenInput) {
+            console.error("date inputs missing in HTML");
+            return;
+        }
+
+        // شماره تماس → ارقام فارسی برای نمایش
         if (phoneInput) {
             if (phoneInput.value) phoneInput.value = H.toPersian(phoneInput.value);
             phoneInput.addEventListener("input", function () {
@@ -21,17 +30,11 @@
             });
         }
 
-        if (!displayInput || !hiddenInput) return;
-
+        // مقدار اولیه تاریخ تولد
         if (hiddenInput.value && /^\d{4}-\d{2}-\d{2}$/.test(hiddenInput.value)) {
             var parts = hiddenInput.value.split("-");
             var j = H.gregorianToJalali(+parts[0], +parts[1], +parts[2]);
             displayInput.value = H.faDate(j[0], j[1], j[2]);
-        }
-
-        if (typeof jalaliDatepicker === "undefined") {
-            console.error("jalaliDatepicker not loaded");
-            return;
         }
 
         jalaliDatepicker.startWatch({
@@ -42,8 +45,9 @@
             useDropDownYears: true,
             persianDigits: false,
             zIndex: 2147483646,
+            // ✅ آبجکت، نه رشته
+            minDate: { year: 1300, month: 1, day: 1 },
             maxDate: "today",
-            minDate: "1300/01/01",
         });
 
         function syncHidden() {
@@ -73,7 +77,8 @@
             setTimeout(function () {
                 try {
                     jalaliDatepicker.show(displayInput);
-                } catch (e) {
+                } catch (err) {
+                    console.error(err);
                     displayInput.focus();
                     displayInput.click();
                 }
@@ -88,40 +93,23 @@
             });
         }
 
-        // رویدادهای کتابخانه
-        ["change", "input", "jdp:change", "blur"].forEach(function (ev) {
+        displayInput.addEventListener("click", function () {
+            openPicker();
+        });
+
+        ["change", "input", "jdp:change"].forEach(function (ev) {
             displayInput.addEventListener(ev, function () {
                 setTimeout(applyFromDisplay, 0);
             });
         });
 
-        // Fallback: کلیک مستقیم روی روز داخل تقویم
         document.addEventListener(
             "click",
             function (e) {
                 var day = e.target.closest(".jdp-day");
                 if (!day) return;
                 if (day.classList.contains("disabled-day")) return;
-                if (day.classList.contains("not-in-month")) return;
-
-                // متن روز یا data
-                var dayNum = (day.getAttribute("data-date") || day.textContent || "").trim();
-                dayNum = H.toEnglish(dayNum).replace(/[^\d]/g, "");
-                if (!dayNum) return;
-
-                // ماه و سال از هدر تقویم
-                var container = day.closest("jdp-container");
-                if (!container) return;
-
-                setTimeout(function () {
-                    // اگر کتابخانه خودش value گذاشت
-                    if (displayInput.value) {
-                        applyFromDisplay();
-                        return;
-                    }
-                    // تلاش برای خواندن از input بعد از click کتابخانه
-                    setTimeout(applyFromDisplay, 50);
-                }, 30);
+                setTimeout(applyFromDisplay, 40);
             },
             true
         );

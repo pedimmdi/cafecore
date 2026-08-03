@@ -94,6 +94,7 @@
                         data-jdp-only-date
                         placeholder="مثال: ۱۳۷۵/۰۱/۱۵"
                         autocomplete="off"
+                        readonly
                     >
                     <button type="button" class="date-picker-btn" id="datePickerBtn" aria-label="انتخاب تاریخ">
                         <i class="bi bi-calendar3"></i>
@@ -108,7 +109,7 @@
                 >
 
                 {{ form.date_of_birth.errors }}
-                <small class="field-hint">می‌توانید تاریخ را تایپ کنید یا از تقویم انتخاب کنید.</small>
+                <small class="field-hint">تاریخ را از تقویم شمسی انتخاب کنید.</small>
             </div>
 
             <div class="form-actions">
