@@ -1,7 +1,13 @@
 {% extends "dashboard/base_dashboard.html" %}
+{% load static %}
 
 {% block title %}{{ page_title }} | داشبورد{% endblock %}
 {% block dash_title %}{{ page_title }}{% endblock %}
+
+{% block dashboard_css %}
+<link rel="stylesheet" href="{% static 'css/vendor/jalalidatepicker.min.css' %}">
+<link rel="stylesheet" href="{% static 'css/vendor/jdp-dark.css' %}">
+{% endblock %}
 
 {% block dash_content %}
 
@@ -13,7 +19,7 @@
 </div>
 
 <div class="dash-card form-card">
-    <form method="post" class="dash-form">
+    <form method="post" class="dash-form" id="couponForm">
         {% csrf_token %}
 
         {% if form.non_field_errors %}
@@ -31,20 +37,56 @@
                 {{ form.discount }}
                 {{ form.discount.errors }}
             </div>
+
+            <!-- اعتبار از -->
             <div class="form-group">
-                <label for="id_valid_from">اعتبار از *</label>
-                {{ form.valid_from }}
-                {{ form.valid_from.errors }}
+                <label>اعتبار از (تاریخ) *</label>
+                <div class="date-field">
+                    <input type="text" id="from_date_display" class="date-display"
+                           data-jdp data-jdp-only-date placeholder="مثال: ۱۴۰۵/۰۱/۰۱"
+                           autocomplete="off" readonly>
+                    <button type="button" class="date-picker-btn" id="fromDateBtn" aria-label="انتخاب تاریخ">
+                        <i class="bi bi-calendar3"></i>
+                    </button>
+                </div>
+                <input type="hidden" name="valid_from_date" id="id_valid_from_date"
+                       value="{{ form.valid_from_date.value|default_if_none:'' }}">
             </div>
             <div class="form-group">
-                <label for="id_valid_to">اعتبار تا *</label>
-                {{ form.valid_to }}
-                {{ form.valid_to.errors }}
+                <label for="id_valid_from_time">اعتبار از (ساعت) *</label>
+                <div class="time-field">
+                    {{ form.valid_from_time }}
+                    <i class="bi bi-clock time-icon"></i>
+                </div>
             </div>
+
+            <!-- اعتبار تا -->
+            <div class="form-group">
+                <label>اعتبار تا (تاریخ) *</label>
+                <div class="date-field">
+                    <input type="text" id="to_date_display" class="date-display"
+                           data-jdp data-jdp-only-date placeholder="مثال: ۱۴۰۵/۱۲/۲۹"
+                           autocomplete="off" readonly>
+                    <button type="button" class="date-picker-btn" id="toDateBtn" aria-label="انتخاب تاریخ">
+                        <i class="bi bi-calendar3"></i>
+                    </button>
+                </div>
+                <input type="hidden" name="valid_to_date" id="id_valid_to_date"
+                       value="{{ form.valid_to_date.value|default_if_none:'' }}">
+            </div>
+            <div class="form-group">
+                <label for="id_valid_to_time">اعتبار تا (ساعت) *</label>
+                <div class="time-field">
+                    {{ form.valid_to_time }}
+                    <i class="bi bi-clock time-icon"></i>
+                </div>
+            </div>
+
             <div class="form-group check-group">
-                <label class="check-label">
+                <label class="toggle-chip">
                     {{ form.is_active }}
-                    <span>فعال باشد</span>
+                    <span class="toggle-ui"></span>
+                    <span class="toggle-text">فعال باشد</span>
                 </label>
             </div>
         </div>
@@ -56,4 +98,10 @@
     </form>
 </div>
 
+{% endblock %}
+
+{% block dashboard_js %}
+<script src="{% static 'js/vendor/jalalidatepicker.min.js' %}"></script>
+<script src="{% static 'js/shared/jalali-helpers.js' %}"></script>
+<script src="{% static 'js/dashboard/coupon_form.js' %}"></script>
 {% endblock %}

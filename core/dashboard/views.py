@@ -332,6 +332,10 @@ class ProductUpdateView(UpdateView):
     success_url = reverse_lazy("dashboard:products")
 
     def form_valid(self, form):
+        if self.request.POST.get("image-clear"):
+            if form.instance.image:
+                form.instance.image.delete(save=False)
+                form.instance.image = None
         messages.success(self.request, "محصول با موفقیت ویرایش شد.")
         return super().form_valid(form)
 
@@ -396,6 +400,10 @@ class CategoryUpdateView(UpdateView):
     success_url = reverse_lazy("dashboard:categories")
 
     def form_valid(self, form):
+        if self.request.POST.get("image-clear"):
+            if form.instance.image:
+                form.instance.image.delete(save=False)
+                form.instance.image = None
         messages.success(self.request, "دسته‌بندی ویرایش شد.")
         return super().form_valid(form)
 

@@ -29,14 +29,22 @@
             <div class="form-group">
                 <label for="id_image">تصویر</label>
                 {{ form.image }}
-                {% if form.instance.image %}
-                    <img src="{{ form.instance.image.url }}" alt="" class="form-preview">
+                {% if form.instance.pk and form.instance.image %}
+                    <div class="image-current">
+                        <img src="{{ form.instance.image.url }}" alt="" class="form-preview">
+                        <label class="toggle-chip danger-chip">
+                            <input type="checkbox" name="image-clear" id="image-clear_id">
+                            <span class="toggle-ui"></span>
+                            <span class="toggle-text">حذف تصویر فعلی</span>
+                        </label>
+                    </div>
                 {% endif %}
             </div>
             <div class="form-group check-group">
-                <label class="check-label">
+                <label class="toggle-chip">
                     {{ form.is_active }}
-                    <span>فعال</span>
+                    <span class="toggle-ui"></span>
+                    <span class="toggle-text">فعال</span>
                 </label>
             </div>
             <div class="form-group full">

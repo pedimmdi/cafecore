@@ -1,4 +1,5 @@
 {% extends "dashboard/base_dashboard.html" %}
+{% load static %}
 
 {% block title %}{{ page_title }} | داشبورد{% endblock %}
 {% block dash_title %}{{ page_title }}{% endblock %}
@@ -46,14 +47,23 @@
                 {{ form.inventory }}
                 {{ form.inventory.errors }}
             </div>
+
             <div class="form-group">
                 <label for="id_image">تصویر</label>
                 {{ form.image }}
                 {{ form.image.errors }}
-                {% if form.instance.image %}
-                    <img src="{{ form.instance.image.url }}" alt="" class="form-preview">
+                {% if form.instance.pk and form.instance.image %}
+                    <div class="image-current">
+                        <img src="{{ form.instance.image.url }}" alt="" class="form-preview">
+                        <label class="toggle-chip danger-chip">
+                            <input type="checkbox" name="image-clear" id="image-clear_id">
+                            <span class="toggle-ui"></span>
+                            <span class="toggle-text">حذف تصویر فعلی</span>
+                        </label>
+                    </div>
                 {% endif %}
             </div>
+
             <div class="form-group full">
                 <label for="id_description">توضیحات *</label>
                 {{ form.description }}
@@ -64,24 +74,36 @@
                 {{ form.ingredients }}
                 {{ form.ingredients.errors }}
             </div>
+
             <div class="form-group">
                 <label for="id_serving_start">شروع سرو</label>
-                {{ form.serving_start }}
+                <div class="time-field">
+                    {{ form.serving_start }}
+                    <i class="bi bi-clock time-icon"></i>
+                </div>
+                {{ form.serving_start.errors }}
             </div>
             <div class="form-group">
                 <label for="id_serving_end">پایان سرو</label>
-                {{ form.serving_end }}
+                <div class="time-field">
+                    {{ form.serving_end }}
+                    <i class="bi bi-clock time-icon"></i>
+                </div>
+                {{ form.serving_end.errors }}
             </div>
+
             <div class="form-group check-group">
-                <label class="check-label">
+                <label class="toggle-chip">
                     {{ form.is_available }}
-                    <span>موجود است</span>
+                    <span class="toggle-ui"></span>
+                    <span class="toggle-text">موجود است</span>
                 </label>
             </div>
             <div class="form-group check-group">
-                <label class="check-label">
+                <label class="toggle-chip">
                     {{ form.is_featured }}
-                    <span>محصول ویژه</span>
+                    <span class="toggle-ui"></span>
+                    <span class="toggle-text">محصول ویژه</span>
                 </label>
             </div>
         </div>
