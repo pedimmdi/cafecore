@@ -1,0 +1,98 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% load jalali %}
+
+{% block title %}رزرو #{{ reservation.id }} | داشبورد{% endblock %}
+{% block dash_title %}جزئیات رزرو{% endblock %}
+
+{% block dash_content %}
+
+<div class="detail-top">
+    <a href="{% url 'dashboard:reservations' %}" class="back-link">
+        <i class="bi bi-arrow-right"></i>
+        بازگشت به لیست
+    </a>
+</div>
+
+<div class="detail-grid">
+    <div class="dash-card">
+        <div class="card-header">
+            <h2>اطلاعات رزرو</h2>
+            <span class="status status-{{ reservation.status }}">{{ reservation.get_status_display }}</span>
+        </div>
+        <div class="info-list">
+            <div class="info-row">
+                <span class="info-label">تاریخ رزرو</span>
+                <span class="info-value">{{ reservation.reservation_date|to_jalali }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">ساعت</span>
+                <span class="info-value">{{ reservation.reservation_time|time:"H:i"|to_persian }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">تعداد نفرات</span>
+                <span class="info-value">{{ reservation.number_of_guests|to_persian }} نفر</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">تاریخ ثبت</span>
+                <span class="info-value">{{ reservation.created_at|to_jalali }}</span>
+            </div>
+            {% if reservation.description %}
+            <div class="info-row">
+                <span class="info-label">توضیحات</span>
+                <span class="info-value">{{ reservation.description }}</span>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="dash-card">
+        <div class="card-header">
+            <h2>اطلاعات مشتری</h2>
+        </div>
+        <div class="info-list">
+            <div class="info-row">
+                <span class="info-label">نام</span>
+                <span class="info-value">{{ reservation.first_name }} {{ reservation.last_name }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">ایمیل</span>
+                <span class="info-value">{{ reservation.email }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">تلفن</span>
+                <span class="info-value">{{ reservation.phone_number|to_persian }}</span>
+            </div>
+            {% if reservation.user %}
+            <div class="info-row">
+                <span class="info-label">حساب کاربری</span>
+                <span class="info-value">{{ reservation.user.email }}</span>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="dash-card">
+    <div class="card-header">
+        <h2>تغییر وضعیت رزرو</h2>
+    </div>
+    <form method="post" action="{% url 'dashboard:reservation_status' reservation.pk %}" class="status-form">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{% url 'dashboard:reservation_detail' reservation.pk %}">
+        <div class="status-actions">
+            {% for value, label in status_choices %}
+            <button
+                type="submit"
+                name="status"
+                value="{{ value }}"
+                class="status-btn status-btn-{{ value }} {% if reservation.status == value %}current{% endif %}"
+                {% if reservation.status == value %}disabled{% endif %}
+            >
+                {{ label }}
+            </button>
+            {% endfor %}
+        </div>
+    </form>
+</div>
+
+{% endblock %}

@@ -164,7 +164,7 @@
 <div class="dash-card" id="reservations">
     <div class="card-header">
         <h2>آخرین رزروها</h2>
-        <a href="#" class="card-link">مشاهده همه</a>
+        <a href="{% url 'dashboard:reservations' %}" class="card-link">مشاهده همه</a>
     </div>
     <div class="table-wrap">
         <table class="dash-table">
@@ -198,7 +198,7 @@
 <div class="dash-card" id="reviews">
     <div class="card-header">
         <h2>آخرین نظرات</h2>
-        <a href="#" class="card-link">مشاهده همه</a>
+        <a href="{% url 'dashboard:reviews' %}" class="card-link">مشاهده همه</a>
     </div>
     <div class="table-wrap">
         <table class="dash-table">
@@ -278,7 +278,7 @@
 <div class="dash-card" id="users">
     <div class="card-header">
         <h2>آخرین کاربران</h2>
-        <a href="#" class="card-link">مشاهده همه</a>
+        <a href="{% url 'dashboard:users' %}" class="card-link">مشاهده همه</a>
     </div>
     <div class="table-wrap">
         <table class="dash-table">

@@ -1,0 +1,85 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% load jalali %}
+
+{% block title %}رزروها | داشبورد{% endblock %}
+{% block dash_title %}رزرو میز{% endblock %}
+
+{% block dash_content %}
+
+<div class="filter-tabs">
+    <a href="?q={{ search_q }}" class="filter-tab {% if not current_status %}active{% endif %}">
+        همه <span class="tab-count">{{ counts.all|to_persian }}</span>
+    </a>
+    <a href="?status=pending&q={{ search_q }}" class="filter-tab {% if current_status == 'pending' %}active{% endif %}">
+        در انتظار <span class="tab-count">{{ counts.pending|to_persian }}</span>
+    </a>
+    <a href="?status=confirmed&q={{ search_q }}" class="filter-tab {% if current_status == 'confirmed' %}active{% endif %}">
+        تأییدشده <span class="tab-count">{{ counts.confirmed|to_persian }}</span>
+    </a>
+    <a href="?status=cancelled&q={{ search_q }}" class="filter-tab {% if current_status == 'cancelled' %}active{% endif %}">
+        لغوشده <span class="tab-count">{{ counts.cancelled|to_persian }}</span>
+    </a>
+</div>
+
+<form method="get" class="dash-search-form">
+    {% if current_status %}<input type="hidden" name="status" value="{{ current_status }}">{% endif %}
+    <div class="dash-search-box">
+        <i class="bi bi-search"></i>
+        <input type="search" name="q" value="{{ search_q }}" placeholder="جستجو: نام، ایمیل یا تلفن..." autocomplete="off">
+        <button type="submit">جستجو</button>
+    </div>
+</form>
+
+<div class="dash-card">
+    <div class="table-wrap">
+        <table class="dash-table">
+            <thead>
+                <tr>
+                    <th>نام</th>
+                    <th>تلفن</th>
+                    <th>تاریخ</th>
+                    <th>ساعت</th>
+                    <th>نفرات</th>
+                    <th>وضعیت</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in reservations %}
+                <tr>
+                    <td>
+                        <div class="cell-main">{{ r.first_name }} {{ r.last_name }}</div>
+                        <div class="cell-sub">{{ r.email }}</div>
+                    </td>
+                    <td>{{ r.phone_number|to_persian }}</td>
+                    <td>{{ r.reservation_date|to_jalali }}</td>
+                    <td>{{ r.reservation_time|time:"H:i"|to_persian }}</td>
+                    <td>{{ r.number_of_guests|to_persian }}</td>
+                    <td>
+                        <span class="status status-{{ r.status }}">{{ r.get_status_display }}</span>
+                    </td>
+                    <td>
+                        <a href="{% url 'dashboard:reservation_detail' r.pk %}" class="btn-sm">جزئیات</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="7" class="empty-cell">رزروی یافت نشد.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if is_paginated %}
+    <div class="dash-pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}&status={{ current_status }}&q={{ search_q }}">قبلی</a>
+        {% endif %}
+        <span>صفحه {{ page_obj.number|to_persian }} از {{ page_obj.paginator.num_pages|to_persian }}</span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}&status={{ current_status }}&q={{ search_q }}">بعدی</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

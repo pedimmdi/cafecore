@@ -45,19 +45,23 @@
                 <i class="bi bi-box-seam"></i>
                 <span>موجودی</span>
             </a>
-            <a href="{% url 'dashboard:index' %}#reservations" class="dash-nav-link">
+            <a href="{% url 'dashboard:reservations' %}"
+               class="dash-nav-link {% if 'reservation' in request.resolver_match.url_name %}active{% endif %}">
                 <i class="bi bi-calendar-check"></i>
                 <span>رزروها</span>
             </a>
-            <a href="{% url 'dashboard:index' %}#reviews" class="dash-nav-link">
+            <a href="{% url 'dashboard:reviews' %}"
+               class="dash-nav-link {% if 'review' in request.resolver_match.url_name %}active{% endif %}">
                 <i class="bi bi-chat-left-text"></i>
                 <span>نظرات</span>
             </a>
-            <a href="{% url 'dashboard:index' %}#coupons" class="dash-nav-link">
+            <a href="{% url 'dashboard:coupons' %}"
+               class="dash-nav-link {% if 'coupon' in request.resolver_match.url_name %}active{% endif %}">
                 <i class="bi bi-ticket-perforated"></i>
                 <span>کوپن‌ها</span>
             </a>
-            <a href="{% url 'dashboard:index' %}#users" class="dash-nav-link">
+            <a href="{% url 'dashboard:users' %}"
+               class="dash-nav-link {% if 'user' in request.resolver_match.url_name %}active{% endif %}">
                 <i class="bi bi-people"></i>
                 <span>کاربران</span>
             </a>

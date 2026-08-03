@@ -1,0 +1,209 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% load jalali %}
+
+{% block title %}{{ profile_user.email }} | داشبورد{% endblock %}
+{% block dash_title %}جزئیات کاربر{% endblock %}
+
+{% block dash_content %}
+
+<div class="detail-top">
+    <a href="{% url 'dashboard:users' %}" class="back-link">
+        <i class="bi bi-arrow-right"></i>
+        بازگشت به لیست
+    </a>
+</div>
+
+<!-- هدر پروفایل -->
+<div class="dash-card user-profile-header">
+    <div class="user-profile-main">
+        {% if profile_user.avatar %}
+            <img src="{{ profile_user.avatar.url }}" alt="" class="user-profile-avatar">
+        {% else %}
+            <div class="user-profile-avatar placeholder"><i class="bi bi-person"></i></div>
+        {% endif %}
+        <div>
+            <h2>{{ profile_user.first_name }} {{ profile_user.last_name }}</h2>
+            <p>{{ profile_user.email }}</p>
+            <div class="user-badges">
+                {% if profile_user.is_superuser %}
+                    <span class="role-badge role-super">سوپریوزر</span>
+                {% elif profile_user.is_staff %}
+                    <span class="role-badge role-staff">مدیر</span>
+                {% else %}
+                    <span class="role-badge role-user">کاربر</span>
+                {% endif %}
+                {% if profile_user.is_active %}
+                    <span class="status status-paid">فعال</span>
+                {% else %}
+                    <span class="status status-cancelled">غیرفعال</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    {% if profile_user.pk != request.user.pk %}
+    <form method="post" action="{% url 'dashboard:user_toggle_active' profile_user.pk %}">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{% url 'dashboard:user_detail' profile_user.pk %}">
+        {% if profile_user.is_active %}
+            <button type="submit" class="btn-danger-dash">غیرفعال کردن حساب</button>
+        {% else %}
+            <button type="submit" class="btn-primary-dash">فعال کردن حساب</button>
+        {% endif %}
+    </form>
+    {% endif %}
+</div>
+
+<!-- آمار کاربر -->
+<div class="stats-grid stats-grid-3">
+    <div class="stat-card">
+        <div class="stat-icon"><i class="bi bi-bag-check"></i></div>
+        <div class="stat-body">
+            <span class="stat-label">سفارش‌ها</span>
+            <strong class="stat-value">{{ orders_count|to_persian }}</strong>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon"><i class="bi bi-calendar-check"></i></div>
+        <div class="stat-body">
+            <span class="stat-label">رزروها</span>
+            <strong class="stat-value">{{ reservations_count|to_persian }}</strong>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon"><i class="bi bi-chat-left-text"></i></div>
+        <div class="stat-body">
+            <span class="stat-label">نظرات</span>
+            <strong class="stat-value">{{ reviews_count|to_persian }}</strong>
+        </div>
+    </div>
+</div>
+
+<div class="detail-grid">
+    <div class="dash-card">
+        <div class="card-header"><h2>اطلاعات حساب</h2></div>
+        <div class="info-list">
+            <div class="info-row">
+                <span class="info-label">نام</span>
+                <span class="info-value">{{ profile_user.first_name }} {{ profile_user.last_name }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">ایمیل</span>
+                <span class="info-value">{{ profile_user.email }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">تلفن</span>
+                <span class="info-value">{{ profile_user.phone_number|default:"—"|to_persian }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">تاریخ تولد</span>
+                <span class="info-value">
+                    {% if profile_user.date_of_birth %}
+                        {{ profile_user.date_of_birth|to_jalali }}
+                    {% else %}
+                        —
+                    {% endif %}
+                </span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">تاریخ عضویت</span>
+                <span class="info-value">{{ profile_user.created_at|to_jalali }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="dash-card">
+        <div class="card-header"><h2>آخرین سفارش‌ها</h2></div>
+        {% if user_orders %}
+        <div class="table-wrap">
+            <table class="dash-table">
+                <thead>
+                    <tr><th>#</th><th>مبلغ</th><th>وضعیت</th><th>تاریخ</th></tr>
+                </thead>
+                <tbody>
+                    {% for order in user_orders %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'dashboard:order_detail' order.pk %}" class="link-gold">
+                                #{{ order.id|to_persian }}
+                            </a>
+                        </td>
+                        <td class="price-cell">{{ order.total_price|persian_price }}</td>
+                        <td><span class="status status-{{ order.status }}">{{ order.get_status_display }}</span></td>
+                        <td>{{ order.created_at|to_jalali }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="empty-inline">سفارشی ثبت نشده.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="detail-grid">
+    <div class="dash-card">
+        <div class="card-header"><h2>آخرین رزروها</h2></div>
+        {% if user_reservations %}
+        <div class="table-wrap">
+            <table class="dash-table">
+                <thead>
+                    <tr><th>تاریخ</th><th>ساعت</th><th>نفرات</th><th>وضعیت</th></tr>
+                </thead>
+                <tbody>
+                    {% for r in user_reservations %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'dashboard:reservation_detail' r.pk %}" class="link-gold">
+                                {{ r.reservation_date|to_jalali }}
+                            </a>
+                        </td>
+                        <td>{{ r.reservation_time|time:"H:i"|to_persian }}</td>
+                        <td>{{ r.number_of_guests|to_persian }}</td>
+                        <td><span class="status status-{{ r.status }}">{{ r.get_status_display }}</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="empty-inline">رزروی ثبت نشده.</p>
+        {% endif %}
+    </div>
+
+    <div class="dash-card">
+        <div class="card-header"><h2>آخرین نظرات</h2></div>
+        {% if user_reviews %}
+        <div class="table-wrap">
+            <table class="dash-table">
+                <thead>
+                    <tr><th>محصول</th><th>امتیاز</th><th>وضعیت</th><th>تاریخ</th></tr>
+                </thead>
+                <tbody>
+                    {% for review in user_reviews %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'dashboard:review_detail' review.pk %}" class="link-gold">
+                                {{ review.product.name }}
+                            </a>
+                        </td>
+                        <td class="rating-cell">
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= review.rating %}<i class="bi bi-star-fill"></i>{% else %}<i class="bi bi-star"></i>{% endif %}
+                            {% endfor %}
+                        </td>
+                        <td><span class="status status-{{ review.status }}">{{ review.get_status_display }}</span></td>
+                        <td>{{ review.created_at|to_jalali }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="empty-inline">نظری ثبت نشده.</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

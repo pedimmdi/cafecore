@@ -1,0 +1,105 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% load jalali %}
+
+{% block title %}کاربران | داشبورد{% endblock %}
+{% block dash_title %}کاربران{% endblock %}
+
+{% block dash_content %}
+
+<div class="filter-tabs">
+    <a href="?q={{ search_q }}" class="filter-tab {% if not current_status %}active{% endif %}">
+        همه <span class="tab-count">{{ counts.all|to_persian }}</span>
+    </a>
+    <a href="?status=active&q={{ search_q }}" class="filter-tab {% if current_status == 'active' %}active{% endif %}">
+        فعال <span class="tab-count">{{ counts.active|to_persian }}</span>
+    </a>
+    <a href="?status=inactive&q={{ search_q }}" class="filter-tab {% if current_status == 'inactive' %}active{% endif %}">
+        غیرفعال <span class="tab-count">{{ counts.inactive|to_persian }}</span>
+    </a>
+    <a href="?status=staff&q={{ search_q }}" class="filter-tab {% if current_status == 'staff' %}active{% endif %}">
+        مدیران <span class="tab-count">{{ counts.staff|to_persian }}</span>
+    </a>
+</div>
+
+<form method="get" class="dash-search-form">
+    {% if current_status %}<input type="hidden" name="status" value="{{ current_status }}">{% endif %}
+    <div class="dash-search-box">
+        <i class="bi bi-search"></i>
+        <input type="search" name="q" value="{{ search_q }}"
+               placeholder="جستجو: نام، ایمیل یا تلفن..." autocomplete="off">
+        <button type="submit">جستجو</button>
+    </div>
+</form>
+
+<div class="dash-card">
+    <div class="table-wrap">
+        <table class="dash-table">
+            <thead>
+                <tr>
+                    <th>کاربر</th>
+                    <th>تلفن</th>
+                    <th>نقش</th>
+                    <th>وضعیت</th>
+                    <th>عضویت</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in users %}
+                <tr>
+                    <td>
+                        <div class="product-cell">
+                            {% if u.avatar %}
+                                <img src="{{ u.avatar.url }}" alt="" class="thumb round">
+                            {% else %}
+                                <div class="thumb round placeholder"><i class="bi bi-person"></i></div>
+                            {% endif %}
+                            <div>
+                                <div class="cell-main">{{ u.first_name }} {{ u.last_name }}</div>
+                                <div class="cell-sub">{{ u.email }}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>{{ u.phone_number|default:"—"|to_persian }}</td>
+                    <td>
+                        {% if u.is_superuser %}
+                            <span class="role-badge role-super">سوپریوزر</span>
+                        {% elif u.is_staff %}
+                            <span class="role-badge role-staff">مدیر</span>
+                        {% else %}
+                            <span class="role-badge role-user">کاربر</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if u.is_active %}
+                            <span class="status status-paid">فعال</span>
+                        {% else %}
+                            <span class="status status-cancelled">غیرفعال</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ u.created_at|to_jalali }}</td>
+                    <td>
+                        <a href="{% url 'dashboard:user_detail' u.pk %}" class="btn-sm">جزئیات</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" class="empty-cell">کاربری یافت نشد.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if is_paginated %}
+    <div class="dash-pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}&status={{ current_status }}&q={{ search_q }}">قبلی</a>
+        {% endif %}
+        <span>صفحه {{ page_obj.number|to_persian }} از {{ page_obj.paginator.num_pages|to_persian }}</span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}&status={{ current_status }}&q={{ search_q }}">بعدی</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

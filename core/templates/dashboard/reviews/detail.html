@@ -1,0 +1,96 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% load jalali %}
+
+{% block title %}نظر #{{ review.id }} | داشبورد{% endblock %}
+{% block dash_title %}جزئیات نظر{% endblock %}
+
+{% block dash_content %}
+
+<div class="detail-top">
+    <a href="{% url 'dashboard:reviews' %}" class="back-link">
+        <i class="bi bi-arrow-right"></i>
+        بازگشت به لیست
+    </a>
+</div>
+
+<div class="detail-grid">
+    <div class="dash-card">
+        <div class="card-header">
+            <h2>متن نظر</h2>
+            <span class="status status-{{ review.status }}">{{ review.get_status_display }}</span>
+        </div>
+
+        <div class="review-stars">
+            {% for i in "12345" %}
+                {% if forloop.counter <= review.rating %}
+                    <i class="bi bi-star-fill"></i>
+                {% else %}
+                    <i class="bi bi-star"></i>
+                {% endif %}
+            {% endfor %}
+            <span class="rating-num">({{ review.rating|to_persian }} از ۵)</span>
+        </div>
+
+        <div class="review-text">
+            {{ review.comment|linebreaks }}
+        </div>
+
+        <div class="info-list" style="margin-top: 20px;">
+            <div class="info-row">
+                <span class="info-label">محصول</span>
+                <span class="info-value">{{ review.product.name }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">تاریخ ثبت</span>
+                <span class="info-value">{{ review.created_at|to_jalali }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="dash-card">
+        <div class="card-header">
+            <h2>کاربر</h2>
+        </div>
+        <div class="info-list">
+            <div class="info-row">
+                <span class="info-label">نام</span>
+                <span class="info-value">{{ review.user.first_name }} {{ review.user.last_name }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">ایمیل</span>
+                <span class="info-value">{{ review.user.email }}</span>
+            </div>
+            {% if review.user.phone_number %}
+            <div class="info-row">
+                <span class="info-label">تلفن</span>
+                <span class="info-value">{{ review.user.phone_number|to_persian }}</span>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="dash-card">
+    <div class="card-header">
+        <h2>تغییر وضعیت نظر</h2>
+    </div>
+    <form method="post" action="{% url 'dashboard:review_status' review.pk %}" class="status-form">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{% url 'dashboard:review_detail' review.pk %}">
+        <div class="status-actions">
+            {% for value, label in status_choices %}
+            <button
+                type="submit"
+                name="status"
+                value="{{ value }}"
+                class="status-btn status-btn-{{ value }} {% if review.status == value %}current{% endif %}"
+                {% if review.status == value %}disabled{% endif %}
+            >
+                {{ label }}
+            </button>
+            {% endfor %}
+        </div>
+    </form>
+</div>
+
+{% endblock %}

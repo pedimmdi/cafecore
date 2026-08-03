@@ -10,13 +10,14 @@ from django.views import View
 from django.views.generic import(
     DetailView, ListView, TemplateView, CreateView, DeleteView, UpdateView
 )
+from django.utils import timezone
 
 from accounts.models import User
 from menu.models import Category, Product
 from orders.models import Coupon, Order
 from reservations.models import Reservation
 from reviews.models import Review
-from .forms import CategoryForm, InventoryUpdateForm, ProductForm
+from .forms import CategoryForm, CouponForm, InventoryUpdateForm, ProductForm
 
 
 @method_decorator(staff_member_required, name="dispatch")
@@ -463,3 +464,373 @@ class InventoryView(ListView):
         return redirect(
             request.META.get("HTTP_REFERER", reverse_lazy("dashboard:inventory"))
         )
+
+
+# ============================================================
+# رزروها
+# ============================================================
+
+@method_decorator(staff_member_required, name="dispatch")
+class ReservationListView(ListView):
+    model = Reservation
+    template_name = "dashboard/reservations/list.html"
+    context_object_name = "reservations"
+    paginate_by = 20
+
+    def get_queryset(self):
+        qs = Reservation.objects.select_related("user").order_by(
+            "-reservation_date", "-reservation_time"
+        )
+        status = self.request.GET.get("status")
+        q = self.request.GET.get("q", "").strip()
+
+        if status in dict(Reservation.Status.choices):
+            qs = qs.filter(status=status)
+        if q:
+            qs = qs.filter(
+                models.Q(first_name__icontains=q)
+                | models.Q(last_name__icontains=q)
+                | models.Q(email__icontains=q)
+                | models.Q(phone_number__icontains=q)
+            )
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["current_status"] = self.request.GET.get("status", "")
+        context["search_q"] = self.request.GET.get("q", "")
+        context["status_choices"] = Reservation.Status.choices
+        context["counts"] = {
+            "all": Reservation.objects.count(),
+            "pending": Reservation.objects.filter(
+                status=Reservation.Status.PENDING
+            ).count(),
+            "confirmed": Reservation.objects.filter(
+                status=Reservation.Status.CONFIRMED
+            ).count(),
+            "cancelled": Reservation.objects.filter(
+                status=Reservation.Status.CANCELLED
+            ).count(),
+        }
+        return context
+
+
+@method_decorator(staff_member_required, name="dispatch")
+class ReservationDetailView(DetailView):
+    model = Reservation
+    template_name = "dashboard/reservations/detail.html"
+    context_object_name = "reservation"
+
+    def get_queryset(self):
+        return Reservation.objects.select_related("user")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["status_choices"] = Reservation.Status.choices
+        return context
+
+
+@method_decorator(staff_member_required, name="dispatch")
+class ReservationStatusUpdateView(View):
+    def post(self, request, pk):
+        reservation = get_object_or_404(Reservation, pk=pk)
+        new_status = request.POST.get("status")
+        valid = dict(Reservation.Status.choices)
+
+        if new_status not in valid:
+            messages.error(request, "وضعیت نامعتبر است.")
+            return redirect("dashboard:reservation_detail", pk=pk)
+
+        reservation.status = new_status
+        reservation.save(update_fields=["status", "updated_at"])
+        messages.success(
+            request,
+            f"وضعیت رزرو به «{valid[new_status]}» تغییر کرد.",
+        )
+
+        next_url = request.POST.get("next")
+        if next_url:
+            return redirect(next_url)
+        return redirect("dashboard:reservation_detail", pk=pk)
+
+
+# ============================================================
+# نظرات
+# ============================================================
+
+@method_decorator(staff_member_required, name="dispatch")
+class ReviewListView(ListView):
+    model = Review
+    template_name = "dashboard/reviews/list.html"
+    context_object_name = "reviews"
+    paginate_by = 20
+
+    def get_queryset(self):
+        qs = (
+            Review.objects.select_related("user", "product")
+            .order_by("-created_at")
+        )
+        status = self.request.GET.get("status")
+        q = self.request.GET.get("q", "").strip()
+        rating = self.request.GET.get("rating")
+
+        if status in dict(Review.Status.choices):
+            qs = qs.filter(status=status)
+        if rating and rating.isdigit() and 1 <= int(rating) <= 5:
+            qs = qs.filter(rating=int(rating))
+        if q:
+            qs = qs.filter(
+                models.Q(comment__icontains=q)
+                | models.Q(product__name__icontains=q)
+                | models.Q(user__email__icontains=q)
+                | models.Q(user__first_name__icontains=q)
+                | models.Q(user__last_name__icontains=q)
+            )
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["current_status"] = self.request.GET.get("status", "")
+        context["current_rating"] = self.request.GET.get("rating", "")
+        context["search_q"] = self.request.GET.get("q", "")
+        context["status_choices"] = Review.Status.choices
+        context["counts"] = {
+            "all": Review.objects.count(),
+            "pending": Review.objects.filter(status=Review.Status.PENDING).count(),
+            "approved": Review.objects.filter(status=Review.Status.APPROVED).count(),
+            "rejected": Review.objects.filter(status=Review.Status.REJECTED).count(),
+        }
+        return context
+
+
+@method_decorator(staff_member_required, name="dispatch")
+class ReviewDetailView(DetailView):
+    model = Review
+    template_name = "dashboard/reviews/detail.html"
+    context_object_name = "review"
+
+    def get_queryset(self):
+        return Review.objects.select_related("user", "product")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["status_choices"] = Review.Status.choices
+        return context
+
+
+@method_decorator(staff_member_required, name="dispatch")
+class ReviewStatusUpdateView(View):
+    def post(self, request, pk):
+        review = get_object_or_404(Review, pk=pk)
+        new_status = request.POST.get("status")
+        valid = dict(Review.Status.choices)
+
+        if new_status not in valid:
+            messages.error(request, "وضعیت نامعتبر است.")
+            return redirect("dashboard:review_detail", pk=pk)
+
+        review.status = new_status
+        review.save(update_fields=["status", "updated_at"])
+        messages.success(
+            request,
+            f"وضعیت نظر به «{valid[new_status]}» تغییر کرد.",
+        )
+
+        next_url = request.POST.get("next")
+        if next_url:
+            return redirect(next_url)
+        return redirect("dashboard:review_detail", pk=pk)
+
+
+# ============================================================
+# کوپن‌ها
+# ============================================================
+
+@method_decorator(staff_member_required, name="dispatch")
+class CouponListView(ListView):
+    model = Coupon
+    template_name = "dashboard/coupons/list.html"
+    context_object_name = "coupons"
+    paginate_by = 20
+
+    def get_queryset(self):
+        qs = Coupon.objects.order_by("-created_at")
+        status = self.request.GET.get("status")
+        q = self.request.GET.get("q", "").strip()
+        now = timezone.now()
+
+        if status == "active":
+            qs = qs.filter(is_active=True, valid_from__lte=now, valid_to__gte=now)
+        elif status == "inactive":
+            qs = qs.filter(is_active=False)
+        elif status == "expired":
+            qs = qs.filter(valid_to__lt=now)
+        if q:
+            qs = qs.filter(code__icontains=q)
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        now = timezone.now()
+        context["current_status"] = self.request.GET.get("status", "")
+        context["search_q"] = self.request.GET.get("q", "")
+        context["now"] = now
+        context["counts"] = {
+            "all": Coupon.objects.count(),
+            "active": Coupon.objects.filter(
+                is_active=True, valid_from__lte=now, valid_to__gte=now
+            ).count(),
+            "inactive": Coupon.objects.filter(is_active=False).count(),
+            "expired": Coupon.objects.filter(valid_to__lt=now).count(),
+        }
+        return context
+
+
+@method_decorator(staff_member_required, name="dispatch")
+class CouponCreateView(CreateView):
+    model = Coupon
+    form_class = CouponForm
+    template_name = "dashboard/coupons/form.html"
+    success_url = reverse_lazy("dashboard:coupons")
+
+    def form_valid(self, form):
+        messages.success(self.request, "کوپن با موفقیت ایجاد شد.")
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "ایجاد کوپن"
+        context["submit_label"] = "ثبت کوپن"
+        return context
+
+
+@method_decorator(staff_member_required, name="dispatch")
+class CouponUpdateView(UpdateView):
+    model = Coupon
+    form_class = CouponForm
+    template_name = "dashboard/coupons/form.html"
+    success_url = reverse_lazy("dashboard:coupons")
+
+    def form_valid(self, form):
+        messages.success(self.request, "کوپن ویرایش شد.")
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "ویرایش کوپن"
+        context["submit_label"] = "ذخیره تغییرات"
+        return context
+
+
+@method_decorator(staff_member_required, name="dispatch")
+class CouponDeleteView(DeleteView):
+    model = Coupon
+    template_name = "dashboard/coupons/confirm_delete.html"
+    success_url = reverse_lazy("dashboard:coupons")
+
+    def form_valid(self, form):
+        messages.success(self.request, "کوپن حذف شد.")
+        return super().form_valid(form)
+
+
+# ============================================================
+# کاربران
+# ============================================================
+
+@method_decorator(staff_member_required, name="dispatch")
+class UserListView(ListView):
+    model = User
+    template_name = "dashboard/users/list.html"
+    context_object_name = "users"
+    paginate_by = 20
+
+    def get_queryset(self):
+        qs = User.objects.order_by("-created_at")
+        q = self.request.GET.get("q", "").strip()
+        status = self.request.GET.get("status")
+
+        if status == "active":
+            qs = qs.filter(is_active=True)
+        elif status == "inactive":
+            qs = qs.filter(is_active=False)
+        elif status == "staff":
+            qs = qs.filter(is_staff=True)
+
+        if q:
+            qs = qs.filter(
+                models.Q(email__icontains=q)
+                | models.Q(first_name__icontains=q)
+                | models.Q(last_name__icontains=q)
+                | models.Q(phone_number__icontains=q)
+            )
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["search_q"] = self.request.GET.get("q", "")
+        context["current_status"] = self.request.GET.get("status", "")
+        context["counts"] = {
+            "all": User.objects.count(),
+            "active": User.objects.filter(is_active=True).count(),
+            "inactive": User.objects.filter(is_active=False).count(),
+            "staff": User.objects.filter(is_staff=True).count(),
+        }
+        return context
+
+
+@method_decorator(staff_member_required, name="dispatch")
+class UserDetailView(DetailView):
+    model = User
+    template_name = "dashboard/users/detail.html"
+    context_object_name = "profile_user"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.object
+        context["user_orders"] = (
+            Order.objects.filter(user=user)
+            .prefetch_related("items")
+            .order_by("-created_at")[:10]
+        )
+        context["user_reservations"] = (
+            Reservation.objects.filter(user=user)
+            .order_by("-created_at")[:10]
+        )
+        context["user_reviews"] = (
+            Review.objects.filter(user=user)
+            .select_related("product")
+            .order_by("-created_at")[:10]
+        )
+        context["orders_count"] = Order.objects.filter(user=user).count()
+        context["reservations_count"] = Reservation.objects.filter(user=user).count()
+        context["reviews_count"] = Review.objects.filter(user=user).count()
+        return context
+
+
+@method_decorator(staff_member_required, name="dispatch")
+class UserToggleActiveView(View):
+    def post(self, request, pk):
+        user = get_object_or_404(User, pk=pk)
+
+        # جلوگیری از غیرفعال کردن خودت
+        if user.pk == request.user.pk:
+            messages.error(request, "نمی‌توانید حساب خودتان را غیرفعال کنید.")
+            return redirect("dashboard:user_detail", pk=pk)
+
+        # جلوگیری از غیرفعال کردن سوپریوزر توسط غیرسوپریوزر
+        if user.is_superuser and not request.user.is_superuser:
+            messages.error(request, "دسترسی کافی برای این عملیات ندارید.")
+            return redirect("dashboard:user_detail", pk=pk)
+
+        user.is_active = not user.is_active
+        user.save(update_fields=["is_active", "updated_at"])
+
+        if user.is_active:
+            messages.success(request, f"حساب «{user.email}» فعال شد.")
+        else:
+            messages.success(request, f"حساب «{user.email}» غیرفعال شد.")
+
+        next_url = request.POST.get("next")
+        if next_url:
+            return redirect(next_url)
+        return redirect("dashboard:user_detail", pk=pk)

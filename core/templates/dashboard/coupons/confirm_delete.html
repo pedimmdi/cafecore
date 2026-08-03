@@ -1,0 +1,19 @@
+{% extends "dashboard/base_dashboard.html" %}
+
+{% block title %}حذف کوپن | داشبورد{% endblock %}
+{% block dash_title %}حذف کوپن{% endblock %}
+
+{% block dash_content %}
+<div class="dash-card confirm-card">
+    <div class="confirm-icon"><i class="bi bi-exclamation-triangle"></i></div>
+    <h2>حذف کد «{{ object.code }}»؟</h2>
+    <p>این عمل قابل بازگشت نیست.</p>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-actions center">
+            <button type="submit" class="btn-danger-dash">بله، حذف شود</button>
+            <a href="{% url 'dashboard:coupons' %}" class="btn-secondary-dash">انصراف</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

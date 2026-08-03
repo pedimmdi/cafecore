@@ -1,0 +1,59 @@
+{% extends "dashboard/base_dashboard.html" %}
+
+{% block title %}{{ page_title }} | داشبورد{% endblock %}
+{% block dash_title %}{{ page_title }}{% endblock %}
+
+{% block dash_content %}
+
+<div class="detail-top">
+    <a href="{% url 'dashboard:coupons' %}" class="back-link">
+        <i class="bi bi-arrow-right"></i>
+        بازگشت به کوپن‌ها
+    </a>
+</div>
+
+<div class="dash-card form-card">
+    <form method="post" class="dash-form">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="form-errors">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="id_code">کد تخفیف *</label>
+                {{ form.code }}
+                {{ form.code.errors }}
+            </div>
+            <div class="form-group">
+                <label for="id_discount">درصد تخفیف (۱–۱۰۰) *</label>
+                {{ form.discount }}
+                {{ form.discount.errors }}
+            </div>
+            <div class="form-group">
+                <label for="id_valid_from">اعتبار از *</label>
+                {{ form.valid_from }}
+                {{ form.valid_from.errors }}
+            </div>
+            <div class="form-group">
+                <label for="id_valid_to">اعتبار تا *</label>
+                {{ form.valid_to }}
+                {{ form.valid_to.errors }}
+            </div>
+            <div class="form-group check-group">
+                <label class="check-label">
+                    {{ form.is_active }}
+                    <span>فعال باشد</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-primary-dash">{{ submit_label }}</button>
+            <a href="{% url 'dashboard:coupons' %}" class="btn-secondary-dash">انصراف</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

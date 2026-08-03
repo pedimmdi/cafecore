@@ -1,0 +1,110 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% load jalali %}
+
+{% block title %}نظرات | داشبورد{% endblock %}
+{% block dash_title %}نظرات کاربران{% endblock %}
+
+{% block dash_content %}
+
+<div class="filter-tabs">
+    <a href="?q={{ search_q }}&rating={{ current_rating }}"
+       class="filter-tab {% if not current_status %}active{% endif %}">
+        همه <span class="tab-count">{{ counts.all|to_persian }}</span>
+    </a>
+    <a href="?status=pending&q={{ search_q }}&rating={{ current_rating }}"
+       class="filter-tab {% if current_status == 'pending' %}active{% endif %}">
+        در انتظار <span class="tab-count">{{ counts.pending|to_persian }}</span>
+    </a>
+    <a href="?status=approved&q={{ search_q }}&rating={{ current_rating }}"
+       class="filter-tab {% if current_status == 'approved' %}active{% endif %}">
+        تأییدشده <span class="tab-count">{{ counts.approved|to_persian }}</span>
+    </a>
+    <a href="?status=rejected&q={{ search_q }}&rating={{ current_rating }}"
+       class="filter-tab {% if current_status == 'rejected' %}active{% endif %}">
+        ردشده <span class="tab-count">{{ counts.rejected|to_persian }}</span>
+    </a>
+</div>
+
+<form method="get" class="dash-search-form">
+    {% if current_status %}<input type="hidden" name="status" value="{{ current_status }}">{% endif %}
+    <div class="dash-search-box">
+        <i class="bi bi-search"></i>
+        <input type="search" name="q" value="{{ search_q }}"
+               placeholder="جستجو در متن نظر، محصول یا کاربر..." autocomplete="off">
+        <select name="rating" onchange="this.form.submit()">
+            <option value="">همه امتیازها</option>
+            {% for i in "12345" %}
+            <option value="{{ i }}" {% if current_rating == i %}selected{% endif %}>
+                {{ i }} ستاره
+            </option>
+            {% endfor %}
+        </select>
+        <button type="submit">جستجو</button>
+    </div>
+</form>
+
+<div class="dash-card">
+    <div class="table-wrap">
+        <table class="dash-table">
+            <thead>
+                <tr>
+                    <th>کاربر</th>
+                    <th>محصول</th>
+                    <th>امتیاز</th>
+                    <th>نظر</th>
+                    <th>وضعیت</th>
+                    <th>تاریخ</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for review in reviews %}
+                <tr>
+                    <td>
+                        <div class="cell-main">
+                            {{ review.user.first_name }} {{ review.user.last_name }}
+                        </div>
+                        <div class="cell-sub">{{ review.user.email }}</div>
+                    </td>
+                    <td>{{ review.product.name }}</td>
+                    <td class="rating-cell">
+                        {% for i in "12345" %}
+                            {% if forloop.counter <= review.rating %}
+                                <i class="bi bi-star-fill"></i>
+                            {% else %}
+                                <i class="bi bi-star"></i>
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td class="comment-cell">{{ review.comment|truncatechars:60 }}</td>
+                    <td>
+                        <span class="status status-{{ review.status }}">
+                            {{ review.get_status_display }}
+                        </span>
+                    </td>
+                    <td>{{ review.created_at|to_jalali }}</td>
+                    <td>
+                        <a href="{% url 'dashboard:review_detail' review.pk %}" class="btn-sm">جزئیات</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="7" class="empty-cell">نظری یافت نشد.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if is_paginated %}
+    <div class="dash-pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}&status={{ current_status }}&q={{ search_q }}&rating={{ current_rating }}">قبلی</a>
+        {% endif %}
+        <span>صفحه {{ page_obj.number|to_persian }} از {{ page_obj.paginator.num_pages|to_persian }}</span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}&status={{ current_status }}&q={{ search_q }}&rating={{ current_rating }}">بعدی</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% load jalali %}
+
+{% block title %}کوپن‌ها | داشبورد{% endblock %}
+{% block dash_title %}کدهای تخفیف{% endblock %}
+
+{% block dash_content %}
+
+<div class="page-actions">
+    <a href="{% url 'dashboard:coupon_create' %}" class="btn-primary-dash">
+        <i class="bi bi-plus-lg"></i>
+        ایجاد کوپن
+    </a>
+</div>
+
+<div class="filter-tabs">
+    <a href="?q={{ search_q }}" class="filter-tab {% if not current_status %}active{% endif %}">
+        همه <span class="tab-count">{{ counts.all|to_persian }}</span>
+    </a>
+    <a href="?status=active&q={{ search_q }}" class="filter-tab {% if current_status == 'active' %}active{% endif %}">
+        فعال <span class="tab-count">{{ counts.active|to_persian }}</span>
+    </a>
+    <a href="?status=inactive&q={{ search_q }}" class="filter-tab {% if current_status == 'inactive' %}active{% endif %}">
+        غیرفعال <span class="tab-count">{{ counts.inactive|to_persian }}</span>
+    </a>
+    <a href="?status=expired&q={{ search_q }}" class="filter-tab {% if current_status == 'expired' %}active{% endif %}">
+        منقضی <span class="tab-count">{{ counts.expired|to_persian }}</span>
+    </a>
+</div>
+
+<form method="get" class="dash-search-form">
+    {% if current_status %}<input type="hidden" name="status" value="{{ current_status }}">{% endif %}
+    <div class="dash-search-box">
+        <i class="bi bi-search"></i>
+        <input type="search" name="q" value="{{ search_q }}" placeholder="جستجوی کد تخفیف..." autocomplete="off">
+        <button type="submit">جستجو</button>
+    </div>
+</form>
+
+<div class="dash-card">
+    <div class="table-wrap">
+        <table class="dash-table">
+            <thead>
+                <tr>
+                    <th>کد</th>
+                    <th>تخفیف</th>
+                    <th>از تاریخ</th>
+                    <th>تا تاریخ</th>
+                    <th>وضعیت</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for coupon in coupons %}
+                <tr>
+                    <td>
+                        <code class="coupon-code">{{ coupon.code }}</code>
+                    </td>
+                    <td class="price-cell">{{ coupon.discount|to_persian }}٪</td>
+                    <td>{{ coupon.valid_from|to_jalali }}</td>
+                    <td>{{ coupon.valid_to|to_jalali }}</td>
+                    <td>
+                        {% if not coupon.is_active %}
+                            <span class="status status-cancelled">غیرفعال</span>
+                        {% elif coupon.valid_to < now %}
+                            <span class="status status-pending">منقضی</span>
+                        {% elif coupon.valid_from > now %}
+                            <span class="status status-pending">هنوز شروع نشده</span>
+                        {% else %}
+                            <span class="status status-paid">فعال</span>
+                        {% endif %}
+                    </td>
+                    <td class="actions-cell">
+                        <a href="{% url 'dashboard:coupon_edit' coupon.pk %}" class="btn-sm">ویرایش</a>
+                        <a href="{% url 'dashboard:coupon_delete' coupon.pk %}" class="btn-sm btn-danger-sm">حذف</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" class="empty-cell">کوپنی ثبت نشده است.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if is_paginated %}
+    <div class="dash-pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}&status={{ current_status }}&q={{ search_q }}">قبلی</a>
+        {% endif %}
+        <span>صفحه {{ page_obj.number|to_persian }} از {{ page_obj.paginator.num_pages|to_persian }}</span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}&status={{ current_status }}&q={{ search_q }}">بعدی</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}
