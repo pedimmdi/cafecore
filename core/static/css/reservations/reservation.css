@@ -211,3 +211,139 @@
         padding: 22px 18px;
     }
 }
+
+.reservation-form select {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: #1a1a1a;
+    color: #fff;
+    font-family: inherit;
+    font-size: 1rem;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23D4AF37' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: left 14px center;
+    padding-left: 36px;
+}
+
+.reservation-form select:focus {
+    outline: none;
+    border-color: rgba(212, 175, 55, 0.55);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.12);
+}
+
+.reservation-form select option {
+    background: #1a1a1a;
+    color: #fff;
+}
+
+.reservation-form input,
+.reservation-form select,
+.reservation-form textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: #1a1a1a;
+    color: #fff;
+    font-family: inherit;
+    font-size: 1rem;
+    outline: none;
+    box-sizing: border-box;
+    transition: 0.25s;
+}
+
+.reservation-form input:focus,
+.reservation-form select:focus,
+.reservation-form textarea:focus {
+    border-color: rgba(212, 175, 55, 0.55);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.12);
+}
+
+.reservation-form textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* ساعت */
+.time-field {
+    position: relative;
+}
+
+.time-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding-left: 44px !important;
+    background-color: #1a1a1a !important;
+    color: #fff !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 12px !important;
+    cursor: pointer;
+}
+
+.time-select option {
+    background: #1a1a1a;
+    color: #fff;
+}
+
+.time-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #D4AF37;
+    font-size: 1.1rem;
+    pointer-events: none;
+}
+
+/* تاریخ — اگر jdp-dark لود نشد، حداقل این باشد */
+.date-field {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.date-field .date-display {
+    width: 100%;
+    padding: 14px 52px 14px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    background: #1a1a1a;
+    color: #fff;
+    font-family: inherit;
+    font-size: 1rem;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.date-picker-btn {
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 10px;
+    background: rgba(212, 175, 55, 0.2);
+    color: #D4AF37;
+    font-size: 1.15rem;
+    cursor: pointer;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.date-picker-btn:hover {
+    background: #D4AF37;
+    color: #111;
+}
+
+.field-hint {
+    color: #9ca3af;
+    font-size: 0.85rem;
+}

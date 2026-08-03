@@ -43,13 +43,15 @@
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 12px;
     font-size: 1rem;
-    transition: .3s;
-    background: rgba(255, 255, 255, 0.05);
+    transition: 0.3s;
+    background: #1a1a1a;
     color: #fff;
     font-family: inherit;
+    box-sizing: border-box;
 }
 
-.form-group input::placeholder {
+.form-group input::placeholder,
+.form-group textarea::placeholder {
     color: #6b7280;
 }
 
@@ -69,11 +71,13 @@
 }
 
 .form-group input[readonly] {
-    opacity: 0.7;
+    opacity: 0.75;
     cursor: not-allowed;
+    background: #141414;
 }
 
-.form-group small {
+.form-group small,
+.field-hint {
     color: #9ca3af;
     font-size: 0.85rem;
 }
@@ -96,7 +100,7 @@
     cursor: pointer;
     font-size: 1rem;
     font-weight: 700;
-    transition: .3s;
+    transition: 0.3s;
     font-family: inherit;
     text-align: center;
 }
@@ -117,27 +121,11 @@
     color: #fff;
 }
 
-@media (max-width: 768px) {
-    .profile-update-card {
-        padding: 28px 18px;
-    }
-
-    .form-actions {
-        flex-direction: column;
-    }
-
-    .form-actions .btn-primary,
-    .form-actions .btn-secondary {
-        width: 100%;
-    }
+.form-actions .btn-secondary:hover {
+    border-color: rgba(212, 175, 55, 0.4);
 }
 
-
-/* فیلد تاریخ */
-.field-hint {
-    color: #9ca3af;
-    font-size: 0.85rem;
-}
+/* ========== فیلد تاریخ ========== */
 
 .date-field {
     position: relative;
@@ -150,10 +138,11 @@
     padding: 14px 52px 14px 16px;
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 12px;
-    background: rgba(255, 255, 255, 0.05);
+    background: #1a1a1a;
     color: #fff;
     font-family: inherit;
     font-size: 1rem;
+    box-sizing: border-box;
 }
 
 .date-field .date-display:focus {
@@ -164,21 +153,22 @@
 
 .date-picker-btn {
     position: absolute;
-    left: 10px;
+    left: 8px;
     top: 50%;
     transform: translateY(-50%);
-    width: 38px;
-    height: 38px;
+    width: 40px;
+    height: 40px;
     border: none;
     border-radius: 10px;
     background: rgba(212, 175, 55, 0.2);
     color: #D4AF37;
     font-size: 1.15rem;
     cursor: pointer;
-    z-index: 2;
+    z-index: 3;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: 0.2s;
 }
 
 .date-picker-btn:hover {
@@ -186,339 +176,39 @@
     color: #111;
 }
 
-/* ========== Persian Datepicker – Dark Theme ========== */
-
-.datepicker-container,
-.datepicker-plot-area {
-    background: #1c1c1c !important;
-    border: 1px solid rgba(212, 175, 55, 0.35) !important;
-    border-radius: 16px !important;
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65) !important;
-    color: #f0f0f0 !important;
-    font-family: "Vazirmatn", Tahoma, sans-serif !important;
-    overflow: hidden;
+/* خطاهای فرم */
+.errorlist {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: #f87171;
+    font-size: 0.85rem;
 }
 
-.datepicker-plot-area .datepicker-time-view,
-.datepicker-plot-area .toolbox,
-.datepicker-plot-area .datepicker-header {
-    background: #141414 !important;
-    color: #D4AF37 !important;
-    border: none !important;
-}
+/* ========== Responsive ========== */
 
-.datepicker-plot-area .datepicker-navigator {
-    background: #141414 !important;
-}
-
-.datepicker-plot-area .datepicker-navigator .pwt-btn-next,
-.datepicker-plot-area .datepicker-navigator .pwt-btn-prev,
-.datepicker-plot-area .datepicker-navigator .pwt-btn-switch {
-    background: transparent !important;
-    color: #D4AF37 !important;
-    font-weight: 700 !important;
-}
-
-.datepicker-plot-area .datepicker-navigator .pwt-btn-next:hover,
-.datepicker-plot-area .datepicker-navigator .pwt-btn-prev:hover,
-.datepicker-plot-area .datepicker-navigator .pwt-btn-switch:hover {
-    background: rgba(212, 175, 55, 0.12) !important;
-    color: #f0d78c !important;
-}
-
-/* روزهای هفته */
-.datepicker-plot-area .datepicker-day-view .month-grid-box .header {
-    background: #1c1c1c !important;
-    color: #9ca3af !important;
-}
-
-.datepicker-plot-area .datepicker-day-view .month-grid-box .header .header-row {
-    color: #9ca3af !important;
-}
-
-/* سلول روزها */
-.datepicker-plot-area .datepicker-day-view .table-days td,
-.datepicker-plot-area .datepicker-day-view .table-days td span {
-    background: transparent !important;
-    color: #e5e5e5 !important;
-    border-radius: 10px !important;
-}
-
-.datepicker-plot-area .datepicker-day-view .table-days td span {
-    border: none !important;
-    box-shadow: none !important;
-}
-
-/* روزهای ماه دیگر */
-.datepicker-plot-area .datepicker-day-view .table-days td.other-month span,
-.datepicker-plot-area .datepicker-day-view .table-days td span.other-month {
-    color: #555 !important;
-    opacity: 0.55;
-}
-
-/* هاور */
-.datepicker-plot-area .datepicker-day-view .table-days td span:hover {
-    background: rgba(212, 175, 55, 0.18) !important;
-    color: #D4AF37 !important;
-}
-
-/* روز انتخاب‌شده */
-.datepicker-plot-area .datepicker-day-view .table-days td.selected span,
-.datepicker-plot-area .datepicker-day-view .table-days td span.selected {
-    background: #D4AF37 !important;
-    color: #111 !important;
-    font-weight: 700 !important;
-}
-
-/* امروز */
-.datepicker-plot-area .datepicker-day-view .table-days td.today span,
-.datepicker-plot-area .datepicker-day-view .table-days td span.today {
-    border: 1px solid rgba(212, 175, 55, 0.7) !important;
-    color: #D4AF37 !important;
-    background: rgba(212, 175, 55, 0.08) !important;
-}
-
-/* ماه / سال */
-.datepicker-plot-area .datepicker-year-view .year-item,
-.datepicker-plot-area .datepicker-month-view .month-item {
-    background: transparent !important;
-    color: #e5e5e5 !important;
-    border-radius: 10px !important;
-}
-
-.datepicker-plot-area .datepicker-year-view .year-item:hover,
-.datepicker-plot-area .datepicker-month-view .month-item:hover {
-    background: rgba(212, 175, 55, 0.18) !important;
-    color: #D4AF37 !important;
-}
-
-.datepicker-plot-area .datepicker-year-view .year-item.selected,
-.datepicker-plot-area .datepicker-month-view .month-item.selected {
-    background: #D4AF37 !important;
-    color: #111 !important;
-}
-
-/* دکمه امروز / پاک کردن پایین */
-.datepicker-plot-area .toolbox .pwt-btn-today,
-.datepicker-plot-area .toolbox .pwt-btn-calendar,
-.datepicker-plot-area .toolbox .pwt-btn-submit {
-    background: rgba(255, 255, 255, 0.06) !important;
-    color: #D4AF37 !important;
-    border: 1px solid rgba(212, 175, 55, 0.3) !important;
-    border-radius: 10px !important;
-}
-
-.datepicker-plot-area .toolbox .pwt-btn-today:hover,
-.datepicker-plot-area .toolbox .pwt-btn-submit:hover {
-    background: #D4AF37 !important;
-    color: #111 !important;
-}
-
-.date-field {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.date-field .date-display {
-    width: 100%;
-    padding: 14px 52px 14px 16px;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.05);
-    color: #fff;
-    font-family: inherit;
-    font-size: 1rem;
-    cursor: text;
-}
-
-.date-picker-btn {
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 38px;
-    height: 38px;
-    border: none;
-    border-radius: 10px;
-    background: rgba(212, 175, 55, 0.18);
-    color: #D4AF37;
-    font-size: 1.15rem;
-    cursor: pointer;
-    z-index: 2;
-}
-
-.date-picker-btn:hover {
-    background: #D4AF37;
-    color: #111;
-}
-
-/* Date field */
-.date-field {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.date-field .date-display {
-    width: 100%;
-    padding: 14px 52px 14px 16px;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.05);
-    color: #fff;
-    font-family: inherit;
-    font-size: 1rem;
-}
-
-.date-picker-btn {
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 38px;
-    height: 38px;
-    border: none;
-    border-radius: 10px;
-    background: rgba(212, 175, 55, 0.18);
-    color: #D4AF37;
-    font-size: 1.15rem;
-    cursor: pointer;
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.date-picker-btn:hover {
-    background: #D4AF37;
-    color: #111;
-}
-
-/* ===== JalaliDatePicker Dark Theme ===== */
-jdp-container {
-    direction: rtl !important;
-    background: #161616 !important;
-    border: 1px solid rgba(212, 175, 55, 0.45) !important;
-    border-radius: 18px !important;
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7) !important;
-    color: #f2f2f2 !important;
-    font-family: "Vazirmatn", Tahoma, sans-serif !important;
-    z-index: 100000 !important;
-    padding: 12px !important;
-    box-sizing: border-box !important;
-    overflow: visible !important;
-}
-
-jdp-container * {
-    font-family: "Vazirmatn", Tahoma, sans-serif !important;
-    box-sizing: border-box !important;
-}
-
-/* هدر ماه/سال */
-jdp-container .jdp-icon-plus,
-jdp-container .jdp-icon-minus,
-jdp-container .jdp-year,
-jdp-container .jdp-month,
-jdp-container select {
-    background: #222 !important;
-    color: #D4AF37 !important;
-    border: 1px solid rgba(212, 175, 55, 0.3) !important;
-    border-radius: 10px !important;
-    cursor: pointer !important;
-}
-
-jdp-container .jdp-year,
-jdp-container .jdp-month {
-    font-weight: 700 !important;
-}
-
-/* روزهای هفته */
-jdp-container .jdp-day-name {
-    color: #a1a1aa !important;
-    background: transparent !important;
-}
-
-/* روزها */
-jdp-container .jdp-day {
-    color: #ececec !important;
-    background: transparent !important;
-    border-radius: 10px !important;
-    cursor: pointer !important;
-    pointer-events: auto !important;
-}
-
-jdp-container .jdp-day:hover {
-    background: rgba(212, 175, 55, 0.2) !important;
-    color: #D4AF37 !important;
-}
-
-jdp-container .jdp-day.selected {
-    background: #D4AF37 !important;
-    color: #111 !important;
-    font-weight: 700 !important;
-}
-
-jdp-container .jdp-day.today {
-    box-shadow: inset 0 0 0 1px rgba(212, 175, 55, 0.8) !important;
-    color: #D4AF37 !important;
-}
-
-jdp-container .jdp-day.not-in-month,
-jdp-container .jdp-day.disabled-day {
-    color: #555 !important;
-    opacity: 0.45 !important;
-}
-
-/* دکمه‌های پایین */
-jdp-container .jdp-btn-today,
-jdp-container .jdp-btn-empty,
-jdp-container .jdp-btn-close {
-    background: rgba(212, 175, 55, 0.12) !important;
-    color: #D4AF37 !important;
-    border: 1px solid rgba(212, 175, 55, 0.4) !important;
-    border-radius: 10px !important;
-    cursor: pointer !important;
-    pointer-events: auto !important;
-}
-
-jdp-container .jdp-btn-today:hover,
-jdp-container .jdp-btn-empty:hover,
-jdp-container .jdp-btn-close:hover {
-    background: #D4AF37 !important;
-    color: #111 !important;
-}
-
-@media (min-width: 577px) {
-    jdp-container {
-        max-width: 320px !important;
-    }
-}
-
-/* موبایل */
-@media (max-width: 576px) {
-    jdp-container {
-        position: fixed !important;
-        left: 50% !important;
-        top: 50% !important;
-        right: auto !important;
-        bottom: auto !important;
-        transform: translate(-50%, -50%) !important;
-        width: min(340px, 92vw) !important;
-        max-width: 92vw !important;
-        max-height: 80vh !important;
-        overflow-y: auto !important;
+@media (max-width: 768px) {
+    .profile-update-section {
+        margin: 40px auto;
+        padding: 0 16px;
     }
 
-    jdp-container .jdp-day {
-        min-width: 34px !important;
-        min-height: 34px !important;
+    .profile-update-card {
+        padding: 28px 18px;
     }
 
-    jdp-container .jdp-year,
-    jdp-container .jdp-month,
-    jdp-container select {
-        min-width: 70px !important;
-        font-size: 0.9rem !important;
+    .profile-update-card h1 {
+        font-size: 1.6rem;
+        margin-bottom: 28px;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .form-actions .btn-primary,
+    .form-actions .btn-secondary {
+        width: 100%;
+        min-width: 0;
     }
 }

@@ -9,6 +9,7 @@
 {% block css %}
 <link rel="stylesheet" href="{% static 'css/accounts/profile_update.css' %}">
 <link rel="stylesheet" href="{% static 'css/vendor/jalalidatepicker.min.css' %}">
+<link rel="stylesheet" href="{% static 'css/vendor/jdp-dark.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -122,5 +123,6 @@
 
 {% block js %}
 <script src="{% static 'js/vendor/jalalidatepicker.min.js' %}"></script>
+<script src="{% static 'js/shared/jalali-helpers.js' %}"></script>
 <script src="{% static 'js/accounts/profile_update.js' %}"></script>
 {% endblock %}

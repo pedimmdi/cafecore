@@ -6,6 +6,8 @@
 
 {% block css %}
 <link rel="stylesheet" href="{% static 'css/reservations/reservation.css' %}">
+<link rel="stylesheet" href="{% static 'css/vendor/jalalidatepicker.min.css' %}">
+<link rel="stylesheet" href="{% static 'css/vendor/jdp-dark.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -56,15 +58,67 @@
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="id_reservation_date">تاریخ رزرو</label>
-                        <input type="date" name="reservation_date" id="id_reservation_date"
-                               value="{{ form.reservation_date.value|default_if_none:'' }}" required>
+                        <label for="id_reservation_date_display">تاریخ رزرو</label>
+                        <div class="date-field">
+                            <input
+                                type="text"
+                                id="id_reservation_date_display"
+                                class="date-display"
+                                data-jdp
+                                data-jdp-only-date
+                                placeholder="مثال: ۱۴۰۵/۰۶/۱۵"
+                                autocomplete="off"
+                                readonly
+                            >
+                            <button type="button" class="date-picker-btn" id="resDateBtn" aria-label="انتخاب تاریخ">
+                                <i class="bi bi-calendar3"></i>
+                            </button>
+                        </div>
+                        <input
+                            type="hidden"
+                            name="reservation_date"
+                            id="id_reservation_date"
+                            value="{{ form.reservation_date.value|default_if_none:'' }}"
+                        >
                         {{ form.reservation_date.errors }}
+                        <small class="field-hint">تاریخ را از تقویم شمسی انتخاب کنید.</small>
                     </div>
+
                     <div class="form-group">
                         <label for="id_reservation_time">ساعت رزرو</label>
-                        <input type="time" name="reservation_time" id="id_reservation_time"
-                               value="{{ form.reservation_time.value|default_if_none:'' }}" required>
+                        <div class="time-field">
+                            <select name="reservation_time" id="id_reservation_time" class="time-select" required>
+                                <option value="">انتخاب ساعت</option>
+                                <option value="10:00">۱۰:۰۰</option>
+                                <option value="10:30">۱۰:۳۰</option>
+                                <option value="11:00">۱۱:۰۰</option>
+                                <option value="11:30">۱۱:۳۰</option>
+                                <option value="12:00">۱۲:۰۰</option>
+                                <option value="12:30">۱۲:۳۰</option>
+                                <option value="13:00">۱۳:۰۰</option>
+                                <option value="13:30">۱۳:۳۰</option>
+                                <option value="14:00">۱۴:۰۰</option>
+                                <option value="14:30">۱۴:۳۰</option>
+                                <option value="15:00">۱۵:۰۰</option>
+                                <option value="15:30">۱۵:۳۰</option>
+                                <option value="16:00">۱۶:۰۰</option>
+                                <option value="16:30">۱۶:۳۰</option>
+                                <option value="17:00">۱۷:۰۰</option>
+                                <option value="17:30">۱۷:۳۰</option>
+                                <option value="18:00">۱۸:۰۰</option>
+                                <option value="18:30">۱۸:۳۰</option>
+                                <option value="19:00">۱۹:۰۰</option>
+                                <option value="19:30">۱۹:۳۰</option>
+                                <option value="20:00">۲۰:۰۰</option>
+                                <option value="20:30">۲۰:۳۰</option>
+                                <option value="21:00">۲۱:۰۰</option>
+                                <option value="21:30">۲۱:۳۰</option>
+                                <option value="22:00">۲۲:۰۰</option>
+                                <option value="22:30">۲۲:۳۰</option>
+                                <option value="23:00">۲۳:۰۰</option>
+                            </select>
+                            <i class="bi bi-clock time-icon"></i>
+                        </div>
                         {{ form.reservation_time.errors }}
                     </div>
                 </div>
@@ -107,5 +161,7 @@
 {% endblock %}
 
 {% block js %}
+<script src="{% static 'js/vendor/jalalidatepicker.min.js' %}"></script>
+<script src="{% static 'js/shared/jalali-helpers.js' %}"></script>
 <script src="{% static 'js/reservations/reservation.js' %}"></script>
 {% endblock %}
