@@ -36,11 +36,20 @@ class DashboardView(TemplateView):
         context["reviews_count"] = Review.objects.count()
         context["coupons_count"] = Coupon.objects.filter(is_active=True).count()
 
+        context["pending_orders_count"] = Order.objects.filter(
+            status=Order.Status.PENDING
+        ).count()
         context["paid_orders_count"] = Order.objects.filter(
             status=Order.Status.PAID
         ).count()
-        context["pending_orders_count"] = Order.objects.filter(
-            status=Order.Status.PENDING
+        context["preparing_orders_count"] = Order.objects.filter(
+            status=Order.Status.PREPARING
+        ).count()
+        context["ready_orders_count"] = Order.objects.filter(
+            status=Order.Status.READY
+        ).count()
+        context["delivered_orders_count"] = Order.objects.filter(
+            status=Order.Status.DELIVERED
         ).count()
         context["cancelled_orders_count"] = Order.objects.filter(
             status=Order.Status.CANCELLED
@@ -69,7 +78,7 @@ class DashboardView(TemplateView):
 
         # ---------- درآمد کل ----------
         paid_orders = (
-            Order.objects.filter(status=Order.Status.PAID)
+            Order.objects.filter(status__in=Order.REVENUE_STATUSES)
             .prefetch_related("items")
             .order_by("created_at")
         )
@@ -103,10 +112,15 @@ class DashboardView(TemplateView):
         ]
 
         # ---------- وضعیت سفارش (doughnut) ----------
-        context["order_status_labels"] = ["در انتظار", "پرداخت‌شده", "لغوشده"]
+        context["order_status_labels"] = [
+            "در انتظار", "پرداخت‌شده", "آماده‌سازی", "آماده", "تحویل", "لغو"
+        ]
         context["order_status_values"] = [
             context["pending_orders_count"],
             context["paid_orders_count"],
+            context["preparing_orders_count"],
+            context["ready_orders_count"],
+            context["delivered_orders_count"],
             context["cancelled_orders_count"],
         ]
 
@@ -209,6 +223,9 @@ class OrderListView(ListView):
             "all": Order.objects.count(),
             "pending": Order.objects.filter(status=Order.Status.PENDING).count(),
             "paid": Order.objects.filter(status=Order.Status.PAID).count(),
+            "preparing": Order.objects.filter(status=Order.Status.PREPARING).count(),
+            "ready": Order.objects.filter(status=Order.Status.READY).count(),
+            "delivered": Order.objects.filter(status=Order.Status.DELIVERED).count(),
             "cancelled": Order.objects.filter(status=Order.Status.CANCELLED).count(),
         }
         return context
