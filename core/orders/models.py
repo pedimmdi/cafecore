@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.utils import timezone
 
 from menu.models import Product
 
@@ -21,6 +22,18 @@ class Coupon(models.Model):
 
     valid_to = models.DateTimeField()
 
+    # None یا ۰ = بدون سقف کلی
+    max_uses = models.PositiveIntegerField(
+        null=True,
+        blank=True,
+        help_text="حداکثر تعداد استفاده کلی. خالی = نامحدود",
+    )
+
+    once_per_user = models.BooleanField(
+        default=False,
+        help_text="هر کاربر فقط یک‌بار بتواند از این کد استفاده کند",
+    )
+
     created_at = models.DateTimeField(
         auto_now_add=True,
     )
@@ -35,6 +48,41 @@ class Coupon(models.Model):
     def __str__(self):
         return self.code
 
+    def times_used(self):
+        from orders.models import Order
+
+        return (
+            Order.objects.filter(coupon=self)
+            .exclude(status=Order.Status.CANCELLED)
+            .count()
+        )
+
+    def is_within_date_range(self):
+        now = timezone.now()
+        return self.is_active and self.valid_from <= now <= self.valid_to
+
+    def is_usable(self, user=None):
+        """آیا این کوپن الان برای این کاربر قابل اعمال است؟"""
+        if not self.is_within_date_range():
+            return False
+
+        if self.max_uses:
+            if self.times_used() >= self.max_uses:
+                return False
+
+        if self.once_per_user and user is not None and getattr(user, "is_authenticated", False):
+            from orders.models import Order
+
+            already = (
+                Order.objects.filter(coupon=self, user=user)
+                .exclude(status=Order.Status.CANCELLED)
+                .exists()
+            )
+            if already:
+                return False
+
+        return True
+
 
 class Order(models.Model):
 
@@ -46,7 +94,6 @@ class Order(models.Model):
         DELIVERED = "delivered", "تحویل شده"
         CANCELLED = "cancelled", "لغو شده"
 
-    # وضعیت‌هایی که فروش/درآمد محسوب می‌شوند
     REVENUE_STATUSES = (
         Status.PAID,
         Status.PREPARING,
@@ -68,7 +115,8 @@ class Order(models.Model):
         max_length=20, choices=Status.choices, default=Status.PENDING
     )
     coupon = models.ForeignKey(
-        'Coupon', on_delete=models.SET_NULL, null=True, blank=True
+        "Coupon", on_delete=models.SET_NULL, null=True, blank=True,
+        related_name="orders",
     )
     discount = models.DecimalField(
         max_digits=10, decimal_places=2, default=0
