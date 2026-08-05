@@ -1,7 +1,9 @@
-from django.db.models import Avg, Case, IntegerField, Q, Value, When
+from django.db.models import Avg, Case, IntegerField, Q, Sum, Value, When
+from django.db.models.functions import Coalesce
 from django.views.generic import DetailView, ListView
 
 from favorites.models import Favorite
+from orders.models import Order
 from reviews.models import Review
 
 from .models import Category, Product
@@ -14,12 +16,22 @@ class ProductListView(ListView):
     paginate_by = 12
 
     def get_queryset(self):
-        return (
-            Product.objects
-            .filter(is_available=True)
-            .select_related("category")
-            .order_by("name")
-        )
+            return (
+                Product.objects.filter(is_available=True)
+                .select_related("category")
+                .annotate(
+                    total_sales=Coalesce(
+                        Sum(
+                            "order_items__quantity",
+                            filter=Q(
+                                order_items__order__status=Order.Status.PAID
+                            ),
+                        ),
+                        Value(0),
+                    )
+                )
+                .order_by("-total_sales", "name")
+            )
 
 
 class ProductDetailView(DetailView):

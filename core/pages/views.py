@@ -1,10 +1,12 @@
 from django.contrib import messages
-from django.db.models import Sum
+from django.db.models import Q, Sum, Value
+from django.db.models.functions import Coalesce
 from django.shortcuts import redirect, render
 from django.views import View
 from django.views.generic import TemplateView
 
 from menu.models import Category, Product
+from orders.models import Order
 
 from .forms import ContactForm
 from .models import ContactMessage
@@ -29,14 +31,27 @@ class HomeView(TemplateView):
             .order_by("name")[:6]
         )
 
+        # محبوب‌ترین‌ها: فقط فروش سفارش‌های پرداخت‌شده
         context["popular_products"] = (
             Product.objects.filter(is_available=True)
             .select_related("category")
-            .annotate(total_sales=Sum("order_items__quantity"))
-            .order_by("-total_sales", "name")[:6]
+            .annotate(
+                total_sales=Coalesce(
+                    Sum(
+                        "order_items__quantity",
+                        filter=Q(
+                            order_items__order__status=Order.Status.PAID
+                        ),
+                    ),
+                    Value(0),
+                )
+            )
+            .order_by("-total_sales", "name")[:12]
         )
 
-        context["products_count"] = Product.objects.filter(is_available=True).count()
+        context["products_count"] = Product.objects.filter(
+            is_available=True
+        ).count()
 
         return context
 
