@@ -15,13 +15,28 @@
     </a>
     <a href="?status=pending&q={{ search_q }}"
        class="filter-tab {% if current_status == 'pending' %}active{% endif %}">
-        در انتظار
+        در انتظار پرداخت
         <span class="tab-count">{{ counts.pending|to_persian }}</span>
     </a>
     <a href="?status=paid&q={{ search_q }}"
        class="filter-tab {% if current_status == 'paid' %}active{% endif %}">
         پرداخت‌شده
         <span class="tab-count">{{ counts.paid|to_persian }}</span>
+    </a>
+    <a href="?status=preparing&q={{ search_q }}"
+       class="filter-tab {% if current_status == 'preparing' %}active{% endif %}">
+        آماده‌سازی
+        <span class="tab-count">{{ counts.preparing|to_persian }}</span>
+    </a>
+    <a href="?status=ready&q={{ search_q }}"
+       class="filter-tab {% if current_status == 'ready' %}active{% endif %}">
+        آماده تحویل
+        <span class="tab-count">{{ counts.ready|to_persian }}</span>
+    </a>
+    <a href="?status=delivered&q={{ search_q }}"
+       class="filter-tab {% if current_status == 'delivered' %}active{% endif %}">
+        تحویل‌شده
+        <span class="tab-count">{{ counts.delivered|to_persian }}</span>
     </a>
     <a href="?status=cancelled&q={{ search_q }}"
        class="filter-tab {% if current_status == 'cancelled' %}active{% endif %}">

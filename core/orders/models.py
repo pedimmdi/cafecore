@@ -39,9 +39,20 @@ class Coupon(models.Model):
 class Order(models.Model):
 
     class Status(models.TextChoices):
-        PENDING = "pending", "در انتظار"
+        PENDING = "pending", "در انتظار پرداخت"
         PAID = "paid", "پرداخت شده"
+        PREPARING = "preparing", "در حال آماده‌سازی"
+        READY = "ready", "آماده تحویل"
+        DELIVERED = "delivered", "تحویل شده"
         CANCELLED = "cancelled", "لغو شده"
+
+    # وضعیت‌هایی که فروش/درآمد محسوب می‌شوند
+    REVENUE_STATUSES = (
+        Status.PAID,
+        Status.PREPARING,
+        Status.READY,
+        Status.DELIVERED,
+    )
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
@@ -83,6 +94,7 @@ class Order(models.Model):
         if total < 0:
             return 0
         return total
+
 
 class OrderItem(models.Model):
     order = models.ForeignKey(
