@@ -44,6 +44,7 @@
                 <tr>
                     <th>کد</th>
                     <th>تخفیف</th>
+                    <th>استفاده</th>
                     <th>از تاریخ</th>
                     <th>تا تاریخ</th>
                     <th>وضعیت</th>
@@ -55,8 +56,16 @@
                 <tr>
                     <td>
                         <code class="coupon-code">{{ coupon.code }}</code>
+                        {% if coupon.once_per_user %}
+                        <div class="cell-sub">یک‌بار / کاربر</div>
+                        {% endif %}
                     </td>
                     <td class="price-cell">{{ coupon.discount|to_persian }}٪</td>
+                    <td>
+                        {{ coupon.times_used|to_persian }}
+                        /
+                        {% if coupon.max_uses %}{{ coupon.max_uses|to_persian }}{% else %}∞{% endif %}
+                    </td>
                     <td>{{ coupon.valid_from|to_jalali }}</td>
                     <td>{{ coupon.valid_to|to_jalali }}</td>
                     <td>
@@ -66,6 +75,8 @@
                             <span class="status status-pending">منقضی</span>
                         {% elif coupon.valid_from > now %}
                             <span class="status status-pending">هنوز شروع نشده</span>
+                        {% elif coupon.max_uses and coupon.times_used >= coupon.max_uses %}
+                            <span class="status status-pending">سقف پر شده</span>
                         {% else %}
                             <span class="status status-paid">فعال</span>
                         {% endif %}
@@ -76,7 +87,7 @@
                     </td>
                 </tr>
                 {% empty %}
-                <tr><td colspan="6" class="empty-cell">کوپنی ثبت نشده است.</td></tr>
+                <tr><td colspan="7" class="empty-cell">کوپنی ثبت نشده است.</td></tr>
                 {% endfor %}
             </tbody>
         </table>

@@ -92,14 +92,18 @@ class CouponForm(forms.ModelForm):
 
     class Meta:
         model = Coupon
-        fields = ("code", "discount", "is_active")
+        fields = ("code", "discount", "max_uses", "once_per_user", "is_active")
         widgets = {
             "code": forms.TextInput(attrs={"placeholder": "مثلاً: NOWROZ1405"}),
             "discount": forms.NumberInput(attrs={"min": 1, "max": 100, "placeholder": "درصد تخفیف"}),
+            "max_uses": forms.NumberInput(
+                attrs={"min": 1, "placeholder": "خالی = نامحدود"}
+            ),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields["max_uses"].required = False
         if self.instance and self.instance.pk:
             vf = self.instance.valid_from
             vt = self.instance.valid_to
@@ -126,6 +130,12 @@ class CouponForm(forms.ModelForm):
         if discount is None or discount < 1 or discount > 100:
             raise forms.ValidationError("درصد تخفیف باید بین ۱ تا ۱۰۰ باشد.")
         return discount
+
+    def clean_max_uses(self):
+        max_uses = self.cleaned_data.get("max_uses")
+        if max_uses is not None and max_uses < 1:
+            raise forms.ValidationError("سقف استفاده باید حداقل ۱ باشد.")
+        return max_uses
 
     def clean(self):
         from datetime import datetime

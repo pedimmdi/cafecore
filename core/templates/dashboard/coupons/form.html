@@ -38,6 +38,13 @@
                 {{ form.discount.errors }}
             </div>
 
+            <div class="form-group">
+                <label for="id_max_uses">سقف استفاده کلی</label>
+                {{ form.max_uses }}
+                <small style="color:#888">خالی بگذارید = نامحدود</small>
+                {{ form.max_uses.errors }}
+            </div>
+
             <!-- اعتبار از -->
             <div class="form-group">
                 <label>اعتبار از (تاریخ) *</label>
@@ -80,6 +87,14 @@
                     {{ form.valid_to_time }}
                     <i class="bi bi-clock time-icon"></i>
                 </div>
+            </div>
+
+            <div class="form-group check-group">
+                <label class="toggle-chip">
+                    {{ form.once_per_user }}
+                    <span class="toggle-ui"></span>
+                    <span class="toggle-text">فقط یک‌بار برای هر کاربر</span>
+                </label>
             </div>
 
             <div class="form-group check-group">
