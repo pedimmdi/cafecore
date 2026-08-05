@@ -10,6 +10,12 @@ The UI is built with **custom HTML, CSS, and JavaScript** (no Bootstrap/Tailwind
 ![Django](https://img.shields.io/badge/Django-5.2-green)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 
+## About this project
+
+I built CafeCore to practice a full multi-app Django workflow around a real business domain: catalog, cart, orders, reservations, reviews, and a staff-facing dashboard.
+
+Along the way I focused on Persian UX (Jalali calendar, localized prices and digits), clear app boundaries, and a hand-written front-end without relying on a CSS framework. Payment is intentionally simulated so the emphasis stays on application logic and admin operations.
+
 ## Features
 
 ### Customer side
@@ -30,10 +36,15 @@ The UI is built with **custom HTML, CSS, and JavaScript** (no Bootstrap/Tailwind
 
 ## Tech stack
 
-- **Backend:** Django 5.2, SQLite or PostgreSQL
-- **Frontend:** Custom HTML / CSS / JS, Bootstrap Icons, Vazirmatn
-- **Persian dates:** jdatetime + jalali-datepicker
-- **Charts:** Chart.js
+| Layer | Tools |
+|--------|--------|
+| Backend | Django 5.2, Python 3.11+ |
+| Database | SQLite (default) or PostgreSQL |
+| Frontend | Custom HTML, CSS, JavaScript |
+| UI helpers | Bootstrap Icons, Vazirmatn |
+| Persian dates | jdatetime, jalali-datepicker |
+| Charts | Chart.js |
+| Config | python-decouple |
 
 ## Setup
 
@@ -132,11 +143,25 @@ cafecore/
 
 ## Screenshots
 
+### Home
+
 ![Home](docs/screenshots/home.png)
+
+![Home sections](docs/screenshots/home2.png)
+
+### Menu
 
 ![Menu](docs/screenshots/menu.png)
 
-![Dashboard](docs/screenshots/dashboard.png)
+### Dashboard
+
+![Dashboard overview](docs/screenshots/dashboard.png)
+
+![Dashboard charts](docs/screenshots/dashboard2.png)
+
+![Dashboard management](docs/screenshots/dashboard3.png)
+
+![Dashboard lists](docs/screenshots/dashboard4.png)
 
 ## License
 
