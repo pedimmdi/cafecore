@@ -53,31 +53,41 @@ cd core
 python manage.py migrate
 python manage.py createsuperuser
 python manage.py runserver
+```
 
-Site: http://127.0.0.1:8000
-Dashboard: http://127.0.0.1:8000/dashboard/ (staff user)
-Django Admin: http://127.0.0.1:8000/admin/
+- Site: http://127.0.0.1:8000
+- Dashboard: http://127.0.0.1:8000/dashboard/ (staff user)
+- Django Admin: http://127.0.0.1:8000/admin/
 
+### PostgreSQL (optional)
 
-PostgreSQL (optional)
-In .env:
+In `.env`:
+
+```env
 DB_ENGINE=postgres
 DB_NAME=cafecore
 DB_USER=postgres
 DB_PASSWORD=your_password
 DB_HOST=127.0.0.1
 DB_PORT=5432
+```
 
-Then run migrate again.
-Default is SQLite (DB_ENGINE=sqlite) so the project runs without PostgreSQL.
+Then run `migrate` again.
 
+Default is SQLite (`DB_ENGINE=sqlite`) so the project runs without PostgreSQL.
 
-Tests
+> **Note:** When running commands from the `core/` directory, keep a copy of `.env` inside `core/` as well (or run from a setup where the project root `.env` is discoverable).
+
+## Tests
+
+```bash
 cd core
 python manage.py test
+```
 
+## Project structure
 
-Project structure
+```text
 cafecore/
 ├── core/
 │   ├── accounts/        # Auth & user profile
@@ -93,18 +103,21 @@ cafecore/
 │   ├── static/
 │   └── templates/
 ├── docs/
-│   └── screenshots/     # Optional UI screenshots
+│   └── screenshots/     # UI screenshots
 ├── requirements.txt
 ├── .env.example
 ├── LICENSE
 └── README.md
+```
 
+## Screenshots
 
-Screenshots
-<image-card alt="Home" src="docs/screenshots/home.png" ></image-card>
-<image-card alt="Menu" src="docs/screenshots/menu.png" ></image-card>
-<image-card alt="Dashboard" src="docs/screenshots/dashboard.png" ></image-card>
+![Home](docs/screenshots/home.png)
 
+![Menu](docs/screenshots/menu.png)
 
-License
-This project is licensed under the MIT License — see the LICENSE file for details.
+![Dashboard](docs/screenshots/dashboard.png)
+
+## License
+
+This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
