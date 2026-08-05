@@ -31,7 +31,7 @@ class HomeView(TemplateView):
             .order_by("name")[:6]
         )
 
-        # محبوب‌ترین‌ها: فقط فروش سفارش‌های پرداخت‌شده
+        # محبوب‌ترین‌ها بر اساس سفارش‌های پرداخت‌شده و مراحل بعد از پرداخت
         context["popular_products"] = (
             Product.objects.filter(is_available=True)
             .select_related("category")
@@ -40,7 +40,7 @@ class HomeView(TemplateView):
                     Sum(
                         "order_items__quantity",
                         filter=Q(
-                            order_items__order__status=Order.Status.PAID
+                            order_items__order__status__in=Order.REVENUE_STATUSES
                         ),
                     ),
                     Value(0),

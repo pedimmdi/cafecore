@@ -16,22 +16,22 @@ class ProductListView(ListView):
     paginate_by = 12
 
     def get_queryset(self):
-            return (
-                Product.objects.filter(is_available=True)
-                .select_related("category")
-                .annotate(
-                    total_sales=Coalesce(
-                        Sum(
-                            "order_items__quantity",
-                            filter=Q(
-                                order_items__order__status=Order.Status.PAID
-                            ),
+        return (
+            Product.objects.filter(is_available=True)
+            .select_related("category")
+            .annotate(
+                total_sales=Coalesce(
+                    Sum(
+                        "order_items__quantity",
+                        filter=Q(
+                            order_items__order__status__in=Order.REVENUE_STATUSES
                         ),
-                        Value(0),
-                    )
+                    ),
+                    Value(0),
                 )
-                .order_by("-total_sales", "name")
             )
+            .order_by("-total_sales", "name")
+        )
 
 
 class ProductDetailView(DetailView):
