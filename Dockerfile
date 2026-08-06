@@ -14,7 +14,8 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 
 COPY core /app/core
 COPY docker/entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+# Windows checkouts often use CRLF; that breaks shebang as "/bin/sh\r"
+RUN sed -i 's/\r$//' /entrypoint.sh && chmod +x /entrypoint.sh
 
 WORKDIR /app/core
 
