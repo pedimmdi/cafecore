@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // سایدبار موبایل
     var toggle = document.getElementById("dashSidebarToggle");
     var sidebar = document.getElementById("dashSidebar");
     if (toggle && sidebar) {
@@ -43,7 +42,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // درآمد — Line
     var revLabels = readJson("revenue-labels");
     var revValues = readJson("revenue-values");
     var revCanvas = document.getElementById("revenueChart");
@@ -73,7 +71,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // سفارش ماهانه — Bar
     var ordLabels = readJson("orders-labels");
     var ordValues = readJson("orders-values");
     var ordCanvas = document.getElementById("ordersChart");
@@ -99,7 +96,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // وضعیت سفارش — Doughnut
     var osLabels = readJson("order-status-labels");
     var osValues = readJson("order-status-values");
     var osCanvas = document.getElementById("orderStatusChart");
@@ -110,7 +106,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 labels: osLabels,
                 datasets: [{
                     data: osValues,
-                    backgroundColor: ["#facc15", "#22c55e", "#ef4444"],
+                    backgroundColor: [
+                        "#facc15",
+                        "#22c55e",
+                        "#60a5fa",
+                        "#c084fc",
+                        "#34d399",
+                        "#ef4444",
+                    ],
                     borderWidth: 0,
                 }],
             },
@@ -128,7 +131,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // وضعیت رزرو — Doughnut
     var rsLabels = readJson("reservation-status-labels");
     var rsValues = readJson("reservation-status-values");
     var rsCanvas = document.getElementById("reservationStatusChart");
@@ -157,7 +159,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // امتیاز نظرات — Bar
     var rtLabels = readJson("rating-labels");
     var rtValues = readJson("rating-values");
     var rtCanvas = document.getElementById("ratingChart");
@@ -188,11 +189,10 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // محصولات پرفروش — Horizontal Bar
     var tpLabels = readJson("top-products-labels");
     var tpValues = readJson("top-products-values");
     var tpCanvas = document.getElementById("topProductsChart");
-    if (tpCanvas && tpLabels) {
+    if (tpCanvas && tpLabels && tpLabels.length) {
         new Chart(tpCanvas, {
             type: "bar",
             data: {
@@ -214,7 +214,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     x: {
                         beginAtZero: true,
                         grid: { color: gridColor },
-                        ticks: { color: tickColor },
+                        ticks: { color: tickColor, precision: 0 },
                     },
                     y: {
                         grid: { display: false },
