@@ -2,8 +2,8 @@ from django.db import models
 from django.urls import reverse_lazy
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
-from django.db.models import Avg, Count, Sum
-from django.db.models.functions import TruncMonth
+from django.db.models import Avg, Count, Q, Sum, Value
+from django.db.models.functions import Coalesce, TruncMonth
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.decorators import method_decorator
 from django.views import View
@@ -134,7 +134,17 @@ class DashboardView(TemplateView):
 
         # ---------- محصولات پرفروش (۵تایی) ----------
         top_products = (
-            Product.objects.annotate(total_sales=Sum("order_items__quantity"))
+            Product.objects.annotate(
+                total_sales=Coalesce(
+                    Sum(
+                        "order_items__quantity",
+                        filter=Q(
+                            order_items__order__status__in=Order.REVENUE_STATUSES
+                        ),
+                    ),
+                    Value(0),
+                )
+            )
             .order_by("-total_sales", "name")[:5]
         )
         context["top_products"] = top_products
@@ -145,7 +155,7 @@ class DashboardView(TemplateView):
 
         # ---------- توزیع امتیاز نظرات ----------
         rating_dist = (
-            Review.objects.filter(status=Review.Status.APPROVED)
+            Review.objects.exclude(status=Review.Status.REJECTED)
             .values("rating")
             .annotate(total=Count("id"))
             .order_by("rating")
