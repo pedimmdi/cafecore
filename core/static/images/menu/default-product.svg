@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="450" viewBox="0 0 600 450">
+  <rect width="600" height="450" fill="#2d231e"/>
+  <circle cx="300" cy="210" r="120" fill="#46372d" stroke="#786450" stroke-width="3"/>
+  <circle cx="300" cy="210" r="70" fill="#5a4637"/>
+  <text x="300" y="400" text-anchor="middle" fill="#c8b496" font-family="sans-serif" font-size="28">CafeCore</text>
+</svg>
