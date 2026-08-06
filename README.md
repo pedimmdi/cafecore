@@ -145,13 +145,11 @@ cafecore/
 
 ### Home
 
-![Home](docs/screenshots/home.png)
+![Home overview](docs/screenshots/home.png)
 
 ![Home sections](docs/screenshots/home2.png)
 
-### Menu
-
-![Menu](docs/screenshots/menu.png)
+![Home lists](docs/screenshots/home3.png)
 
 ### Dashboard
 
@@ -160,8 +158,6 @@ cafecore/
 ![Dashboard charts](docs/screenshots/dashboard2.png)
 
 ![Dashboard management](docs/screenshots/dashboard3.png)
-
-![Dashboard lists](docs/screenshots/dashboard4.png)
 
 ## License
 
