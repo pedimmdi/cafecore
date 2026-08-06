@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% load static %}
-{% load humanize %}
 {% load jalali %}
 
 {% block title %}
@@ -27,7 +26,7 @@
             <ul class="payment-info">
                 <li>
                     <span class="label">شماره سفارش</span>
-                    <span class="value">#{{ payment.order.id }}</span>
+                    <span class="value">#{{ payment.order.id|to_persian }}</span>
                 </li>
                 <li>
                     <span class="label">شناسه پرداخت</span>
@@ -35,7 +34,7 @@
                 </li>
                 <li>
                     <span class="label">مبلغ</span>
-                    <span class="value amount">{{ payment.amount|intcomma }} تومان</span>
+                    <span class="value amount">{{ payment.amount|persian_price }} تومان</span>
                 </li>
                 <li>
                     <span class="label">وضعیت</span>

@@ -28,10 +28,9 @@ class HomeView(TemplateView):
                 is_featured=True,
             )
             .select_related("category")
-            .order_by("name")[:6]
+            .order_by("name")[:8]
         )
 
-        # محبوب‌ترین‌ها بر اساس سفارش‌های پرداخت‌شده و مراحل بعد از پرداخت
         context["popular_products"] = (
             Product.objects.filter(is_available=True)
             .select_related("category")

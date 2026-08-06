@@ -104,11 +104,13 @@
                 </a>
 
                 <div class="home-product-body">
-                    <span class="home-product-category">{{ product.category.name }}</span>
-                    <h3>
-                        <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
-                    </h3>
-                    <p>{{ product.description|truncatewords:15 }}</p>
+                    <div class="home-product-top">
+                        <span class="home-product-category">{{ product.category.name }}</span>
+                        <h3>
+                            <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+                        </h3>
+                        <p>{{ product.description|truncatewords:15 }}</p>
+                    </div>
                     <div class="home-product-footer">
                         <span class="home-product-price">{{ product.price|persian_price }} تومان</span>
                         <a href="{{ product.get_absolute_url }}" class="home-product-btn">مشاهده</a>
@@ -137,11 +139,13 @@
                 </a>
 
                 <div class="home-product-body">
-                    <span class="home-product-category">{{ product.category.name }}</span>
-                    <h3>
-                        <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
-                    </h3>
-                    <p>{{ product.description|truncatewords:15 }}</p>
+                    <div class="home-product-top">
+                        <span class="home-product-category">{{ product.category.name }}</span>
+                        <h3>
+                            <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+                        </h3>
+                        <p>{{ product.description|truncatewords:15 }}</p>
+                    </div>
                     <div class="home-product-footer">
                         <span class="home-product-price">{{ product.price|persian_price }} تومان</span>
                         <a href="{{ product.get_absolute_url }}" class="home-product-btn">مشاهده</a>
