@@ -8,6 +8,7 @@ The UI is built with **custom HTML, CSS, and JavaScript** (no Bootstrap/Tailwind
 
 ![Python](https://img.shields.io/badge/Python-3.11+-blue)
 ![Django](https://img.shields.io/badge/Django-5.2-green)
+![Docker](https://img.shields.io/badge/Docker-Compose-blue)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 
 ## About this project
@@ -45,8 +46,44 @@ Along the way I focused on Persian UX (Jalali calendar, localized prices and dig
 | Persian dates | jdatetime, jalali-datepicker |
 | Charts | Chart.js |
 | Config | python-decouple |
+| Containers | Docker, Docker Compose, Gunicorn, WhiteNoise |
 
-## Setup
+## Quick start with Docker
+
+Requires [Docker Desktop](https://www.docker.com/products/docker-desktop/) (or Docker Engine + Compose).
+
+```bash
+git clone https://github.com/pedimmdi/cafecore.git
+cd cafecore
+docker compose up --build
+```
+
+Then open:
+
+- Site: http://127.0.0.1:8000
+- Dashboard: http://127.0.0.1:8000/dashboard/
+- Django Admin: http://127.0.0.1:8000/admin/
+
+On first start the container runs migrations, collects static files, and seeds demo data (`RUN_SEED=1`).
+
+Demo staff login (from seed):
+
+- Email: `admin@cafecore.local`
+- Password: `Admin123!`
+
+Stop:
+
+```bash
+docker compose down
+```
+
+Reset database volume:
+
+```bash
+docker compose down -v
+```
+
+## Setup (local, without Docker)
 
 ```bash
 git clone https://github.com/pedimmdi/cafecore.git
@@ -133,8 +170,12 @@ cafecore/
 │   ├── siteconfig/      # Site settings
 │   ├── static/          # Custom CSS & JS
 │   └── templates/       # Custom HTML templates
+├── docker/
+│   └── entrypoint.sh
 ├── docs/
 │   └── screenshots/
+├── Dockerfile
+├── docker-compose.yml
 ├── requirements.txt
 ├── .env.example
 ├── LICENSE
