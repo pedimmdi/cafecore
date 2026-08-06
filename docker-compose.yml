@@ -1,0 +1,39 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: cafecore
+      POSTGRES_USER: cafecore
+      POSTGRES_PASSWORD: cafecore
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cafecore -d cafecore"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      SECRET_KEY: docker-dev-secret-change-me
+      DEBUG: "True"
+      ALLOWED_HOSTS: localhost,127.0.0.1,0.0.0.0,web
+      DB_ENGINE: postgres
+      DB_NAME: cafecore
+      DB_USER: cafecore
+      DB_PASSWORD: cafecore
+      DB_HOST: db
+      DB_PORT: "5432"
+      RUN_SEED: "1"
+    volumes:
+      - media_data:/app/core/media
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  media_data:
