@@ -9,6 +9,7 @@ The UI is built with **custom HTML, CSS, and JavaScript** (no Bootstrap/Tailwind
 ![Python](https://img.shields.io/badge/Python-3.11+-blue)
 ![Django](https://img.shields.io/badge/Django-5.2-green)
 ![Docker](https://img.shields.io/badge/Docker-Compose-blue)
+![Tests](https://github.com/pedimmdi/cafecore/actions/workflows/tests.yml/badge.svg)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 
 ## About this project
@@ -22,17 +23,18 @@ Along the way I focused on Persian UX (Jalali calendar, localized prices and dig
 ### Customer side
 - Register / login / profile / password reset
 - Product menu, categories, and search
-- Session-based cart with coupon codes
+- Session-based cart with coupon codes (usage limits supported)
 - Order placement with simulated payment flow
 - Table reservation with Jalali (Persian) calendar
 - Reviews & ratings (admin approval required)
 - Favorites list
 
 ### Admin dashboard (staff)
-- Stats overview and Chart.js charts
-- Manage orders, products, categories, and inventory
+- Stats overview and Chart.js charts (sales, ratings, order status, top products)
+- Order status workflow: pending → paid → preparing → ready → delivered / cancelled
+- Manage products, categories, and inventory
 - Approve / reject reviews and reservations
-- Coupon CRUD
+- Coupon CRUD with max uses and once-per-user options
 - User management
 
 ## Tech stack
@@ -46,7 +48,9 @@ Along the way I focused on Persian UX (Jalali calendar, localized prices and dig
 | Persian dates | jdatetime, jalali-datepicker |
 | Charts | Chart.js |
 | Config | python-decouple |
-| Containers | Docker, Docker Compose, Gunicorn, WhiteNoise |
+| Static files | WhiteNoise |
+| Containers | Docker, Docker Compose, Gunicorn |
+| CI | GitHub Actions |
 
 ## Quick start with Docker
 
@@ -64,7 +68,7 @@ Then open:
 - Dashboard: http://127.0.0.1:8000/dashboard/
 - Django Admin: http://127.0.0.1:8000/admin/
 
-On first start the container runs migrations, collects static files, and seeds demo data (`RUN_SEED=1`).
+On first start the container waits for PostgreSQL, runs migrations, collects static files, and seeds demo data (`RUN_SEED=1`).
 
 Demo staff login (from seed):
 
@@ -77,10 +81,11 @@ Stop:
 docker compose down
 ```
 
-Reset database volume:
+Reset database volume (fresh seed):
 
 ```bash
 docker compose down -v
+docker compose up --build
 ```
 
 ## Setup (local, without Docker)
@@ -97,10 +102,10 @@ source .venv/bin/activate
 
 pip install -r requirements.txt
 cp .env.example .env
-# Edit .env and set a SECRET_KEY
+# Edit .env and set a long random SECRET_KEY
 
 cd core
-# Keep a copy of .env in this folder (python-decouple reads it from the working directory)
+# python-decouple reads .env from the current working directory — keep a copy here too
 python manage.py migrate
 python manage.py seed_demo
 python manage.py runserver
@@ -146,12 +151,16 @@ Then run `migrate` again.
 
 Default is SQLite (`DB_ENGINE=sqlite`) so the project runs without PostgreSQL.
 
-## Tests
+## Tests & CI
+
+Locally:
 
 ```bash
 cd core
 python manage.py test
 ```
+
+On every push to `main`, [GitHub Actions](https://github.com/pedimmdi/cafecore/actions) runs the same test suite on Python 3.12 with SQLite.
 
 ## Project structure
 
@@ -160,7 +169,7 @@ cafecore/
 ├── core/
 │   ├── accounts/        # Auth & user profile
 │   ├── menu/            # Products & categories
-│   ├── orders/          # Cart & orders
+│   ├── orders/          # Cart, coupons & orders
 │   ├── payments/        # Simulated payments
 │   ├── reservations/    # Table reservations
 │   ├── reviews/         # Product reviews
@@ -171,11 +180,11 @@ cafecore/
 │   ├── static/          # Custom CSS & JS
 │   └── templates/       # Custom HTML templates
 ├── docker/
-│   └── entrypoint.sh
+│   └── entrypoint.sh    # migrate / collectstatic / seed
 ├── docs/
 │   └── screenshots/
 ├── Dockerfile
-├── docker-compose.yml
+├── docker-compose.yml   # web + PostgreSQL
 ├── requirements.txt
 ├── .env.example
 ├── LICENSE
